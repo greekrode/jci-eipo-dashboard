@@ -23,14 +23,14 @@ export default function App() {
   };
 
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pb-16 pt-5">
-      <header className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="h-3.5 w-3.5 bg-primary" aria-hidden />
-          <h1 className="text-[15px] font-semibold tracking-tight text-foreground">IDX e-IPO Analytics</h1>
-          <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted-foreground">IDX · 2021&ndash;2026</span>
+    <div className="mx-auto w-full max-w-[2100px] px-6 pb-20 pt-6">
+      <header className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-border pb-4">
+        <div className="flex items-center gap-3">
+          <span className="h-4 w-4 bg-primary" aria-hidden />
+          <h1 className="text-[20px] font-semibold tracking-tight text-foreground">IDX e-IPO Analytics</h1>
+          <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">IDX · 2021&ndash;2026</span>
         </div>
-        <div className="tabnum font-mono text-[11px] text-muted-foreground">
+        <div className="tabnum font-mono text-[13.5px] text-muted-foreground">
           <span className="font-semibold text-foreground">246</span> DEALS
           <span className="px-1.5 text-muted-foreground">/</span>
           <span className="font-semibold text-foreground">237</span> LISTED
@@ -52,7 +52,7 @@ export default function App() {
         <TabsContent value="explorer"><Explorer ipos={ipos} /></TabsContent>
       </Tabs>
 
-      <footer className="mt-6 border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
+      <footer className="mt-8 border-t border-border pt-4 text-[12.5px] leading-relaxed text-muted-foreground">
         <span className="font-medium text-foreground">Definitions.</span> Final price is the final IPO offer price (post
         book-building). D1–D7 are daily returns; cumulative compounds them. Returns are right-skewed, so median leads and
         sample size (n) is shown on every cut. Source:{" "}

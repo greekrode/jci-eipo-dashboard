@@ -41,10 +41,10 @@ const KIND_COLOR: Record<Bucket["kind"], string> = { neg: C.neg, flat: C.neutral
 
 export function ReturnHistogram({ data }: { data: Bucket[] }) {
   return (
-    <ResponsiveContainer width="100%" height={236}>
+    <ResponsiveContainer width="100%" height={270}>
       <BarChart data={data} margin={{ top: 6, right: 8, left: 0, bottom: 2 }}>
         <CartesianGrid stroke={C.grid} vertical={false} />
-        <XAxis dataKey="label" tickLine={false} axisLine={false} interval={0} tick={{ fontSize: 10 }} />
+        <XAxis dataKey="label" tickLine={false} axisLine={false} interval={0} tick={{ fontSize: 12 }} />
         <YAxis tickLine={false} axisLine={false} allowDecimals={false} width={34} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={(v) => `${v ?? 0} IPOs`} />} />
         <Bar dataKey="count" radius={[0, 0, 0, 0]} name="IPOs" isAnimationActive={false}>
@@ -59,14 +59,14 @@ export function ReturnHistogram({ data }: { data: Bucket[] }) {
 
 export function FadeCurveChart({ data }: { data: FadePoint[] }) {
   return (
-    <ResponsiveContainer width="100%" height={250}>
+    <ResponsiveContainer width="100%" height={290}>
       <LineChart data={data} margin={{ top: 8, right: 14, left: -12, bottom: 2 }}>
         <CartesianGrid stroke={C.grid} vertical={false} />
         <XAxis dataKey="day" tickLine={false} axisLine={false} />
         <YAxis tickFormatter={pctTick} tickLine={false} axisLine={false} width={42} />
         <ReferenceLine y={0} stroke={C.grid} />
         <Tooltip content={<Tip fmt={pctVal} />} />
-        <Legend wrapperStyle={{ fontSize: 11.5, color: "#aab2c5" }} />
+        <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
         <Line type="monotone" dataKey="mean" name="Mean" stroke={C.blue} strokeWidth={1.75} strokeDasharray="5 4" dot={{ r: 2.5, fill: C.blue }} isAnimationActive={false} />
         <Line type="monotone" dataKey="median" name="Median" stroke={C.text} strokeWidth={2.5} dot={{ r: 3, fill: C.text }} isAnimationActive={false} />
       </LineChart>
@@ -76,11 +76,11 @@ export function FadeCurveChart({ data }: { data: FadePoint[] }) {
 
 export function SectorBars({ data }: { data: SectorRow[] }) {
   return (
-    <ResponsiveContainer width="100%" height={Math.max(260, data.length * 26)}>
+    <ResponsiveContainer width="100%" height={Math.max(300, data.length * 30)}>
       <BarChart data={data} layout="vertical" margin={{ top: 2, right: 20, left: 6, bottom: 2 }}>
         <CartesianGrid stroke={C.grid} horizontal={false} />
         <XAxis type="number" tickFormatter={pctTick} tickLine={false} axisLine={false} />
-        <YAxis type="category" dataKey="sector" width={150} tickLine={false} axisLine={false} tick={{ fontSize: 11 }} />
+        <YAxis type="category" dataKey="sector" width={172} tickLine={false} axisLine={false} tick={{ fontSize: 12.5 }} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={pctVal} />} />
         <Bar dataKey="d1" name="Median D1" radius={[0, 0, 0, 0]} isAnimationActive={false}>
           {data.map((d, i) => (
@@ -94,7 +94,7 @@ export function SectorBars({ data }: { data: SectorRow[] }) {
 
 export function YoYChart({ data }: { data: YearRow[] }) {
   return (
-    <ResponsiveContainer width="100%" height={250}>
+    <ResponsiveContainer width="100%" height={290}>
       <ComposedChart data={data} margin={{ top: 8, right: 6, left: 6, bottom: 2 }}>
         <CartesianGrid stroke={C.grid} vertical={false} />
         <XAxis dataKey="year" tickLine={false} axisLine={false} />
@@ -104,7 +104,7 @@ export function YoYChart({ data }: { data: YearRow[] }) {
           cursor={{ fill: "rgba(255,255,255,0.04)" }}
           content={<Tip fmt={(v) => (v === null ? "—" : Math.abs(v) < 5 ? pctVal(v) : `${v} IPOs`)} />}
         />
-        <Legend wrapperStyle={{ fontSize: 11.5, color: "#aab2c5" }} />
+        <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
         <Bar yAxisId="l" dataKey="count" name="IPOs listed" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive={false} />
         <Line yAxisId="r" type="monotone" dataKey="d1" name="Median D1" stroke={C.blue} strokeWidth={2.5} dot={{ r: 3, fill: C.blue }} isAnimationActive={false} />
       </ComposedChart>
@@ -115,13 +115,13 @@ export function YoYChart({ data }: { data: YearRow[] }) {
 export function LeadMemberBars({ data }: { data: RoleRow[] }) {
   const rows = data.map((r) => ({ code: r.code, leadMed: r.leadMed, memberMed: r.memberMed }));
   return (
-    <ResponsiveContainer width="100%" height={250}>
+    <ResponsiveContainer width="100%" height={290}>
       <BarChart data={rows} margin={{ top: 8, right: 6, left: -14, bottom: 2 }} barGap={2}>
         <CartesianGrid stroke={C.grid} vertical={false} />
         <XAxis dataKey="code" tickLine={false} axisLine={false} />
         <YAxis tickFormatter={pctTick} tickLine={false} axisLine={false} width={42} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={pctVal} />} />
-        <Legend wrapperStyle={{ fontSize: 11.5, color: "#aab2c5" }} />
+        <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
         <Bar dataKey="leadMed" name="As lead" radius={[0, 0, 0, 0]} fill={C.blue} isAnimationActive={false} />
         <Bar dataKey="memberMed" name="As member" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive={false} />
       </BarChart>
@@ -131,11 +131,11 @@ export function LeadMemberBars({ data }: { data: RoleRow[] }) {
 
 export function ProceedsBars({ data }: { data: Array<{ code: string; raised: number }> }) {
   return (
-    <ResponsiveContainer width="100%" height={Math.max(300, data.length * 30)}>
+    <ResponsiveContainer width="100%" height={Math.max(340, data.length * 34)}>
       <BarChart data={data} layout="vertical" margin={{ top: 8, right: 20, left: 6, bottom: 2 }}>
         <CartesianGrid stroke={C.grid} horizontal={false} />
         <XAxis type="number" tickFormatter={(v) => idr(v)} tickLine={false} axisLine={false} />
-        <YAxis type="category" dataKey="code" width={44} interval={0} tickLine={false} axisLine={false} tick={{ fontSize: 10 }} />
+        <YAxis type="category" dataKey="code" width={44} interval={0} tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={(v) => (v === null ? "—" : idr(v))} />} />
         <Bar dataKey="raised" name="Raised" radius={[0, 0, 0, 0]} isAnimationActive={false}>
           {data.map((d, i) => (
@@ -176,7 +176,7 @@ export function ActivityScatter({ data }: { data: Array<{ code: string; deals: n
     .filter((r) => r.deals >= 3 && r.d1 !== null)
     .map((r) => ({ code: r.code, led: r.deals, d1: r.d1 as number, raised: r.raised, label: r.deals >= 6 ? r.code : "" }));
   return (
-    <ResponsiveContainer width="100%" height={340}>
+    <ResponsiveContainer width="100%" height={380}>
       <ScatterChart margin={{ top: 12, right: 16, left: -6, bottom: 12 }}>
         <CartesianGrid stroke={C.grid} />
         <XAxis
@@ -185,7 +185,7 @@ export function ActivityScatter({ data }: { data: Array<{ code: string; deals: n
           name="Deals led"
           tickLine={false}
           axisLine={false}
-          label={{ value: "deals", position: "insideBottom", offset: -4, fill: "#aab2c5", fontSize: 10 }}
+          label={{ value: "deals", position: "insideBottom", offset: -4, fill: "#aab2c5", fontSize: 12 }}
         />
         <YAxis type="number" dataKey="d1" name="Median D1" tickFormatter={pctTick} tickLine={false} axisLine={false} width={42} />
         <ZAxis type="number" dataKey="raised" range={[30, 300]} name="Raised" />
@@ -195,7 +195,7 @@ export function ActivityScatter({ data }: { data: Array<{ code: string; deals: n
           {pts.map((p, i) => (
             <Cell key={i} fill={brokerColor(p.code)} fillOpacity={0.6} stroke={brokerColor(p.code)} />
           ))}
-          <LabelList dataKey="label" position="top" style={{ fill: "#c5cbdc", fontSize: 9 }} />
+          <LabelList dataKey="label" position="top" style={{ fill: "#c5cbdc", fontSize: 11 }} />
         </Scatter>
       </ScatterChart>
     </ResponsiveContainer>

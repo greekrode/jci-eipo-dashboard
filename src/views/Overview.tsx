@@ -73,7 +73,7 @@ export default function Overview({ ipos }: { ipos: IPO[] }) {
           </CardHeader>
           <CardContent>
             <FadeCurveChart data={fade} />
-            <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">
               Median holds near <span className="font-medium text-foreground">{pct(d1med)}</span> on D1 and eases to{" "}
               <span className="font-medium text-foreground">{pct(d7med)}</span> by D7, while the mean rises to{" "}
               <span className="font-medium text-foreground">{pct(d7mean)}</span>, lifted by a few large outliers.

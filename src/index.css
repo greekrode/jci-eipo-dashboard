@@ -34,6 +34,8 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-size: 15px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -48,7 +50,7 @@
 /* Recharts: mono ticks, square structural grid */
 .recharts-cartesian-axis-tick text {
   fill: hsl(var(--muted-foreground));
-  font-size: 10.5px;
+  font-size: 12px;
 }
 .recharts-cartesian-grid line { stroke: hsl(var(--border)); }
 .recharts-tooltip-wrapper { outline: none; }

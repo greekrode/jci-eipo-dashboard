@@ -163,6 +163,13 @@ export function leagueTable(ipos: IPO[]): LeagueRow[] {
   return rows.sort((a, b) => b.led - a.led);
 }
 
+/** Code -> display name for every broker (leads + member-only, with overrides, uppercase). */
+export function brokerNames(ipos: IPO[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const p of participationTable(ipos)) out[p.code] = p.name;
+  return out;
+}
+
 export interface UwMarket {
   activeLeads: number;
   mostActive: { code: string; name: string; led: number } | null;

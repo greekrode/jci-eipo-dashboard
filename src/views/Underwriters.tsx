@@ -95,14 +95,14 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
     <div className="space-y-4">
       {/* Global role control: drives the stat strip, capital-raised chart, scatter, and league table. */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-2.5">
-        <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">View underwriters as</div>
+        <div className="font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">View underwriters as</div>
         <div className="inline-flex overflow-hidden rounded-[2px] border border-border">
           {(["all", "lead", "member"] as const).map((r) => (
             <button
               key={r}
               onClick={() => pickRole(r)}
               className={cn(
-                "border-r border-border px-4 py-1.5 font-mono text-[11px] uppercase tracking-wider transition-colors last:border-r-0 hover:text-foreground",
+                "border-r border-border px-5 py-2 font-mono text-[12.5px] uppercase tracking-wider transition-colors last:border-r-0 hover:text-foreground",
                 role === r ? "bg-secondary text-foreground" : "text-muted-foreground"
               )}
             >
@@ -149,7 +149,7 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
               onChange={(e) => setSearch(e.target.value)}
               className="w-64"
             />
-            <span className="tabnum ml-auto font-mono text-[11px] text-muted-foreground">{rows.length} underwriters</span>
+            <span className="tabnum ml-auto font-mono text-[12.5px] text-muted-foreground">{rows.length} underwriters</span>
           </div>
 
           <Table containerClassName="max-h-[480px]">
@@ -208,7 +208,7 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
           </CardHeader>
           <CardContent>
             <LeadMemberBars data={roles} />
-            <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">
               Brokers active in both roles tend to show a larger day-1 pop when they lead the book than when they join as a
               member.
             </p>

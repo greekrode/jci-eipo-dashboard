@@ -1,5 +1,6 @@
 import { Fragment, useMemo, useState } from "react";
 import type { IPO } from "@/lib/types";
+import { brokerNames } from "@/lib/compute";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ interface Row {
   sector: string;
   leadCode: string;
   lead: string;
+  members: string[];
   listed: boolean;
   finalPrice: number | null;
   d1: number | null;
@@ -25,9 +27,12 @@ interface Row {
 type Key = keyof Row;
 type GroupBy = "none" | "lead" | "sector" | "year";
 
-const COL_COUNT = 10;
+const COL_COUNT = 11;
+const selectCls =
+  "h-9 rounded-[2px] border border-input bg-secondary px-2 text-[14px] text-foreground focus-visible:border-primary focus-visible:outline-none";
 
 export default function Explorer({ ipos }: { ipos: IPO[] }) {
+  const names = useMemo(() => brokerNames(ipos), [ipos]);
   const base: Row[] = useMemo(
     () =>
       ipos.map((i) => ({
@@ -36,6 +41,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
         sector: i.sector,
         leadCode: i.leadCode,
         lead: i.leadName,
+        members: i.members,
         listed: i.listed,
         finalPrice: i.finalPrice,
         d1: i.cum[0],
@@ -81,9 +87,12 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
 
   const legend = useMemo(() => {
     const m = new Map<string, string>();
-    for (const r of rows) if (r.leadCode) m.set(r.leadCode, r.lead);
+    for (const r of rows) {
+      if (r.leadCode) m.set(r.leadCode, r.lead);
+      for (const c of r.members) m.set(c, names[c] ?? c);
+    }
     return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [rows]);
+  }, [rows, names]);
 
   const sortable = (key: Key, label: string, cls = "") => (
     <TableHead
@@ -105,7 +114,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
           </Badge>
         )}
       </TableCell>
-      <TableCell className="max-w-[230px] truncate text-left text-muted-foreground">{r.company}</TableCell>
+      <TableCell className="max-w-[240px] truncate text-left text-muted-foreground">{r.company}</TableCell>
       <TableCell className="text-left text-muted-foreground">{r.sector}</TableCell>
       <TableCell className="text-left">
         <Tooltip>
@@ -116,6 +125,29 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
           </TooltipTrigger>
           <TooltipContent>{r.lead}</TooltipContent>
         </Tooltip>
+      </TableCell>
+      <TableCell className="max-w-[170px] text-left text-muted-foreground">
+        {r.members.length === 0 ? (
+          <span className="text-muted-foreground/60">—</span>
+        ) : (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="block cursor-default truncate underline decoration-dotted decoration-muted-foreground/50 underline-offset-2">
+                {r.members.join(", ")}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-[320px]">
+              <div className="space-y-1">
+                {r.members.map((c) => (
+                  <div key={c}>
+                    <span className="text-foreground">{c}</span>{" "}
+                    <span className="text-muted-foreground">{names[c] ?? c}</span>
+                  </div>
+                ))}
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </TableCell>
       <TableCell>{idrPrice(r.finalPrice)}</TableCell>
       <TableCell className={signClass(r.d1)}>{pct(r.d1)}</TableCell>
@@ -146,21 +178,17 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
       <Card>
         <CardHeader>
           <CardTitle>IPO explorer</CardTitle>
-          <CardDescription>all 246 deals · D1–D7 cumulative · hover a lead code for the broker name</CardDescription>
+          <CardDescription>all 246 deals · D1–D7 cumulative · hover a lead or member code for the broker name</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
+          <div className="flex flex-wrap items-center gap-2.5 border-b border-border px-4 py-3.5">
             <Input
               placeholder="Search ticker or company"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              className="w-56"
+              className="w-60"
             />
-            <select
-              value={sec}
-              onChange={(e) => setSec(e.target.value)}
-              className="h-8 rounded-[2px] border border-input bg-secondary px-2 text-[13px] text-foreground focus-visible:border-primary focus-visible:outline-none"
-            >
+            <select value={sec} onChange={(e) => setSec(e.target.value)} className={selectCls}>
               <option value="all">All sectors</option>
               {sectors.map((s) => (
                 <option key={s} value={s}>
@@ -168,32 +196,29 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
                 </option>
               ))}
             </select>
-            <select
-              value={groupBy}
-              onChange={(e) => setGroupBy(e.target.value as GroupBy)}
-              className="h-8 rounded-[2px] border border-input bg-secondary px-2 text-[13px] text-foreground focus-visible:border-primary focus-visible:outline-none"
-            >
+            <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as GroupBy)} className={selectCls}>
               <option value="none">No grouping</option>
               <option value="lead">Group by lead</option>
               <option value="sector">Group by sector</option>
               <option value="year">Group by year</option>
             </select>
-            <label className="flex cursor-pointer items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground">
+            <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px] uppercase tracking-wider text-muted-foreground">
               <input type="checkbox" checked={listedOnly} onChange={(e) => setListedOnly(e.target.checked)} className="accent-primary" />
               Listed only
             </label>
-            <span className="tabnum ml-auto text-[11px] text-muted-foreground">
+            <span className="tabnum ml-auto text-[12.5px] text-muted-foreground">
               {rows.length} deals{groups ? ` · ${groups.length} groups` : ""}
             </span>
           </div>
 
-          <Table containerClassName="max-h-[560px]">
+          <Table containerClassName="max-h-[640px]">
             <TableHeader className="[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-card">
               <TableRow>
                 {sortable("ticker", "Ticker", "static")}
                 {sortable("company", "Company", "text-left")}
                 {sortable("sector", "Sector", "text-left")}
                 {sortable("leadCode", "Lead", "text-left")}
+                <TableHead className="static text-left">Members</TableHead>
                 {sortable("finalPrice", "Offer")}
                 {sortable("d1", "D1")}
                 {sortable("d3", "D3")}
@@ -214,11 +239,11 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
             </TableBody>
           </Table>
 
-          <div className="border-t border-border px-4 py-3">
-            <div className="mb-2 text-[10px] uppercase tracking-wider text-muted-foreground">
-              Lead underwriter codes ({legend.length})
+          <div className="border-t border-border px-4 py-3.5">
+            <div className="mb-2 text-[11.5px] uppercase tracking-wider text-muted-foreground">
+              Underwriter codes ({legend.length})
             </div>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-1 text-[11px] sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-x-5 gap-y-1.5 text-[12.5px] sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {legend.map(([code, name]) => (
                 <div key={code} className="truncate">
                   <span className="text-foreground">{code}</span> <span className="text-muted-foreground">{name}</span>
