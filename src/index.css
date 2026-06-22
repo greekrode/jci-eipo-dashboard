@@ -1,0 +1,59 @@
+@import "@fontsource-variable/inter";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Semi-brutalist concrete-dark theme. Structure carried by borders, not elevation. */
+:root {
+  --background: 240 5% 7%;          /* concrete near-black */
+  --foreground: 240 6% 95%;
+  --card: 240 5% 10%;               /* flat panel */
+  --card-foreground: 240 6% 95%;
+  --popover: 240 5% 11%;
+  --popover-foreground: 240 6% 95%;
+  --primary: 222 100% 62%;          /* single structural accent */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 4% 15%;
+  --secondary-foreground: 240 6% 95%;
+  --muted: 240 4% 15%;
+  --muted-foreground: 240 6% 75%;
+  --accent: 240 4% 17%;
+  --accent-foreground: 240 6% 96%;
+  --border: 240 4% 24%;             /* strong, visible structural lines */
+  --input: 240 4% 30%;
+  --ring: 222 100% 62%;
+  --pos: 152 56% 50%;               /* up */
+  --neg: 4 84% 63%;                 /* down */
+  --radius: 0.125rem;               /* near-square edges */
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  .tabnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Recharts: mono ticks, square structural grid */
+.recharts-cartesian-axis-tick text {
+  fill: hsl(var(--muted-foreground));
+  font-size: 10.5px;
+}
+.recharts-cartesian-grid line { stroke: hsl(var(--border)); }
+.recharts-tooltip-wrapper { outline: none; }
+.recharts-default-legend { font-size: 11px !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
