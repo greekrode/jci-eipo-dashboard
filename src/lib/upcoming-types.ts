@@ -20,7 +20,13 @@ export interface UseOfProceedsItem {
 
 export interface RedFlag {
   text: string;
-  severity: string | null; // "High" | "Med" | … | null (string-style sources have no severity)
+  severity: string | null; // "High" | "Med-High" | "Med" | "Low-Med" | "Low"
+}
+
+/** Positive / mitigating factor — the green-flag mirror of RedFlag. */
+export interface GreenFlag {
+  text: string;
+  strength: string; // "Strong" | "Moderate" | "Minor"
 }
 
 export interface RevenueSeg {
@@ -146,7 +152,7 @@ export interface UpcomingIPO {
   primaryRisk: string | null;
   industryTailwind: string | null;
   redFlags: RedFlag[];
-  counterweights: string[] | null;
+  counterweights: GreenFlag[] | null; // "green flags" — positives, graded like red flags
   openQuestions: string[];
 
   /** Full source JSON, kept non-lossy for the detail view's deal-specific sections. */

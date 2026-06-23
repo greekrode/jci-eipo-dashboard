@@ -2,24 +2,104 @@
   "_note": "Prospectus-PDF-derived data (gitignored PDFs in _sources). Hand-curated from extraction agents' cited figures; merged over the normalized base by scripts/build-upcoming.ts. Percentages are 0-100; rpBn in IDR billions. Only one clean ~100%-summing revenue cut per deal is kept here; customer concentration lives in keyCustomersOrChannel.",
   "BACH": {
     "shareholdersPost": [
-      { "name": "PT Bach Multi Sukses Investama", "shares": 2135496000, "pct": 52.28, "role": "Controller (pre-option)" },
-      { "name": "PT Global Telekomunikasi Prima", "shares": 1040832000, "pct": 25.48, "role": null },
-      { "name": "Budi Kurniawan", "shares": 69600000, "pct": 1.70, "role": "Dir. Utama" },
-      { "name": "Hartanto Rahardja", "shares": 62400000, "pct": 1.53, "role": "Komisaris" },
-      { "name": "Edy Surianto", "shares": 55200000, "pct": 1.35, "role": null },
-      { "name": "Zulfahmi Fithri", "shares": 53102000, "pct": 1.30, "role": null },
-      { "name": "Hasby Jap", "shares": 52800000, "pct": 1.29, "role": "Direktur" },
-      { "name": "Masyarakat (Public)", "shares": 615000000, "pct": 15.06, "role": null }
+      {
+        "name": "PT Bach Multi Sukses Investama",
+        "shares": 2135496000,
+        "pct": 52.28,
+        "role": "Controller (pre-option)"
+      },
+      {
+        "name": "PT Global Telekomunikasi Prima",
+        "shares": 1040832000,
+        "pct": 25.48,
+        "role": null
+      },
+      {
+        "name": "Budi Kurniawan",
+        "shares": 69600000,
+        "pct": 1.7,
+        "role": "Dir. Utama"
+      },
+      {
+        "name": "Hartanto Rahardja",
+        "shares": 62400000,
+        "pct": 1.53,
+        "role": "Komisaris"
+      },
+      {
+        "name": "Edy Surianto",
+        "shares": 55200000,
+        "pct": 1.35,
+        "role": null
+      },
+      {
+        "name": "Zulfahmi Fithri",
+        "shares": 53102000,
+        "pct": 1.3,
+        "role": null
+      },
+      {
+        "name": "Hasby Jap",
+        "shares": 52800000,
+        "pct": 1.29,
+        "role": "Direktur"
+      },
+      {
+        "name": "Masyarakat (Public)",
+        "shares": 615000000,
+        "pct": 15.06,
+        "role": null
+      }
     ],
     "shareholdersPostOption": [
-      { "name": "PT Global Telekomunikasi Prima", "shares": 2083059300, "pct": 51.00, "role": "Controller (post-option)" },
-      { "name": "PT Bach Multi Sukses Investama", "shares": 1093268700, "pct": 26.77, "role": null },
-      { "name": "Budi Kurniawan", "shares": 69600000, "pct": 1.70, "role": null },
-      { "name": "Hartanto Rahardja", "shares": 62400000, "pct": 1.53, "role": null },
-      { "name": "Edy Surianto", "shares": 55200000, "pct": 1.35, "role": null },
-      { "name": "Zulfahmi Fithri", "shares": 53102000, "pct": 1.30, "role": null },
-      { "name": "Hasby Jap", "shares": 52800000, "pct": 1.29, "role": null },
-      { "name": "Masyarakat (Public)", "shares": 615000000, "pct": 15.06, "role": null }
+      {
+        "name": "PT Global Telekomunikasi Prima",
+        "shares": 2083059300,
+        "pct": 51.0,
+        "role": "Controller (post-option)"
+      },
+      {
+        "name": "PT Bach Multi Sukses Investama",
+        "shares": 1093268700,
+        "pct": 26.77,
+        "role": null
+      },
+      {
+        "name": "Budi Kurniawan",
+        "shares": 69600000,
+        "pct": 1.7,
+        "role": null
+      },
+      {
+        "name": "Hartanto Rahardja",
+        "shares": 62400000,
+        "pct": 1.53,
+        "role": null
+      },
+      {
+        "name": "Edy Surianto",
+        "shares": 55200000,
+        "pct": 1.35,
+        "role": null
+      },
+      {
+        "name": "Zulfahmi Fithri",
+        "shares": 53102000,
+        "pct": 1.3,
+        "role": null
+      },
+      {
+        "name": "Hasby Jap",
+        "shares": 52800000,
+        "pct": 1.29,
+        "role": null
+      },
+      {
+        "name": "Masyarakat (Public)",
+        "shares": 615000000,
+        "pct": 15.06,
+        "role": null
+      }
     ],
     "controllerLines": [
       "Controls: GTP / Hartono group",
@@ -30,15 +110,89 @@
     "businessModel": {
       "summary": "Two segments: sale & rental of gensets (sole Indonesian agent for Himoinsa) and telecom-infrastructure construction & maintenance (towers, fiber, O&M of ~41,000 sites) via subsidiary BMI.",
       "revenueBreakdown": [
-        { "label": "Genset (sale & rental)", "pct": 56.4, "year": 2025, "rpBn": 977.957 },
-        { "label": "Telecom-infrastructure (construction & maintenance)", "pct": 43.6, "year": 2025, "rpBn": 754.988 }
+        {
+          "label": "Genset (sale & rental)",
+          "pct": 56.4,
+          "year": 2025,
+          "rpBn": 977.957
+        },
+        {
+          "label": "Telecom-infrastructure (construction & maintenance)",
+          "pct": 43.6,
+          "year": 2025,
+          "rpBn": 754.988
+        }
       ],
       "breakdownBasis": "by business segment",
       "model": "Genset segment sells units (7–3,000 kVA) with installation and after-sales, and rents a fleet under medium/long-term contracts. Telecom-infra (BMI) does site acquisition, CME tower build and fiber, plus recurring SLA-based maintenance and backup power. The genset segment more than doubled in FY2025 (was only ~36% of FY2024 revenue), flipping the mix to genset-majority.",
       "keyCustomersOrChannel": "Concentrated in tower companies/operators. FY2025 customers >10% of revenue: Protelindo (TOWR group) ~14% and Solusi Tunas Pratama (SUPR) ~14%, both under common control with controlling shareholder GTP, so ~35% of FY2025 revenue is related-party.",
       "moatOrEdge": "Sole-agent status for Himoinsa plus captive demand from the controlling Sarana Menara Nusantara tower group, which is also the source of its customer concentration.",
       "sourcePages": "p.63–64, 70, 171–185"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "Cheap valuation: ~10-13x trailing P/E for ~100% profit growth and 29% ROE",
+        "strength": "Strong"
+      },
+      {
+        "text": "Deep-pocketed Hartono controller brings capital strength and captive demand (TOWR / Protelindo / data centres)",
+        "strength": "Strong"
+      },
+      {
+        "text": "Growth-oriented use of proceeds (~70% funds revenue-generating genset inventory and rental fleet)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Positive and growing operating cash flow (Rp132bn in 2025)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Structural demand tailwind from data-centre, telecom-tower and electrification build-out",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Clean legal record across company, subsidiary, directors and commissioners",
+        "strength": "Minor"
+      }
+    ],
+    "redFlags": [
+      {
+        "text": "Concurrent control transfer to Hartono (GTP->51%) with NO mandatory tender offer (MTO-avoidance via 'GTP already controller' resolution 8 Jan 2026) - no control-premium exit for minorities",
+        "severity": "High"
+      },
+      {
+        "text": "Control sale (BMSI->GTP, Rp417-521bn) larger than IPO raise; IPO book sets Bach family's exit price",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Related-party concentration: #1 customer Protelindo (Hartono/TOWR) 14-40% of revenue becomes related party; chair on both sides",
+        "severity": "High"
+      },
+      {
+        "text": "Debt-funded growth on thin cash: DER 1.30x, Rp11.97bn cash vs Rp595bn current liabilities, Rp369.7bn fleet capex outran CFO",
+        "severity": "High"
+      },
+      {
+        "text": "Supplier dependency (stated #1 risk) - reliance on Chinese genset suppliers; FX/supply-chain exposure",
+        "severity": "Med"
+      },
+      {
+        "text": "Cyclical growth - 2025 genset surge tied to data-centre/tower capex cycle; reversible",
+        "severity": "Med"
+      },
+      {
+        "text": "Pre-IPO dividend Rp129.1bn (2023) = ~3.6x that year's net profit",
+        "severity": "Med"
+      },
+      {
+        "text": "Thin 15.06% float + concentrated register = low liquidity, minimal minority influence",
+        "severity": "Low-Med"
+      },
+      {
+        "text": "Governance thinness - only 1 independent commissioner; conflicted chair; no ESA/ESOP",
+        "severity": "Med"
+      }
+    ]
   },
   "EMMI": {
     "controllerLines": [
@@ -50,15 +204,51 @@
     "businessModel": {
       "summary": "Distributor of medical/lab devices for ~25 years (exclusive Indonesian distributor for Medicon, Bowa, Penlon, Air Liquide and others) with light local manufacturing. ~96% of revenue is to government.",
       "revenueBreakdown": [
-        { "label": "Government", "pct": 96.10, "year": 2025, "rpBn": 436.894 },
-        { "label": "Non-government / private", "pct": 3.90, "year": 2025, "rpBn": 17.742 }
+        {
+          "label": "Government",
+          "pct": 96.1,
+          "year": 2025,
+          "rpBn": 436.894
+        },
+        {
+          "label": "Non-government / private",
+          "pct": 3.9,
+          "year": 2025,
+          "rpBn": 17.742
+        }
       ],
       "breakdownBasis": "by customer (government vs private), revenue basis",
       "model": "Earns a distribution margin via sole-distributor arrangements with foreign principals, selling capital medical equipment mainly through government hospital procurement tenders (LKPP e-Katalog, IsDB soft loans, World Bank SOPHI), and is building recurring consumables (surgical sutures). On a gross-profit basis the government share is even higher (~98.5%).",
       "keyCustomersOrChannel": "~96% to government hospitals/institutions via national tenders; revenue is lumpy and tender-driven. Listed competitors: Itama Ranoraya (IRRA), Jayamas Medica (OMED).",
       "moatOrEdge": "Long-standing exclusive sole-distributor rights for global medtech brands; 200+ hospital relationships; nationwide distribution network.",
       "sourcePages": "p.13–16, 71–73, 154–157"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "Genuine sector tailwind: ~8.68% medical-device market CAGR to 2030, plus JKN coverage and TKDN local-content support",
+        "strength": "Strong"
+      },
+      {
+        "text": "Strong top-line growth (+122.5% in 2024, +18.1% in 2025; net profit up ~210%)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Near-term revenue visibility from ~Rp81bn SOPHI government backlog",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Shift to domestic manufacturing positions EMMI for TKDN local-content preference",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Credible principals: founder with ~36 years in medical devices and the Esa Group of device makers",
+        "strength": "Minor"
+      },
+      {
+        "text": "Larger 30% free float aids liquidity and minority weight",
+        "strength": "Minor"
+      }
+    ]
   },
   "JECX": {
     "controllerLines": [
@@ -70,21 +260,129 @@
     "businessModel": {
       "summary": "Specialty eye-care network (brand JEC / Jakarta Eye Center, est. 1993): 5 eye hospitals + 11 clinics with 184 ophthalmologists, run on a continuum-of-care model.",
       "revenueBreakdown": [
-        { "label": "Surgery (Bedah)", "pct": 51.32, "year": 2025, "rpBn": null },
-        { "label": "Polyclinic (Poliklinik)", "pct": 25.69, "year": 2025, "rpBn": null },
-        { "label": "LASIK", "pct": 10.55, "year": 2025, "rpBn": null },
-        { "label": "Pharmacy (Farmasi)", "pct": 6.22, "year": 2025, "rpBn": null },
-        { "label": "Optic (Optik)", "pct": 2.83, "year": 2025, "rpBn": null },
-        { "label": "Patient administration", "pct": 1.55, "year": 2025, "rpBn": null },
-        { "label": "Inpatient (Rawat inap)", "pct": 0.96, "year": 2025, "rpBn": null },
-        { "label": "Other (Lain-lain)", "pct": 0.87, "year": 2025, "rpBn": null }
+        {
+          "label": "Surgery (Bedah)",
+          "pct": 51.32,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Polyclinic (Poliklinik)",
+          "pct": 25.69,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "LASIK",
+          "pct": 10.55,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Pharmacy (Farmasi)",
+          "pct": 6.22,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Optic (Optik)",
+          "pct": 2.83,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Patient administration",
+          "pct": 1.55,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Inpatient (Rawat inap)",
+          "pct": 0.96,
+          "year": 2025,
+          "rpBn": null
+        },
+        {
+          "label": "Other (Lain-lain)",
+          "pct": 0.87,
+          "year": 2025,
+          "rpBn": null
+        }
       ],
       "breakdownBasis": "by service line (gross, before doctors' honorarium)",
       "model": "Fee-for-service eye care: revenue per procedure, consultation and LASIK, plus pharmacy and optical sales. Doctors are paid via an honorarium deducted from gross service revenue to reach net revenue. Primary screening feeds secondary clinics and tertiary subspecialty/hospital procedures.",
       "keyCustomersOrChannel": "Retail eye-care patients across 11 sites (mostly Java); payers are BPJS, private insurance, corporate and self-pay, with no single customer >10% of revenue. By region: Java ~87%, Sulawesi ~11%, Bali ~2%.",
       "moatOrEdge": "Trusted 30+ year brand (Top Brand 2025, index 43%); LASIK pioneer in Indonesia; 184 ophthalmologists; high barriers from scarce national eye-care capacity.",
       "sourcePages": "p.16–17, 45–46, 52, 232–234, 481"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "Leading eye-care brand (Jakarta Eye Center) with JCI and KARS accreditation",
+        "strength": "Strong"
+      },
+      {
+        "text": "Healthy, cash-generative core operations (parent plus JECMI and JMP)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Conservative parent balance sheet (DER ~0.07x)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Structural demand tailwind for specialist eye-care",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Clean legal record",
+        "strength": "Minor"
+      },
+      {
+        "text": "Credible deleveraging plan, if executed as stated",
+        "strength": "Minor"
+      }
+    ],
+    "redFlags": [
+      {
+        "text": "Dividend-recap backfill: Rp100bn of IPO proceeds repays an HSBC loan (Apr 2026) raised to fund a pre-IPO dividend - public money reimburses a shareholder distribution",
+        "severity": "High"
+      },
+      {
+        "text": "33% of deal is founder-doctor cash-out (Waldensius 6.2% -> 0.6%)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "~60% of company proceeds = debt repayment / subsidiary bailout",
+        "severity": "High"
+      },
+      {
+        "text": "Orbita & JCS breached bank covenants; Orbita ICR 0.90x; waiver only Mar 2026",
+        "severity": "High"
+      },
+      {
+        "text": "Profit still 35% below 2023 peak; revenue growth decelerating to +4.4%",
+        "severity": "Med"
+      },
+      {
+        "text": "Current ratio 0.69x; liquidity strained (reclassified breached loans)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "2024 cash dividends exceeded net profit (>100% payout); equity flat 3 yrs",
+        "severity": "Med"
+      },
+      {
+        "text": "Only ~9% locked up; ~76% of pre-IPO shares freely sellable vs 14.7% float",
+        "severity": "Med-High"
+      },
+      {
+        "text": "~53-62x trailing P/E - priced for unproven recovery",
+        "severity": "High"
+      },
+      {
+        "text": "Control/ownership mismatch - largest holder (SAME 25%) non-controlling",
+        "severity": "Low-Med"
+      }
+    ]
   },
   "JELI": {
     "controllerLines": [
@@ -95,15 +393,51 @@
     "businessModel": {
       "summary": "Market-leading dessert / processed-food maker (brand INACO, est. 1990): nata de coco, jelly, aloe vera and pudding across 4 owned plants (~3.5bn pcs/yr, 150+ SKUs).",
       "revenueBreakdown": [
-        { "label": "Domestic", "pct": 97.91, "year": 2025, "rpBn": 737.317 },
-        { "label": "Export", "pct": 2.09, "year": 2025, "rpBn": 15.734 }
+        {
+          "label": "Domestic",
+          "pct": 97.91,
+          "year": 2025,
+          "rpBn": 737.317
+        },
+        {
+          "label": "Export",
+          "pct": 2.09,
+          "year": 2025,
+          "rpBn": 15.734
+        }
       ],
       "breakdownBasis": "by geography (no operating segments disclosed)",
       "model": "Vertically integrated own-brand FMCG: manufactures and sells mainly B2B to distributors reaching general- and modern-trade retail domestically, plus direct export to 30+ countries and contract-manufacturing (maklon) via subsidiary NPS for Yupi and Tarami/Kawasho (Japan).",
       "keyCustomersOrChannel": "251 domestic distribution points; largest distributor PT Supralita Mandiri ~12% of sales. Export is only ~2% of revenue.",
       "moatOrEdge": "Category leadership in modern retail (2025): Jelly 49.6%, Nata de Coco 19.9%, Pudding 16.0%, backed by the INACO brand and a national distribution network.",
       "sourcePages": "p.42, 179, 209–220, 359–362"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "Durable consumer brand: Inaco is a market leader in nata de coco and jelly desserts",
+        "strength": "Strong"
+      },
+      {
+        "text": "Net profit tripled in 2025 (to Rp39.0bn) on margin expansion",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Credible new export growth vector (Tarami / Japan gummy-jelly expansion)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "100% primary structure - all proceeds fund the company, no shareholder cash-out",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Material deleveraging funded by the raise",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Clean legal and audit standing",
+        "strength": "Minor"
+      }
+    ]
   },
   "PRDL": {
     "controllerLines": [
@@ -115,18 +449,69 @@
     "businessModel": {
       "summary": "In-Vitro Diagnostics manufacturer (brand Proline): makes reagents and instruments under a DiaSys (Germany) technology license, serving 7,600+ end users through distributors.",
       "revenueBreakdown": [
-        { "label": "Clinical chemistry", "pct": 81.19, "year": 2025, "rpBn": 60.381 },
-        { "label": "Instruments", "pct": 11.87, "year": 2025, "rpBn": 8.826 },
-        { "label": "Hematology", "pct": 5.49, "year": 2025, "rpBn": 4.086 },
-        { "label": "Services", "pct": 1.37, "year": 2025, "rpBn": 1.022 },
-        { "label": "Immunology & biomolecular", "pct": 0.08, "year": 2025, "rpBn": 0.057 }
+        {
+          "label": "Clinical chemistry",
+          "pct": 81.19,
+          "year": 2025,
+          "rpBn": 60.381
+        },
+        {
+          "label": "Instruments",
+          "pct": 11.87,
+          "year": 2025,
+          "rpBn": 8.826
+        },
+        {
+          "label": "Hematology",
+          "pct": 5.49,
+          "year": 2025,
+          "rpBn": 4.086
+        },
+        {
+          "label": "Services",
+          "pct": 1.37,
+          "year": 2025,
+          "rpBn": 1.022
+        },
+        {
+          "label": "Immunology & biomolecular",
+          "pct": 0.08,
+          "year": 2025,
+          "rpBn": 0.057
+        }
       ],
       "breakdownBasis": "by product line",
       "model": "Manufactures reagents under a DiaSys license (extended to 2033) using DiaSys-supplied raw materials, branded DiaSys/Proline, plus instruments. Sells domestically via distributors and OEM partners and through government tenders (Cek Kesehatan Gratis); no exports.",
       "keyCustomersOrChannel": "Distributor-led, FY2025 customers >10%: Rajawali Nusindo (BUMN) 33%, Visi Trading (OEM) 11%, Sumbermitra 10%, Innovasi Diagnostika 7%. DiaSys is also the dominant single supplier.",
       "moatOrEdge": "Exclusive DiaSys reagent-technology license and brand rights; 10+ years of IVD manufacturing; government-tender track record.",
       "sourcePages": "p.x–xii, 55–58, 320–321"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "8-month hard lock-up on all founder shares",
+        "strength": "Strong"
+      },
+      {
+        "text": "Cheap absolute valuation (~10-12x trailing P/E)",
+        "strength": "Strong"
+      },
+      {
+        "text": "Big-4 auditor (EY) appointed pre-IPO",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Strong gross margins (61-68%)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Structural government health-spending tailwind",
+        "strength": "Moderate"
+      },
+      {
+        "text": "ESA aligns employees",
+        "strength": "Minor"
+      }
+    ]
   },
   "RANS": {
     "controllerLines": [
@@ -138,17 +523,68 @@
     "businessModel": {
       "summary": "Celebrity-IP media holding monetising the audience and brand of Raffi Ahmad, Nagita Slavina and family, across two segments: Hiburan & Lifestyle (content, endorsements, talent, production, events) and Penjualan Produk (IP-branded F&B and beauty).",
       "revenueBreakdown": [
-        { "label": "Content on social media", "pct": 33.54, "year": 2025, "rpBn": 118.512 },
-        { "label": "IP food, beverage & beauty products", "pct": 30.28, "year": 2025, "rpBn": 107.007 },
-        { "label": "Production house, event & ticketing", "pct": 21.16, "year": 2025, "rpBn": 74.771 },
-        { "label": "Brand ambassador & talent management", "pct": 14.69, "year": 2025, "rpBn": 51.929 },
-        { "label": "Others", "pct": 0.33, "year": 2025, "rpBn": 1.159 }
+        {
+          "label": "Content on social media",
+          "pct": 33.54,
+          "year": 2025,
+          "rpBn": 118.512
+        },
+        {
+          "label": "IP food, beverage & beauty products",
+          "pct": 30.28,
+          "year": 2025,
+          "rpBn": 107.007
+        },
+        {
+          "label": "Production house, event & ticketing",
+          "pct": 21.16,
+          "year": 2025,
+          "rpBn": 74.771
+        },
+        {
+          "label": "Brand ambassador & talent management",
+          "pct": 14.69,
+          "year": 2025,
+          "rpBn": 51.929
+        },
+        {
+          "label": "Others",
+          "pct": 0.33,
+          "year": 2025,
+          "rpBn": 1.159
+        }
       ],
       "breakdownBasis": "by revenue line (FY2025)",
       "model": "The Hiburan & Lifestyle segment (~70% of revenue and the profit engine, ~35% segment margin) earns from social-media content and advertising, brand-ambassador and endorsement deals, talent management, a production house, and live events and ticketing. The Penjualan Produk segment (~30%) sells IP-branded food, beverage and beauty products and was loss-making in 2025. The asset being monetised is the reach and goodwill of the Raffi/Nagita family brand.",
       "keyCustomersOrChannel": "Advertisers, brands and audiences across social media (YouTube, TV), endorsement clients, and retail buyers of IP products. Revenue and brand value are tied to the continued involvement and reputation of Raffi Ahmad and Nagita Slavina (the issuer's #1 stated risk).",
       "moatOrEdge": "A genuine celebrity-IP moat: one of Indonesia's largest social-media followings and a recognisable family brand, hard to replicate. The flip side is extreme key-person concentration.",
       "sourcePages": "p.69 (segments), Note 27 (revenue lines), p.1 (offering)"
-    }
+    },
+    "counterweights": [
+      {
+        "text": "Durable celebrity-IP moat: the audience and goodwill of Raffi Ahmad, Nagita Slavina and family",
+        "strength": "Strong"
+      },
+      {
+        "text": "Clean, low-leverage balance sheet (DER 0.35x, interest cover ~20x)",
+        "strength": "Strong"
+      },
+      {
+        "text": "8-month hard lock-up on founder shares protects minorities",
+        "strength": "Strong"
+      },
+      {
+        "text": "100% primary structure - all proceeds fund the company, no controller cash-out",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Profitable, cash-generative core 'Hiburan & Lifestyle' segment (~35% segment margin, ~70% of revenue)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Clean legal record; BNI debt (personally guaranteed) repaid at IPO",
+        "strength": "Minor"
+      }
+    ]
   }
 }

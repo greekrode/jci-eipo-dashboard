@@ -346,6 +346,9 @@ for (const o of out as any[]) {
     if (Array.isArray(s.controllerLines)) o.controllerLines = s.controllerLines;
     if (typeof s.controllerPost === "string") o.controllerPost = s.controllerPost;
     if (typeof s.lockupShort === "string") o.lockup.short = s.lockupShort;
+    // graded green flags (all deals) + red-flag severities (override for the two ungraded deals)
+    if (Array.isArray(s.counterweights)) o.counterweights = s.counterweights;
+    if (Array.isArray(s.redFlags)) o.redFlags = s.redFlags;
   }
   // curated forensic writeup (consistent 7-heading template), one .md per ticker
   try { o.forensicMd = readFileSync(resolve(ROOT, "scripts", "forensic", `${o.ticker}.md`), "utf8").trim(); } catch { /* optional */ }
@@ -397,6 +400,9 @@ check(T.RANS.ownership.level === "pep-linked" && T.RANS.ownership.holders.some((
 check(T.BACH.ownership.level === "conglomerate-linked" && T.JELI.ownership.level === "conglomerate-linked", "BACH & JELI conglomerate-linked");
 check(out.every((o: any) => o.ownership.holders.every((h: any) => h.tags.every((t: string) => STRUCTURAL_TAGS.has(t)))), "ownership holder tags are structural only");
 check(out.every((o: any) => o.ownership.flags.every((f: string) => !SOFT_FLAG.test(f))), "soft reputational flags excluded from client bundle");
+// flags normalized across all deals: every red flag graded, every deal has >=5 graded green flags
+check(out.every((o: any) => o.redFlags.length >= 8 && o.redFlags.every((r: any) => typeof r.severity === "string" && r.severity)), "every deal has graded red flags");
+check(out.every((o: any) => Array.isArray(o.counterweights) && o.counterweights.length >= 5 && o.counterweights.every((c: any) => c.text && typeof c.strength === "string")), "every deal has >=5 graded green flags");
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);

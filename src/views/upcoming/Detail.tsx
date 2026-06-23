@@ -9,7 +9,7 @@ import { StatStrip } from "@/components/stat-strip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
-import { fmtDate, priceRange, lockBadge, sevVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta } from "@/views/upcoming/shared";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const normKey = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
@@ -102,6 +102,7 @@ export default function Detail({
           <Financials ipo={ipo} />
           <ValuationPanel ipo={ipo} />
           <RedFlags ipo={ipo} />
+          <GreenFlags ipo={ipo} />
           <Qualitative ipo={ipo} />
         </div>
 
@@ -468,21 +469,28 @@ function RedFlags({ ipo }: { ipo: UpcomingIPO }) {
   );
 }
 
+/** Green flags — positives, graded and laid out as the mirror of RedFlags. */
+function GreenFlags({ ipo }: { ipo: UpcomingIPO }) {
+  const g = ipo.counterweights ?? [];
+  if (g.length === 0) return null;
+  return (
+    <Panel title="Green flags" note={`${g.length} positives`}>
+      <ul className="space-y-2 p-4">
+        {g.map((c, i) => (
+          <li key={i} className="flex gap-2.5 text-[12.5px] leading-snug">
+            <Badge variant={strengthVariant(c.strength)} className="mt-0.5 shrink-0">{c.strength}</Badge>
+            <span className="text-muted-foreground">{c.text}</span>
+          </li>
+        ))}
+      </ul>
+    </Panel>
+  );
+}
+
 function Qualitative({ ipo }: { ipo: UpcomingIPO }) {
   return (
-    <Panel title="Counterweights & open questions">
+    <Panel title="Context & open questions">
       <div className="space-y-3 p-4">
-        {ipo.counterweights && ipo.counterweights.length > 0 && (
-          <Section label="Counterweights / positives">
-            <ul className="space-y-1">
-              {ipo.counterweights.map((c, i) => (
-                <li key={i} className="flex gap-2 text-[12.5px] leading-snug text-muted-foreground">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-pos/70" aria-hidden />{c}
-                </li>
-              ))}
-            </ul>
-          </Section>
-        )}
         {(ipo.primaryRisk || ipo.industryTailwind) && (
           <Section label="Context">
             {ipo.primaryRisk && <div className="text-[12.5px] leading-snug text-muted-foreground"><span className="text-neg/90">Primary risk:</span> {ipo.primaryRisk}</div>}

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { idr, idrBn, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
-import { fmtDate, priceRange, lockBadge, severityCount, Disclaimer, exposureMeta, distinctTags, TagChip } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
 
 /** A metric row in the transposed comparison matrix. `dir` marks which extreme to highlight. */
@@ -199,6 +199,19 @@ const METRICS: Metric[] = [
         <span className="inline-flex items-center gap-1.5">
           <Badge variant={best ? "outline" : "neg"}>{i.redFlags.length}</Badge>
           {high > 0 && <span className="font-mono text-[10.5px] text-neg/80">{high} high</span>}
+        </span>
+      );
+    },
+  },
+  {
+    group: "Ownership & risk", label: "Green flags", dir: "high", rank: (i) => i.counterweights?.length ?? 0,
+    cell: (i) => {
+      const g = i.counterweights ?? [];
+      const strong = strengthCount(g, "strong");
+      return (
+        <span className="inline-flex items-center gap-1.5">
+          <Badge variant="pos">{g.length}</Badge>
+          {strong > 0 && <span className="font-mono text-[10.5px] text-pos/80">{strong} strong</span>}
         </span>
       );
     },

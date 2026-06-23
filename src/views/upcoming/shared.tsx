@@ -42,6 +42,20 @@ export function sevVariant(sev: string | null): "neg" | "secondary" | "outline" 
   return "outline";
 }
 
+/** Badge variant for a green-flag strength string — the positive mirror of sevVariant. */
+export function strengthVariant(strength: string | null): "pos" | "secondary" | "outline" {
+  const s = (strength ?? "").toLowerCase();
+  if (s.startsWith("strong")) return "pos";
+  if (s.startsWith("mod")) return "secondary";
+  return "outline";
+}
+
+/** Count green flags whose strength contains `level` (case-insensitive). */
+export function strengthCount(flags: { strength: string }[], level: string): number {
+  const l = level.toLowerCase();
+  return flags.filter((g) => (g.strength ?? "").toLowerCase().includes(l)).length;
+}
+
 /** NFA / DYOR disclaimer shown on every Upcoming surface (compare + detail). */
 export function Disclaimer() {
   return (
