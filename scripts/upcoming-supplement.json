@@ -127,5 +127,28 @@
       "moatOrEdge": "Exclusive DiaSys reagent-technology license and brand rights; 10+ years of IVD manufacturing; government-tender track record.",
       "sourcePages": "p.x–xii, 55–58, 320–321"
     }
+  },
+  "RANS": {
+    "controllerLines": [
+      "Controls: Raffi Farid Ahmad 62.93% (sole controller & UBO)",
+      "Founder / family bloc (9 holders) 79.98% post-IPO",
+      "Holders incl. Nagita Slavina, Kaesang Pangarep, Dony Oskaria"
+    ],
+    "lockupShort": "Hard 8-mo statutory lock on ALL 9 pre-IPO holders (79.98% of cap); Raffi commits to 3-year control retention",
+    "businessModel": {
+      "summary": "Celebrity-IP media holding monetising the audience and brand of Raffi Ahmad, Nagita Slavina and family, across two segments: Hiburan & Lifestyle (content, endorsements, talent, production, events) and Penjualan Produk (IP-branded F&B and beauty).",
+      "revenueBreakdown": [
+        { "label": "Content on social media", "pct": 33.54, "year": 2025, "rpBn": 118.512 },
+        { "label": "IP food, beverage & beauty products", "pct": 30.28, "year": 2025, "rpBn": 107.007 },
+        { "label": "Production house, event & ticketing", "pct": 21.16, "year": 2025, "rpBn": 74.771 },
+        { "label": "Brand ambassador & talent management", "pct": 14.69, "year": 2025, "rpBn": 51.929 },
+        { "label": "Others", "pct": 0.33, "year": 2025, "rpBn": 1.159 }
+      ],
+      "breakdownBasis": "by revenue line (FY2025)",
+      "model": "The Hiburan & Lifestyle segment (~70% of revenue and the profit engine, ~35% segment margin) earns from social-media content and advertising, brand-ambassador and endorsement deals, talent management, a production house, and live events and ticketing. The Penjualan Produk segment (~30%) sells IP-branded food, beverage and beauty products and was loss-making in 2025. The asset being monetised is the reach and goodwill of the Raffi/Nagita family brand.",
+      "keyCustomersOrChannel": "Advertisers, brands and audiences across social media (YouTube, TV), endorsement clients, and retail buyers of IP products. Revenue and brand value are tied to the continued involvement and reputation of Raffi Ahmad and Nagita Slavina (the issuer's #1 stated risk).",
+      "moatOrEdge": "A genuine celebrity-IP moat: one of Indonesia's largest social-media followings and a recognisable family brand, hard to replicate. The flip side is extreme key-person concentration.",
+      "sourcePages": "p.69 (segments), Note 27 (revenue lines), p.1 (offering)"
+    }
   }
 }

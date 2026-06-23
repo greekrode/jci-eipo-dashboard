@@ -3,8 +3,34 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Semi-brutalist concrete-dark theme. Structure carried by borders, not elevation. */
+/* Semi-brutalist fintech theme. Structure carried by borders, not elevation.
+   Light is the default (:root); .dark overrides to the concrete-dark variant. */
 :root {
+  color-scheme: light;
+  --background: 240 13% 97%;        /* clean cool off-white (not cream/sand) */
+  --foreground: 240 14% 12%;        /* near-black, faint cool tint */
+  --card: 0 0% 100%;                /* white flat panel */
+  --card-foreground: 240 14% 12%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 14% 12%;
+  --primary: 222 83% 51%;           /* structural accent, darkened for AA on white */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 9% 93%;
+  --secondary-foreground: 240 14% 18%;
+  --muted: 240 9% 93%;
+  --muted-foreground: 240 5% 38%;   /* AA on white/card */
+  --accent: 240 9% 89%;
+  --accent-foreground: 240 14% 14%;
+  --border: 240 8% 83%;             /* visible structural line on white */
+  --input: 240 8% 76%;
+  --ring: 222 83% 51%;
+  --pos: 152 62% 32%;               /* up, darkened for contrast on white */
+  --neg: 0 72% 47%;                 /* down */
+  --radius: 0.125rem;               /* near-square edges */
+}
+
+.dark {
+  color-scheme: dark;
   --background: 240 5% 7%;          /* concrete near-black */
   --foreground: 240 6% 95%;
   --card: 240 5% 10%;               /* flat panel */
@@ -24,7 +50,6 @@
   --ring: 222 100% 62%;
   --pos: 152 56% 50%;               /* up */
   --neg: 4 84% 63%;                 /* down */
-  --radius: 0.125rem;               /* near-square edges */
 }
 
 @layer base {

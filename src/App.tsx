@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Sun, Moon } from "lucide-react";
 import iposData from "./data/ipos.json";
 import upcomingData from "./data/upcoming-ipos.json";
 import type { IPO } from "./lib/types";
@@ -26,6 +27,18 @@ export default function App() {
     if (typeof window !== "undefined") window.history.replaceState(null, "", `#${v}`);
   };
 
+  // Theme: default light (:root); .dark class on <html> toggles the concrete-dark variant.
+  const [dark, setDark] = useState<boolean>(
+    () => typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+  );
+  const toggleTheme = () =>
+    setDark((d) => {
+      const next = !d;
+      document.documentElement.classList.toggle("dark", next);
+      try { localStorage.setItem("theme", next ? "dark" : "light"); } catch { /* private mode */ }
+      return next;
+    });
+
   return (
     <div className="mx-auto w-full max-w-[2100px] px-3 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-6">
       <header className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border pb-3 sm:mb-5 sm:items-end sm:pb-4">
@@ -34,12 +47,22 @@ export default function App() {
           <h1 className="text-[16px] font-semibold tracking-tight text-foreground sm:text-[20px]">IDX e-IPO Analytics</h1>
           <span className="hidden font-mono text-[12px] uppercase tracking-wider text-muted-foreground sm:inline">IDX · 2021&ndash;2026</span>
         </div>
-        <div className="tabnum font-mono text-[12px] text-muted-foreground sm:text-[13.5px]">
-          <span className="font-semibold text-foreground">246</span> DEALS
-          <span className="px-1.5 text-muted-foreground">/</span>
-          <span className="font-semibold text-foreground">237</span> LISTED
-          <span className="px-1.5 text-muted-foreground">/</span>
-          <span className="font-semibold text-foreground">9</span> N/L
+        <div className="flex items-center gap-3">
+          <div className="tabnum font-mono text-[12px] text-muted-foreground sm:text-[13.5px]">
+            <span className="font-semibold text-foreground">246</span> DEALS
+            <span className="px-1.5 text-muted-foreground">/</span>
+            <span className="font-semibold text-foreground">237</span> LISTED
+            <span className="px-1.5 text-muted-foreground">/</span>
+            <span className="font-semibold text-foreground">9</span> N/L
+          </div>
+          <button
+            onClick={toggleTheme}
+            aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+            title={dark ? "Switch to light mode" : "Switch to dark mode"}
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-[2px] border border-border bg-card text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+          >
+            {dark ? <Sun className="h-[15px] w-[15px]" /> : <Moon className="h-[15px] w-[15px]" />}
+          </button>
         </div>
       </header>
 

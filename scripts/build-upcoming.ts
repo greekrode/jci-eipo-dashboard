@@ -13,7 +13,7 @@ const ROOT = resolve(import.meta.dir, "..");
 const SRC = resolve(ROOT, "_sources", "upcoming");
 const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
-const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL"];
+const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS"];
 
 type Obj = Record<string, any>;
 const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
@@ -110,12 +110,16 @@ function useOfProceeds(raw: Obj) {
  *  so we keep the basis label honest rather than forcing a false apples-to-apples number. */
 function debtAlloc(raw: Obj) {
   const csm = pick(raw, "capital_structure_metrics.pct_proceeds_to_debt");
-  if (csm) return {
-    pct: n(csm.pct_of_net), low: null as number | null, high: null as number | null,
-    basis: "of net proceeds",
-    rupiah: isNum(csm.rupiah) ? csm.rupiah : null,
-    facility: csm.facility ?? null,
-  };
+  if (csm) {
+    const pctNet = n(csm.pct_of_net);
+    const pctGross = n(csm.pct_of_proceeds);
+    return {
+      pct: pctNet ?? pctGross, low: null as number | null, high: null as number | null,
+      basis: pctNet != null ? "of net proceeds" : "of gross proceeds",
+      rupiah: isNum(csm.rupiah) ? csm.rupiah : null,
+      facility: csm.facility ?? null,
+    };
+  }
   const b = pick(raw, "use_of_proceeds.pct_of_proceeds_to_debt"); // BACH (% of gross)
   if (b) {
     const v = Object.values(b).filter(isNum) as number[];
@@ -136,7 +140,7 @@ function lockup(raw: Obj) {
   if (statutory === true) hard = true;
   else if (typeof statutory === "string") {
     const s = statutory.toUpperCase();
-    hard = /\b8[- ]MONTH\b/.test(s) && !/\bNOT\b|\bNONE\b/.test(s);
+    hard = /\b8[- ]MONTHS?\b/.test(s) && !/\bNOT\b|\bNONE\b/.test(s);
   }
   const strength = hard ? "Hard lock" : (pick(raw, "lockup.controller_12_month", "lockup.control_commitment", "lockup.voluntary_commitment") ? "Control only" : "None");
   const summary = Object.values(lk).filter((v) => typeof v === "string").join(" · ");
@@ -194,8 +198,24 @@ function normalize(raw: Obj, narrativeMd: string, ticker: string) {
     "capital_structure_metrics.der_total_liabilities_over_equity.post_ipo_proforma_reported",
   ));
 
+  // Post-money ROE: trailing FY net profit (parent) over equity enlarged by the PRIMARY raise.
+  // Deals with a secondary tranche raise less for the company, so use the to-company proceeds;
+  // otherwise the gross midpoint. Use the analyst figure when the source provides one.
+  const grossLowR = n(pick(off, "gross_raise_rp.low", "gross_proceeds_rp.low", "gross_proceeds_excl_cost_rp.low.total", "gross_proceeds_excl_cost_rp.low"));
+  const grossHighR = n(pick(off, "gross_raise_rp.high", "gross_proceeds_rp.high", "gross_proceeds_excl_cost_rp.high.total", "gross_proceeds_excl_cost_rp.high"));
+  const toCompLow = n(pick(off, "gross_proceeds_excl_cost_rp.low.to_company"));
+  const toCompHigh = n(pick(off, "gross_proceeds_excl_cost_rp.high.to_company"));
+  const primaryRaiseBn =
+    isNum(toCompLow) && isNum(toCompHigh) ? (toCompLow + toCompHigh) / 2 / 1e9
+    : isNum(grossLowR) && isNum(grossHighR) ? (grossLowR + grossHighR) / 2 / 1e9
+    : isNum(grossHighR) ? grossHighR / 1e9 : null;
+  const roePostComputed =
+    isNum(netParent[2]) && isNum(totalEquity[2]) && isNum(primaryRaiseBn) && totalEquity[2]! + primaryRaiseBn! !== 0
+      ? +((netParent[2]! / (totalEquity[2]! + primaryRaiseBn!)) * 100).toFixed(1) : null;
+  const roePost = n(pick(raw, "valuation.roe_post_money_pct")) ?? roePostComputed;
+
   const pe = rangeOf(pick(raw, "valuation_post_money.trailing_pe_fy2025", "valuation_post_money.trailing_pe_fy2025_attrib", "valuation.trailing_pe_2025_parent", "valuation.trailing_pe_post_money", "valuation.trailing_pe_2025"));
-  const pb = rangeOf(pick(raw, "valuation_post_money.pb_post_money", "valuation_post_money.pb_total_equity_post_money", "valuation.pbv_post_money", "valuation.pbv_post_money_price_consistent"));
+  const pb = rangeOf(pick(raw, "valuation_post_money.pb_post_money", "valuation_post_money.pb_total_equity_post_money", "valuation.pbv_post_money", "valuation.pbv_post_money_price_consistent", "valuation.pbv_post_money_parent_approx"));
   const mcap = rangeOf(pick(raw, "offering.post_ipo_market_cap_rp", "valuation.post_ipo_market_cap_rp"));
 
   const shPre = shList(pick(raw, "shareholders_pre_ipo", "shareholders.pre_ipo"));
@@ -215,8 +235,11 @@ function normalize(raw: Obj, narrativeMd: string, ticker: string) {
     sector,
     sectorGroup: sectorGroup(sector),
     listingISO: toISO(pick(raw, "capital_structure_metrics.listing_date", "listing_date", "offering.timeline.listing", "timeline_2026.listing_bei")),
-    underwriter: pick(raw, "issuer.lead_underwriter", "offering.underwriters.lead", "offering.underwriter.name") ?? null,
-    underwriterJoint: pick(raw, "offering.underwriters.joint") ?? null,
+    underwriter: pick(raw, "issuer.lead_underwriter", "offering.underwriters.lead", "offering.underwriter.lead", "offering.underwriter.name") ?? null,
+    // drop "to be determined" placeholder joints so they don't show as noise
+    underwriterJoint: ((j) => (typeof j === "string" && !/ditentukan kemudian|to be determined|\btbd\b/i.test(j) ? j : null))(
+      pick(raw, "offering.underwriters.joint", "offering.underwriter.joint")
+    ),
     issueType: pick(off, "issue_type", "share_type") ?? (off.all_primary ? "100% primary" : null),
     hasSecondary: !!pick(off, "secondary_divestment_shares") || off.secondary_in_ipo === true,
     offering: {
@@ -265,7 +288,7 @@ function normalize(raw: Obj, narrativeMd: string, ticker: string) {
     valuation: {
       peLow: pe.low, peHigh: pe.high, pbLow: pb.low, pbHigh: pb.high,
       mcapLow: mcap.low, mcapHigh: mcap.high,
-      roePost: n(pick(raw, "valuation.roe_post_money_pct")),
+      roePost,
       verdict: pick(raw, "valuation.verdict", "valuation_post_money.flag") ?? null,
     },
     dividendPolicy: dividendPolicy(raw),
@@ -321,7 +344,7 @@ writeFileSync(resolve(OUT, "upcoming-ipos.json"), JSON.stringify(out, null, 0));
 // ---- sanity asserts (unit/mapping regressions fail loudly) -------------------
 const check = (cond: boolean, msg: string) => { if (!cond) throw new Error("ASSERT FAILED: " + msg); };
 const T = Object.fromEntries(out.map((o) => [o.ticker, o]));
-check(out.length === 5, "exactly 5 IPOs");
+check(out.length === TICKERS.length, `all ${TICKERS.length} IPOs built`);
 check(out.every((o) => o.listingISO?.startsWith("2026-07")), "all list in Jul 2026");
 check(out.every((o) => isNum(o.financials.revenue[2]) && o.financials.revenue[2]! > 0), "all have 2025 revenue > 0");
 check(out.every((o) => o.metrics.der[2] != null && o.metrics.der[2]! > 0 && o.metrics.der[2]! < 10), "all DER in (0,10)");
@@ -340,6 +363,7 @@ check((T.BACH as any).shareholdersPost?.length === 8, "BACH post-IPO cap table m
 check((T.BACH as any).shareholdersPostOption?.find((s: any) => /Global Telekom/.test(s.name))?.pct === 51.0, "BACH post-option GTP = 51%");
 check(out.every((o: any) => o.businessModel && o.businessModel.revenueBreakdown?.length > 0), "every deal has a business-model breakdown");
 check(out.every((o: any) => o.forensicMd?.startsWith("## Thesis")), "every deal has a curated forensic writeup (7-heading template)");
+check(out.every((o: any) => isNum(o.valuation.roePost) && o.valuation.roePost > 0 && o.valuation.roePost < 60), "every deal has a post-money ROE");
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);

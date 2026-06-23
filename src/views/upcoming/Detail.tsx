@@ -145,7 +145,7 @@ function Panel({ title, note, children, defaultOpen = true }: { title: string; n
             <span className="self-center font-mono text-[9px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
             <CardTitle>{title}</CardTitle>
           </span>
-          {note && <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{note}</span>}
+          {note && <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{note}</span>}
         </summary>
         <CardContent className="p-0">{children}</CardContent>
       </details>
@@ -199,7 +199,8 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
           </div>
         ))}
       </div>
-      <table className="w-full border-t border-border font-mono text-[12px] tabnum">
+      <div className="overflow-x-auto border-t border-border">
+      <table className="w-full font-mono text-[12px] tabnum">
         <thead>
           <tr className="border-b border-border text-[10.5px] uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-1.5 text-left font-medium">Holder</th>
@@ -229,6 +230,7 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
           })}
         </tbody>
       </table>
+      </div>
       {(ipo.ubo || ipo.controllerPost) && (
         <div className="space-y-0.5 border-t border-border px-4 py-2 font-mono text-[11px] leading-relaxed text-muted-foreground">
           {ipo.controllerPost && <div><span className="text-muted-foreground">Controller</span> <span className="text-foreground">{ipo.controllerPost}</span></div>}
