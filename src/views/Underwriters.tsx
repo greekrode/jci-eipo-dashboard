@@ -92,7 +92,7 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="stagger space-y-4">
       {/* Global role control: drives the stat strip, capital-raised chart, scatter, and league table. */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-2.5">
         <div className="font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">View underwriters as</div>

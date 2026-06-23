@@ -44,13 +44,14 @@ export default {
         mono: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
       },
       keyframes: {
+        // Panel-level fade only; per-card rise is handled by .anim-enter so motion doesn't double up.
         tabin: {
-          from: { opacity: "0", transform: "translateY(3px)" },
-          to: { opacity: "1", transform: "none" },
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
       },
       animation: {
-        tabin: "tabin 180ms cubic-bezier(0.22, 1, 0.36, 1)",
+        tabin: "tabin 220ms ease-out",
       },
     },
   },

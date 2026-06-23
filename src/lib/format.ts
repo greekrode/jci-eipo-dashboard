@@ -26,3 +26,13 @@ export const intFmt = (x: number | null): string =>
 /** Tailwind text-color class for a signed value. */
 export const signClass = (x: number | null): string =>
   x === null || x === 0 ? "text-muted-foreground" : x > 0 ? "text-pos" : "text-neg";
+
+/** Compact IDR from a figure already expressed in IDR **billions** (upcoming-ipos data). */
+export const idrBn = (x: number | null): string => (x === null ? "—" : idr(x * 1e9));
+
+/** Whole-number percent already in 0–100 form, e.g. 29.0% (not the 0–1 decimal `pct`). */
+export const pctN = (x: number | null, d = 1): string => (x === null ? "—" : `${x.toFixed(d)}%`);
+
+/** Signed whole-number percent, e.g. +97.5%. */
+export const pctNSigned = (x: number | null, d = 1): string =>
+  x === null ? "—" : `${x >= 0 ? "+" : ""}${x.toFixed(d)}%`;

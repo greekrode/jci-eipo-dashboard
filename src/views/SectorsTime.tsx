@@ -14,7 +14,7 @@ export default function SectorsTime({ ipos }: { ipos: IPO[] }) {
   const cold = sectors[sectors.length - 1];
 
   return (
-    <div className="space-y-4">
+    <div className="stagger space-y-4">
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader>

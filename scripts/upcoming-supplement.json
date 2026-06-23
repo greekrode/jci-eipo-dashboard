@@ -1,0 +1,131 @@
+{
+  "_note": "Prospectus-PDF-derived data (gitignored PDFs in _sources). Hand-curated from extraction agents' cited figures; merged over the normalized base by scripts/build-upcoming.ts. Percentages are 0-100; rpBn in IDR billions. Only one clean ~100%-summing revenue cut per deal is kept here; customer concentration lives in keyCustomersOrChannel.",
+  "BACH": {
+    "shareholdersPost": [
+      { "name": "PT Bach Multi Sukses Investama", "shares": 2135496000, "pct": 52.28, "role": "Controller (pre-option)" },
+      { "name": "PT Global Telekomunikasi Prima", "shares": 1040832000, "pct": 25.48, "role": null },
+      { "name": "Budi Kurniawan", "shares": 69600000, "pct": 1.70, "role": "Dir. Utama" },
+      { "name": "Hartanto Rahardja", "shares": 62400000, "pct": 1.53, "role": "Komisaris" },
+      { "name": "Edy Surianto", "shares": 55200000, "pct": 1.35, "role": null },
+      { "name": "Zulfahmi Fithri", "shares": 53102000, "pct": 1.30, "role": null },
+      { "name": "Hasby Jap", "shares": 52800000, "pct": 1.29, "role": "Direktur" },
+      { "name": "Masyarakat (Public)", "shares": 615000000, "pct": 15.06, "role": null }
+    ],
+    "shareholdersPostOption": [
+      { "name": "PT Global Telekomunikasi Prima", "shares": 2083059300, "pct": 51.00, "role": "Controller (post-option)" },
+      { "name": "PT Bach Multi Sukses Investama", "shares": 1093268700, "pct": 26.77, "role": null },
+      { "name": "Budi Kurniawan", "shares": 69600000, "pct": 1.70, "role": null },
+      { "name": "Hartanto Rahardja", "shares": 62400000, "pct": 1.53, "role": null },
+      { "name": "Edy Surianto", "shares": 55200000, "pct": 1.35, "role": null },
+      { "name": "Zulfahmi Fithri", "shares": 53102000, "pct": 1.30, "role": null },
+      { "name": "Hasby Jap", "shares": 52800000, "pct": 1.29, "role": null },
+      { "name": "Masyarakat (Public)", "shares": 615000000, "pct": 15.06, "role": null }
+    ],
+    "controllerLines": [
+      "Controls: GTP / Hartono group",
+      "51% after the post-listing option (25.5% at listing)",
+      "UBO: Hartono family (Djarum / BCA / GDP Venture)"
+    ],
+    "lockupShort": "No statutory lock; GTP control-locked 12 mo; the 5 Bach founders are unlocked",
+    "businessModel": {
+      "summary": "Two segments: sale & rental of gensets (sole Indonesian agent for Himoinsa) and telecom-infrastructure construction & maintenance (towers, fiber, O&M of ~41,000 sites) via subsidiary BMI.",
+      "revenueBreakdown": [
+        { "label": "Genset (sale & rental)", "pct": 56.4, "year": 2025, "rpBn": 977.957 },
+        { "label": "Telecom-infrastructure (construction & maintenance)", "pct": 43.6, "year": 2025, "rpBn": 754.988 }
+      ],
+      "breakdownBasis": "by business segment",
+      "model": "Genset segment sells units (7–3,000 kVA) with installation and after-sales, and rents a fleet under medium/long-term contracts. Telecom-infra (BMI) does site acquisition, CME tower build and fiber, plus recurring SLA-based maintenance and backup power. The genset segment more than doubled in FY2025 (was only ~36% of FY2024 revenue), flipping the mix to genset-majority.",
+      "keyCustomersOrChannel": "Concentrated in tower companies/operators. FY2025 customers >10% of revenue: Protelindo (TOWR group) ~14% and Solusi Tunas Pratama (SUPR) ~14%, both under common control with controlling shareholder GTP, so ~35% of FY2025 revenue is related-party.",
+      "moatOrEdge": "Sole-agent status for Himoinsa plus captive demand from the controlling Sarana Menara Nusantara tower group, which is also the source of its customer concentration.",
+      "sourcePages": "p.63–64, 70, 171–185"
+    }
+  },
+  "EMMI": {
+    "controllerLines": [
+      "Controls: Widjaja family, 59% post-IPO (85% pre)",
+      "UBO: Surya Gunawan Widjaja",
+      "All individuals, no holding company"
+    ],
+    "lockupShort": "No statutory founder lock; only a 12-mo control commitment; the 59% block is tradable from day 1",
+    "businessModel": {
+      "summary": "Distributor of medical/lab devices for ~25 years (exclusive Indonesian distributor for Medicon, Bowa, Penlon, Air Liquide and others) with light local manufacturing. ~96% of revenue is to government.",
+      "revenueBreakdown": [
+        { "label": "Government", "pct": 96.10, "year": 2025, "rpBn": 436.894 },
+        { "label": "Non-government / private", "pct": 3.90, "year": 2025, "rpBn": 17.742 }
+      ],
+      "breakdownBasis": "by customer (government vs private), revenue basis",
+      "model": "Earns a distribution margin via sole-distributor arrangements with foreign principals, selling capital medical equipment mainly through government hospital procurement tenders (LKPP e-Katalog, IsDB soft loans, World Bank SOPHI), and is building recurring consumables (surgical sutures). On a gross-profit basis the government share is even higher (~98.5%).",
+      "keyCustomersOrChannel": "~96% to government hospitals/institutions via national tenders; revenue is lumpy and tender-driven. Listed competitors: Itama Ranoraya (IRRA), Jayamas Medica (OMED).",
+      "moatOrEdge": "Long-standing exclusive sole-distributor rights for global medtech brands; 200+ hospital relationships; nationwide distribution network.",
+      "sourcePages": "p.13–16, 71–73, 154–157"
+    }
+  },
+  "JECX": {
+    "controllerLines": [
+      "Controls: PT Magna Selaras Lestari ~9.1%",
+      "UBO: Dr. Darwan Madja Purba",
+      "Largest holder SAME (OMNI) 25.2% is non-controlling"
+    ],
+    "lockupShort": "Only the ~9% controller stake is locked (12 mo); ~76% of pre-IPO shares are freely sellable vs a 14.7% float",
+    "businessModel": {
+      "summary": "Specialty eye-care network (brand JEC / Jakarta Eye Center, est. 1993): 5 eye hospitals + 11 clinics with 184 ophthalmologists, run on a continuum-of-care model.",
+      "revenueBreakdown": [
+        { "label": "Surgery (Bedah)", "pct": 51.32, "year": 2025, "rpBn": null },
+        { "label": "Polyclinic (Poliklinik)", "pct": 25.69, "year": 2025, "rpBn": null },
+        { "label": "LASIK", "pct": 10.55, "year": 2025, "rpBn": null },
+        { "label": "Pharmacy (Farmasi)", "pct": 6.22, "year": 2025, "rpBn": null },
+        { "label": "Optic (Optik)", "pct": 2.83, "year": 2025, "rpBn": null },
+        { "label": "Patient administration", "pct": 1.55, "year": 2025, "rpBn": null },
+        { "label": "Inpatient (Rawat inap)", "pct": 0.96, "year": 2025, "rpBn": null },
+        { "label": "Other (Lain-lain)", "pct": 0.87, "year": 2025, "rpBn": null }
+      ],
+      "breakdownBasis": "by service line (gross, before doctors' honorarium)",
+      "model": "Fee-for-service eye care: revenue per procedure, consultation and LASIK, plus pharmacy and optical sales. Doctors are paid via an honorarium deducted from gross service revenue to reach net revenue. Primary screening feeds secondary clinics and tertiary subspecialty/hospital procedures.",
+      "keyCustomersOrChannel": "Retail eye-care patients across 11 sites (mostly Java); payers are BPJS, private insurance, corporate and self-pay, with no single customer >10% of revenue. By region: Java ~87%, Sulawesi ~11%, Bali ~2%.",
+      "moatOrEdge": "Trusted 30+ year brand (Top Brand 2025, index 43%); LASIK pioneer in Indonesia; 184 ophthalmologists; high barriers from scarce national eye-care capacity.",
+      "sourcePages": "p.16–17, 45–46, 52, 232–234, 481"
+    }
+  },
+  "JELI": {
+    "controllerLines": [
+      "Controls: PT Niramas Utama Int'l (NUI), 73.9%",
+      "UBO: Yusuf Hamdani"
+    ],
+    "lockupShort": "No hard lock on the 74% founder block; only a 12-mo control pledge (can sell down toward 50%)",
+    "businessModel": {
+      "summary": "Market-leading dessert / processed-food maker (brand INACO, est. 1990): nata de coco, jelly, aloe vera and pudding across 4 owned plants (~3.5bn pcs/yr, 150+ SKUs).",
+      "revenueBreakdown": [
+        { "label": "Domestic", "pct": 97.91, "year": 2025, "rpBn": 737.317 },
+        { "label": "Export", "pct": 2.09, "year": 2025, "rpBn": 15.734 }
+      ],
+      "breakdownBasis": "by geography (no operating segments disclosed)",
+      "model": "Vertically integrated own-brand FMCG: manufactures and sells mainly B2B to distributors reaching general- and modern-trade retail domestically, plus direct export to 30+ countries and contract-manufacturing (maklon) via subsidiary NPS for Yupi and Tarami/Kawasho (Japan).",
+      "keyCustomersOrChannel": "251 domestic distribution points; largest distributor PT Supralita Mandiri ~12% of sales. Export is only ~2% of revenue.",
+      "moatOrEdge": "Category leadership in modern retail (2025): Jelly 49.6%, Nata de Coco 19.9%, Pudding 16.0%, backed by the INACO brand and a national distribution network.",
+      "sourcePages": "p.42, 179, 209–220, 359–362"
+    }
+  },
+  "PRDL": {
+    "controllerLines": [
+      "Controls: Prodia Utama 35.7% + PRDA 27.3% = 63% group",
+      "UBO: 6 Prodia founders (16.67% each of Prodia Utama)",
+      "Second listing of the Prodia group, alongside listed PRDA"
+    ],
+    "lockupShort": "Hard 8-mo statutory lock on ALL pre-IPO holders (70% of cap) + 12-mo control commitment",
+    "businessModel": {
+      "summary": "In-Vitro Diagnostics manufacturer (brand Proline): makes reagents and instruments under a DiaSys (Germany) technology license, serving 7,600+ end users through distributors.",
+      "revenueBreakdown": [
+        { "label": "Clinical chemistry", "pct": 81.19, "year": 2025, "rpBn": 60.381 },
+        { "label": "Instruments", "pct": 11.87, "year": 2025, "rpBn": 8.826 },
+        { "label": "Hematology", "pct": 5.49, "year": 2025, "rpBn": 4.086 },
+        { "label": "Services", "pct": 1.37, "year": 2025, "rpBn": 1.022 },
+        { "label": "Immunology & biomolecular", "pct": 0.08, "year": 2025, "rpBn": 0.057 }
+      ],
+      "breakdownBasis": "by product line",
+      "model": "Manufactures reagents under a DiaSys license (extended to 2033) using DiaSys-supplied raw materials, branded DiaSys/Proline, plus instruments. Sells domestically via distributors and OEM partners and through government tenders (Cek Kesehatan Gratis); no exports.",
+      "keyCustomersOrChannel": "Distributor-led, FY2025 customers >10%: Rajawali Nusindo (BUMN) 33%, Visi Trading (OEM) 11%, Sumbermitra 10%, Innovasi Diagnostika 7%. DiaSys is also the dominant single supplier.",
+      "moatOrEdge": "Exclusive DiaSys reagent-technology license and brand rights; 10+ years of IVD manufacturing; government-tender track record.",
+      "sourcePages": "p.x–xii, 55–58, 320–321"
+    }
+  }
+}

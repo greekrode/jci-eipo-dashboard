@@ -47,7 +47,7 @@ export function ReturnHistogram({ data }: { data: Bucket[] }) {
         <XAxis dataKey="label" tickLine={false} axisLine={false} interval={0} tick={{ fontSize: 12 }} />
         <YAxis tickLine={false} axisLine={false} allowDecimals={false} width={34} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={(v) => `${v ?? 0} IPOs`} />} />
-        <Bar dataKey="count" radius={[0, 0, 0, 0]} name="IPOs" isAnimationActive={false}>
+        <Bar dataKey="count" radius={[0, 0, 0, 0]} name="IPOs" isAnimationActive animationDuration={650} animationEasing="ease-out">
           {data.map((d, i) => (
             <Cell key={i} fill={KIND_COLOR[d.kind]} />
           ))}
@@ -67,8 +67,8 @@ export function FadeCurveChart({ data }: { data: FadePoint[] }) {
         <ReferenceLine y={0} stroke={C.grid} />
         <Tooltip content={<Tip fmt={pctVal} />} />
         <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
-        <Line type="monotone" dataKey="mean" name="Mean" stroke={C.blue} strokeWidth={1.75} strokeDasharray="5 4" dot={{ r: 2.5, fill: C.blue }} isAnimationActive={false} />
-        <Line type="monotone" dataKey="median" name="Median" stroke={C.text} strokeWidth={2.5} dot={{ r: 3, fill: C.text }} isAnimationActive={false} />
+        <Line type="monotone" dataKey="mean" name="Mean" stroke={C.blue} strokeWidth={1.75} strokeDasharray="5 4" dot={{ r: 2.5, fill: C.blue }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+        <Line type="monotone" dataKey="median" name="Median" stroke={C.text} strokeWidth={2.5} dot={{ r: 3, fill: C.text }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -82,7 +82,7 @@ export function SectorBars({ data }: { data: SectorRow[] }) {
         <XAxis type="number" tickFormatter={pctTick} tickLine={false} axisLine={false} />
         <YAxis type="category" dataKey="sector" width={172} tickLine={false} axisLine={false} tick={{ fontSize: 12.5 }} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={pctVal} />} />
-        <Bar dataKey="d1" name="Median D1" radius={[0, 0, 0, 0]} isAnimationActive={false}>
+        <Bar dataKey="d1" name="Median D1" radius={[0, 0, 0, 0]} isAnimationActive animationDuration={650} animationEasing="ease-out">
           {data.map((d, i) => (
             <Cell key={i} fill={sectorColor(d.sector)} />
           ))}
@@ -105,8 +105,8 @@ export function YoYChart({ data }: { data: YearRow[] }) {
           content={<Tip fmt={(v) => (v === null ? "—" : Math.abs(v) < 5 ? pctVal(v) : `${v} IPOs`)} />}
         />
         <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
-        <Bar yAxisId="l" dataKey="count" name="IPOs listed" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive={false} />
-        <Line yAxisId="r" type="monotone" dataKey="d1" name="Median D1" stroke={C.blue} strokeWidth={2.5} dot={{ r: 3, fill: C.blue }} isAnimationActive={false} />
+        <Bar yAxisId="l" dataKey="count" name="IPOs listed" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+        <Line yAxisId="r" type="monotone" dataKey="d1" name="Median D1" stroke={C.blue} strokeWidth={2.5} dot={{ r: 3, fill: C.blue }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
       </ComposedChart>
     </ResponsiveContainer>
   );
@@ -122,8 +122,8 @@ export function LeadMemberBars({ data }: { data: RoleRow[] }) {
         <YAxis tickFormatter={pctTick} tickLine={false} axisLine={false} width={42} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={pctVal} />} />
         <Legend wrapperStyle={{ fontSize: 13, color: "#aab2c5" }} />
-        <Bar dataKey="leadMed" name="As lead" radius={[0, 0, 0, 0]} fill={C.blue} isAnimationActive={false} />
-        <Bar dataKey="memberMed" name="As member" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive={false} />
+        <Bar dataKey="leadMed" name="As lead" radius={[0, 0, 0, 0]} fill={C.blue} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+        <Bar dataKey="memberMed" name="As member" radius={[0, 0, 0, 0]} fill={C.neutral} isAnimationActive animationDuration={650} animationEasing="ease-out" />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -137,7 +137,7 @@ export function ProceedsBars({ data }: { data: Array<{ code: string; raised: num
         <XAxis type="number" tickFormatter={(v) => idr(v)} tickLine={false} axisLine={false} />
         <YAxis type="category" dataKey="code" width={44} interval={0} tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
         <Tooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<Tip fmt={(v) => (v === null ? "—" : idr(v))} />} />
-        <Bar dataKey="raised" name="Raised" radius={[0, 0, 0, 0]} isAnimationActive={false}>
+        <Bar dataKey="raised" name="Raised" radius={[0, 0, 0, 0]} isAnimationActive animationDuration={650} animationEasing="ease-out">
           {data.map((d, i) => (
             <Cell key={i} fill={brokerColor(d.code)} />
           ))}
@@ -191,7 +191,7 @@ export function ActivityScatter({ data }: { data: Array<{ code: string; deals: n
         <ZAxis type="number" dataKey="raised" range={[30, 300]} name="Raised" />
         <ReferenceLine y={0} stroke={C.grid} />
         <Tooltip cursor={{ strokeDasharray: "3 3", stroke: C.grid }} content={<ScatterTip />} />
-        <Scatter data={pts} isAnimationActive={false}>
+        <Scatter data={pts} isAnimationActive animationDuration={650} animationEasing="ease-out">
           {pts.map((p, i) => (
             <Cell key={i} fill={brokerColor(p.code)} fillOpacity={0.6} stroke={brokerColor(p.code)} />
           ))}

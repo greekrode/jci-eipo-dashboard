@@ -18,7 +18,7 @@ export default function Overview({ ipos }: { ipos: IPO[] }) {
   const d7mean = fade[6]?.mean ?? null;
 
   return (
-    <div className="space-y-4">
+    <div className="stagger space-y-4">
       <StatStrip
         items={[
           { label: "IPOs Listed", value: k.listed, sub: `${k.total} total · ${k.canceled} canceled` },

@@ -15,14 +15,14 @@ export function StatStrip({ items, cols = 6 }: { items: StatItem[]; cols?: numbe
     <Card className="overflow-hidden">
       <div className={cn("grid grid-cols-2 divide-x divide-y divide-border sm:grid-cols-3 lg:divide-y-0", lg)}>
         {items.map((it) => (
-          <div key={it.label} className="px-5 py-4">
-            <div className="whitespace-nowrap font-mono text-[11.5px] uppercase tracking-wider text-muted-foreground">
+          <div key={it.label} className="px-3.5 py-3 sm:px-5 sm:py-4">
+            <div className="whitespace-nowrap font-mono text-[11px] uppercase tracking-wider text-muted-foreground sm:text-[11.5px]">
               {it.label}
             </div>
-            <div className={cn("mt-1.5 font-mono text-[26px] font-semibold tracking-tight tabnum", it.valueClass)}>
+            <div className={cn("mt-1 font-mono text-[20px] font-semibold tracking-tight tabnum sm:mt-1.5 sm:text-[26px]", it.valueClass)}>
               {it.value}
             </div>
-            {it.sub && <div className="mt-1 truncate font-mono text-[12px] text-muted-foreground">{it.sub}</div>}
+            {it.sub && <div className="mt-1 truncate font-mono text-[11.5px] text-muted-foreground sm:text-[12px]">{it.sub}</div>}
           </div>
         ))}
       </div>

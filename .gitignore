@@ -6,3 +6,11 @@ _analysis/
 
 *.xlsx
 logs/
+
+# Upcoming-IPO raw source (ZIPs + extracted markdown/json). The committed
+# artifact is src/data/upcoming-ipos.json, built from these by scripts/build-upcoming.ts.
+*.zip
+_sources/
+
+# Interceptor verification screenshots
+interceptor-screenshot-*.png
