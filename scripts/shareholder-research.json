@@ -3,7 +3,7 @@
     "asOf": "2026-06-23",
     "purpose": "Per-deal shareholder background research for the Upcoming-IPO section: flags conglomerate ties, PEP (Politically Exposed Person) status, listed-company affiliations and foreign-strategic holders.",
     "method": "Web research per named shareholder (Indonesian financial press, IDX/e-IPO disclosures, company sites, prospectus). Namesake-cautious: shared surnames (e.g. Widjaja, Hartono, Supra) are NOT treated as links without direct evidence. BACH is derived from its prospectus forensic; the other five from dated web sources cited inline.",
-    "disclaimer": "Not financial advice. Research compiled from public sources and may contain namesake or attribution errors. Items marked confidence 'low' or 'unverified', and any dated/unproven reputational mentions, are explicitly uncertain and should be confirmed against the final prospectus before relying on them.",
+    "disclaimer": "Not financial advice. Research compiled from public sources and may contain namesake or attribution errors. The 'caveats' on some deals are UNVERIFIED or unproven items (dated allegations, possible namesakes, media-reported noise) surfaced for transparency; they are explicitly not findings of wrongdoing and should be confirmed against the final prospectus before relying on them.",
     "tagLegend": {
       "conglomerate": "Controlled by or part of a large business group",
       "pep": "Politically Exposed Person — holds/held government, party or state-enterprise office",
@@ -25,34 +25,54 @@
         {
           "name": "PT Bach Multi Sukses Investama (BMSI)",
           "stakePost": 52.28,
-          "tags": ["holding-co", "family", "founder"],
+          "tags": [
+            "holding-co",
+            "family",
+            "founder"
+          ],
           "finding": "Founding Bach-family holding company and the pre-option controller (52.28% post-IPO before the option). It is selling command of the company: it sells 1,042,227,300 shares to GTP via a negotiated-market crossing within five working days of listing, dropping to 26.77%. A control sale, not a clean exit.",
           "confidence": "high",
-          "sources": ["scripts/forensic/BACH.md (prospectus-derived analysis)"]
+          "sources": [
+            "scripts/forensic/BACH.md (prospectus-derived analysis)"
+          ]
         },
         {
           "name": "PT Global Telekomunikasi Prima (GTP)",
           "stakePost": 25.48,
-          "tags": ["conglomerate", "holding-co"],
+          "tags": [
+            "conglomerate",
+            "holding-co"
+          ],
           "finding": "Incoming controller and the Hartono-group acquisition vehicle. Holds 25.48% at listing and exercises a pre-agreed irrevocable option (signed 7 Jan 2026, exercise notice 13 Mar 2026) to reach 51% within five working days of listing. The prospectus designates GTP 'controller' by resolution on 8 Jan 2026 while it still held only 30%, the basis for asserting no mandatory tender offer is triggered.",
           "confidence": "high",
-          "sources": ["scripts/forensic/BACH.md (prospectus-derived analysis)"]
+          "sources": [
+            "scripts/forensic/BACH.md (prospectus-derived analysis)"
+          ]
         },
         {
           "name": "Martin Basuki Hartono & Victor Rachmat Hartono (UBOs via GTP)",
           "stakePost": null,
-          "tags": ["conglomerate"],
+          "tags": [
+            "conglomerate"
+          ],
           "finding": "Named in the prospectus as the ultimate beneficial owners of incoming controller GTP. They are the Hartono family of the Djarum / BCA / GDP Venture group, which also controls IDX-listed tower group Sarana Menara Nusantara (TOWR) and Protelindo, BACH's largest customer.",
           "confidence": "high",
-          "sources": ["scripts/forensic/BACH.md (prospectus-derived analysis)"]
+          "sources": [
+            "scripts/forensic/BACH.md (prospectus-derived analysis)"
+          ]
         },
         {
           "name": "Budi Kurniawan, Hartanto Rahardja, Edy Surianto, Zulfahmi Fithri, Hasby Jap",
           "stakePost": null,
-          "tags": ["founder", "individual"],
+          "tags": [
+            "founder",
+            "individual"
+          ],
           "finding": "The five Bach founders/management (Dir. Utama, Komisaris, directors), each holding ~1.3-1.7% post-IPO. They retain operating roles for management continuity as the Hartono group takes economic control; they are unlocked (no eight-month lock-up asserted) and have no ESA/ESOP.",
           "confidence": "high",
-          "sources": ["scripts/forensic/BACH.md (prospectus-derived analysis)"]
+          "sources": [
+            "scripts/forensic/BACH.md (prospectus-derived analysis)"
+          ]
         }
       ],
       "dealExposure": {
@@ -63,7 +83,8 @@
           "Chair (Komut Anita Anwar) is concurrently VP Director of Protelindo, Director of TOWR and Komut of listed REMALA, sitting on both sides of BACH's largest customer relationship",
           "~14-40% of revenue becomes related-party (Protelindo / TOWR group) after the acquisition",
           "Only 1 of 3 commissioners is independent (33%, bare minimum); float sits at the 15.06% regulatory floor"
-        ]
+        ],
+        "caveats": []
       }
     },
     {
@@ -73,7 +94,11 @@
         {
           "name": "Raffi Farid Ahmad",
           "stakePost": 62.93,
-          "tags": ["founder", "pep", "individual"],
+          "tags": [
+            "founder",
+            "pep",
+            "individual"
+          ],
           "finding": "Sole controller and ultimate beneficial owner; celebrity entertainer and co-founder of RANS. A Politically Exposed Person: sworn in 22 October 2024 before President Prabowo Subianto as Utusan Khusus Presiden (Presidential Special Envoy) for Development of the Young Generation and Art Workers (2024-2029), under Keppres No. 76/M of 2024.",
           "confidence": "high",
           "sources": [
@@ -84,7 +109,11 @@
         {
           "name": "PT Indonesia Entertainmen Grup",
           "stakePost": 7.23,
-          "tags": ["conglomerate", "affiliated-listed", "holding-co"],
+          "tags": [
+            "conglomerate",
+            "affiliated-listed",
+            "holding-co"
+          ],
           "finding": "Content sub-holding of PT Surya Citra Media Tbk (IDX: SCMA), part of the Emtek Group (IDX: EMTK), owner of SCTV and Indosiar. The Emtek conglomerate's strategic stake in RANS (originally part of a ~Rp248bn / up to 17% investment). Its Direktur Utama is Emtek/SCMA chief Sutanto Hartono.",
           "confidence": "high",
           "sources": [
@@ -95,15 +124,22 @@
         {
           "name": "Soultan Ariq Rachman",
           "stakePost": 2.74,
-          "tags": ["individual"],
+          "tags": [
+            "individual"
+          ],
           "finding": "Investment professional at Provident Capital Partners (Jakarta); appears to hold as a private financial investor, not in any government capacity. No PEP status found. The Provident/Saratoga network also links to Bali United, consistent with another investor entity on this cap table.",
           "confidence": "medium",
-          "sources": ["https://www.linkedin.com/in/soultan/"]
+          "sources": [
+            "https://www.linkedin.com/in/soultan/"
+          ]
         },
         {
           "name": "Dony Oskaria",
           "stakePost": 2.74,
-          "tags": ["pep", "individual"],
+          "tags": [
+            "pep",
+            "individual"
+          ],
           "finding": "Senior state-enterprise official and a clear PEP: appointed Wakil Menteri BUMN (inaugurated 20 Oct 2024), COO of Danantara (24 Feb 2025), acting Minister of BUMN (from 17 Sep 2025) and Kepala BP BUMN (from 8 Oct 2025, Keppres No. 109/P of 2025).",
           "confidence": "high",
           "sources": [
@@ -114,7 +150,10 @@
         {
           "name": "Sutanto Hartono",
           "stakePost": 1.14,
-          "tags": ["affiliated-listed", "individual"],
+          "tags": [
+            "affiliated-listed",
+            "individual"
+          ],
           "finding": "Senior Emtek media executive: Managing Director of Emtek and Direktur Utama of PT Surya Citra Media Tbk (SCMA), Vidio, SCTV and PT Indonesia Entertainmen Grup. Stake reflects the Emtek/SCMA affiliation. NAMESAKE NOTE: NOT a member of the Djarum/BCA Hartono family; 'Hartono' is a common Indonesian name and his ties are to Emtek/SCMA only.",
           "confidence": "high",
           "sources": [
@@ -125,15 +164,25 @@
         {
           "name": "Nagita Slavina Mariana Tengker",
           "stakePost": 0.99,
-          "tags": ["pep-family", "founder", "individual"],
+          "tags": [
+            "pep-family",
+            "founder",
+            "individual"
+          ],
           "finding": "Co-founder of RANS and spouse of controller/UBO Raffi Ahmad; PEP-family by virtue of that marriage. No independent government or political office of her own was found.",
           "confidence": "high",
-          "sources": ["https://market.bisnis.com/read/20260623/192/1982629/intip-pemegang-saham-rans-jelang-ipo-ada-raffi-ahmad-dony-oskaria-hingga-kaesang"]
+          "sources": [
+            "https://market.bisnis.com/read/20260623/192/1982629/intip-pemegang-saham-rans-jelang-ipo-ada-raffi-ahmad-dony-oskaria-hingga-kaesang"
+          ]
         },
         {
           "name": "Kaesang Pangarep",
           "stakePost": 0.91,
-          "tags": ["pep", "pep-family", "individual"],
+          "tags": [
+            "pep",
+            "pep-family",
+            "individual"
+          ],
           "finding": "PEP on two counts: youngest son of former President Joko Widodo (PEP-family), and General Chairman (Ketua Umum) of the PSI party, re-elected for 2025-2030 at the September 2025 PSI Congress.",
           "confidence": "high",
           "sources": [
@@ -144,18 +193,28 @@
         {
           "name": "Hikmat Janika",
           "stakePost": 0.68,
-          "tags": ["unverified", "individual"],
+          "tags": [
+            "unverified",
+            "individual"
+          ],
           "finding": "Minority individual shareholder; identity not reliably established. One outlet (suara.com) identifies him as a public-hospital facilities official (Kepala IPSR, RSUD Pasar Minggu), but this single-thread description is unexplained relative to RANS and may be a namesake mismatch. No conglomerate, listed-company or political tie confirmed.",
           "confidence": "low",
-          "sources": ["https://market.bisnis.com/read/20260623/192/1982629/intip-pemegang-saham-rans-jelang-ipo-ada-raffi-ahmad-dony-oskaria-hingga-kaesang"]
+          "sources": [
+            "https://market.bisnis.com/read/20260623/192/1982629/intip-pemegang-saham-rans-jelang-ipo-ada-raffi-ahmad-dony-oskaria-hingga-kaesang"
+          ]
         },
         {
           "name": "PT Ekonomi Baru Investasi Teknologi",
           "stakePost": 0.61,
-          "tags": ["affiliated-listed", "holding-co"],
+          "tags": [
+            "affiliated-listed",
+            "holding-co"
+          ],
           "finding": "Investment subsidiary (~90% owned) of PT Bali Bintang Sejahtera Tbk (IDX: BOLA), the listed operator of the Bali United football club, set up Sep 2021 to invest in new-economy technology. The stake ties to the Bali United / Provident-Saratoga investor sphere.",
           "confidence": "high",
-          "sources": ["https://market.bisnis.com/read/20210924/192/1446375/bali-united-bola-rambah-bisnis-investasi-teknologi-ekonomi-baru"]
+          "sources": [
+            "https://market.bisnis.com/read/20210924/192/1446375/bali-united-bola-rambah-bisnis-investasi-teknologi-ekonomi-baru"
+          ]
         }
       ],
       "dealExposure": {
@@ -167,6 +226,11 @@
           "Emtek/SCMA conglomerate affiliation via PT Indonesia Entertainmen Grup and CEO Sutanto Hartono, implying related-party content/distribution dependence",
           "Float is small (~20%) with the founder retaining majority control",
           "Hikmat Janika beneficial identity unverified; confirm against the prospectus"
+        ],
+        "caveats": [
+          "Media-reported money-laundering allegations (2023-24) and an incidental mention in a 2026 customs trial never resulted in Raffi Ahmad being named a suspect, charged, or convicted; noted as headline-volatility risk, not a finding of wrongdoing.",
+          "October 2025 media reports described a wave of RANS staff resignations citing heavy workloads; sourced to ex-employee accounts, not a formal labor ruling.",
+          "Minority holder Hikmat Janika (0.68%) could not be reliably identified; one outlet's 'hospital official' identification may be a namesake. Confirm against the final prospectus."
         ]
       }
     },
@@ -177,7 +241,11 @@
         {
           "name": "Surya Gunawan Widjaja",
           "stakePost": 21,
-          "tags": ["founder", "family", "individual"],
+          "tags": [
+            "founder",
+            "family",
+            "individual"
+          ],
           "finding": "Founder, controlling shareholder (PSP) and Komisaris Utama; age 72. Self-made medical-device veteran (~36 years) who founded EMMI in 2000 and built the family-owned 'Esa Group' of device makers (ESA Tech in Solo, Surgitec in Cikarang). No conglomerate, PEP, or other listed-company ties; an industry entrepreneur, not a public figure.",
           "confidence": "high",
           "sources": [
@@ -188,34 +256,54 @@
         {
           "name": "Andrew Ignatius Widjaja",
           "stakePost": 16,
-          "tags": ["family", "individual"],
+          "tags": [
+            "family",
+            "individual"
+          ],
           "finding": "Controlling-family member and a Komisaris of EMMI (23% pre-IPO); founding family's next generation working inside the company. No conglomerate, PEP, or other listed-firm role. Unrelated to the Sinar Mas Widjaja family (shared surname only).",
           "confidence": "medium",
-          "sources": ["https://www.cnbcindonesia.com/market/20260622113810-17-744571/esa-medika-mandiri--emmi--mau-ipo-incar-dana-segar-rp269-miliar"]
+          "sources": [
+            "https://www.cnbcindonesia.com/market/20260622113810-17-744571/esa-medika-mandiri--emmi--mau-ipo-incar-dana-segar-rp269-miliar"
+          ]
         },
         {
           "name": "Florian Chris Widjaja",
           "stakePost": 11,
-          "tags": ["family", "individual"],
+          "tags": [
+            "family",
+            "individual"
+          ],
           "finding": "Controlling-family member and Direktur Utama (CEO) of EMMI; age ~40 (16% pre-IPO). Profiled as the young operating leader of the family business. No conglomerate/PEP ties; not connected to the Sinar Mas Widjaja family.",
           "confidence": "medium",
-          "sources": ["https://investor.id/market/443547/laba-melonjak-188-perusahaan-ini-mantap-ipo-bosnya-usia-30an"]
+          "sources": [
+            "https://investor.id/market/443547/laba-melonjak-188-perusahaan-ini-mantap-ipo-bosnya-usia-30an"
+          ]
         },
         {
           "name": "Andrian Matthew Widjaja",
           "stakePost": 11,
-          "tags": ["family", "individual"],
+          "tags": [
+            "family",
+            "individual"
+          ],
           "finding": "Controlling-family member and a Direktur of EMMI (16% pre-IPO). Public footprint is that of a private individual in the family device business. No conglomerate/PEP ties; unrelated to the Sinar Mas Widjaja family.",
           "confidence": "medium",
-          "sources": ["https://id.linkedin.com/in/andrian-widjaja-1919a8117"]
+          "sources": [
+            "https://id.linkedin.com/in/andrian-widjaja-1919a8117"
+          ]
         },
         {
           "name": "Eddy Lie",
           "stakePost": 10,
-          "tags": ["founder", "individual"],
+          "tags": [
+            "founder",
+            "individual"
+          ],
           "finding": "Long-standing co-founder/business partner (35% at the 2000 founding, 15% pre-IPO) and a Direktur of EMMI; age 64. Represents a second founding family (a 'Jason Aaron Lie' also sits on the board). No conglomerate, PEP, or reputational/legal issues found.",
           "confidence": "medium",
-          "sources": ["https://www.suara.com/bisnis/2026/06/22/151948/profil-pt-esa-medika-mandiri-tbk-emmi-emiten-alkes-pemegang-saham-dan-prospek"]
+          "sources": [
+            "https://www.suara.com/bisnis/2026/06/22/151948/profil-pt-esa-medika-mandiri-tbk-emmi-emiten-alkes-pemegang-saham-dan-prospek"
+          ]
         }
       ],
       "dealExposure": {
@@ -225,7 +313,8 @@
           "Surname 'Widjaja' coincides with the Sinar Mas founding family but there is NO evidence of any link; do not infer a conglomerate connection from the name",
           "Concentrated family control (~59% post-IPO) with only ~30% genuine public float, standard minority-shareholder governance considerations for a founder-controlled small-cap",
           "Younger Widjajas' exact familial link to the founder is implied by surname/roles rather than stated in the sources reviewed (medium confidence)"
-        ]
+        ],
+        "caveats": []
       }
     },
     {
@@ -235,7 +324,10 @@
         {
           "name": "PT Sarana Meditama Metropolitan Tbk (SAME)",
           "stakePost": 25.2,
-          "tags": ["affiliated-listed", "conglomerate"],
+          "tags": [
+            "affiliated-listed",
+            "conglomerate"
+          ],
           "finding": "IDX-listed hospital operator behind EMC Hospitals (formerly OMNI), ~75% controlled by PT Elang Mahkota Teknologi Tbk (EMTK/Emtek), the media-tech-healthcare group of Eddy Kusnadi Sariaatmadja. SAME first bought 28% of Nitrasanata Dharma in April 2022; post-IPO it is the single largest holder at 25.2% but explicitly NON-controlling. Makes JECX an Emtek-associated cross-holding by a listed peer.",
           "confidence": "high",
           "sources": [
@@ -246,7 +338,10 @@
         {
           "name": "Dr. Darwan Madja Purba, Sp.M(K)",
           "stakePost": 11.8,
-          "tags": ["founder", "individual"],
+          "tags": [
+            "founder",
+            "individual"
+          ],
           "finding": "One of the four ophthalmologists who founded Jakarta Eye Center (then Klinik Mata Jakarta) on 1 Feb 1984. Designated the UBO of JECX: beyond his 11.8% direct stake he is the single largest owner (19.78%) of the controlling vehicle Magna Selaras Lestari. A senior JEC eye surgeon, not a businessman-controller; no conglomerate or political ties.",
           "confidence": "high",
           "sources": [
@@ -257,42 +352,67 @@
         {
           "name": "PT Magna Selaras Lestari (MSL)",
           "stakePost": 9.1,
-          "tags": ["holding-co", "family"],
+          "tags": [
+            "holding-co",
+            "family"
+          ],
           "finding": "The controlling shareholder (committed to retain control 12 months post-IPO). A doctor-and-employee holding vehicle, not a conglomerate: owners include Dr. Darwan Purba (19.78%), Dr. Waldensius Girsang (10.48%), Drg. Rifi Arianti (6.97%), Prof. Widya Artini Wiyogo (6.83%) and the JEC Employee Cooperative (3.92%). Control sits collectively with JEC's founding doctors and staff.",
           "confidence": "high",
-          "sources": ["https://ajaib.co.id/belajar/saham/ipo-jec-eye-hospital-jecx-simak-jadwal-lengkapnya"]
+          "sources": [
+            "https://ajaib.co.id/belajar/saham/ipo-jec-eye-hospital-jecx-simak-jadwal-lengkapnya"
+          ]
         },
         {
           "name": "Rayyan Farrel Wardhana Istiantoro",
           "stakePost": 8.9,
-          "tags": ["family", "individual"],
+          "tags": [
+            "family",
+            "individual"
+          ],
           "finding": "Individual shareholder. The 'Istiantoro' surname matches the late Prof. Istiantoro, one of JEC's four 1984 co-founders, so he is almost certainly a founding-family descendant holding inherited equity (shares the 'Wardhana Istiantoro' name with Nabbil, likely a sibling). The specific lineage is inferred from the surname and JEC's founder roster, not an explicit prospectus statement. No PEP/conglomerate/adverse findings.",
           "confidence": "medium",
-          "sources": ["https://id.wikipedia.org/wiki/Rumah_Sakit_Mata_JEC"]
+          "sources": [
+            "https://id.wikipedia.org/wiki/Rumah_Sakit_Mata_JEC"
+          ]
         },
         {
           "name": "Nabbil Wardhana Istiantoro",
           "stakePost": 8.9,
-          "tags": ["family", "individual"],
+          "tags": [
+            "family",
+            "individual"
+          ],
           "finding": "Individual shareholder sharing the 'Wardhana Istiantoro' name with Rayyan Farrel, indicating siblings and almost certainly descendants of JEC co-founder the late Prof. Istiantoro. Founding-family link inferred from surname/founder history rather than explicit disclosure. No PEP status, conglomerate tie or reputational issue found.",
           "confidence": "medium",
-          "sources": ["https://id.wikipedia.org/wiki/Rumah_Sakit_Mata_JEC"]
+          "sources": [
+            "https://id.wikipedia.org/wiki/Rumah_Sakit_Mata_JEC"
+          ]
         },
         {
           "name": "DR. Dr. Waldensius Girsang, Sp.M(K)",
           "stakePost": 0.6,
-          "tags": ["individual", "founder"],
+          "tags": [
+            "individual",
+            "founder"
+          ],
           "finding": "Selling shareholder divesting ~162.66m shares (5% of capital) in the IPO. A senior JEC vitreoretinal/cataract ophthalmologist who is also the second-largest owner (10.48%) of controller Magna Selaras Lestari. One dated reputational item: a 2007 police report by a patient alleged blindness after laser treatment and named him and Dr. Darwan Purba, an unproven ~19-year-old allegation with no documented finding of wrongdoing. No political or conglomerate ties.",
           "confidence": "high",
-          "sources": ["https://jec.co.id/id/doctor/dr-dr-waldensius-girsang-spmk"]
+          "sources": [
+            "https://jec.co.id/id/doctor/dr-dr-waldensius-girsang-spmk"
+          ]
         },
         {
           "name": "Prof. DR. Dr. Widya Artini Wiyogo, Sp.M",
           "stakePost": null,
-          "tags": ["individual", "founder"],
+          "tags": [
+            "individual",
+            "founder"
+          ],
           "finding": "Senior JEC glaucoma/cataract ophthalmologist and Professor in Ophthalmology at FK UI (Head of Glaucoma Division since 2006). Holds 6.83% of controller Magna Selaras Lestari; her direct JECX stake was not disclosed in the sources reviewed. Academic/medical affiliation only; no PEP, conglomerate, or adverse findings.",
           "confidence": "medium",
-          "sources": ["https://jec.co.id/id/doctor/prof-dr-dr-widya-artini-wiyogo-ikke-spmk"]
+          "sources": [
+            "https://jec.co.id/id/doctor/prof-dr-dr-widya-artini-wiyogo-ikke-spmk"
+          ]
         }
       ],
       "dealExposure": {
@@ -304,6 +424,9 @@
           "Two ~8.9% Istiantoro holders are inferred (not prospectus-confirmed) to be founding-family heirs of the late co-founder Prof. Istiantoro",
           "Minor/dated reputational item: a 2007 unproven malpractice police report named JEC doctors; no documented finding of wrongdoing",
           "Selling shareholder Dr. Waldensius Girsang is cashing out the entire 5% secondary tranche at IPO"
+        ],
+        "caveats": [
+          "A 2007 patient police report (filed via LBH Kesehatan) named JEC doctors Darwan Purba and Waldensius Girsang over a laser-treatment outcome. Unproven, roughly 19 years old, with no documented finding of wrongdoing or conviction."
         ]
       }
     },
@@ -314,7 +437,11 @@
         {
           "name": "PT Niramas Utama International (NUI)",
           "stakePost": 73.92,
-          "tags": ["holding-co", "conglomerate", "family"],
+          "tags": [
+            "holding-co",
+            "conglomerate",
+            "family"
+          ],
           "finding": "Controlling shareholder (PSP) and intermediate holding company within the Supra Group, a family conglomerate controlled by Yusuf Hamdani. Ownership chain: Yusuf controls ~93.79% of PT Supra Sentral Investama > ~89.9% of PT Supra Pangan Lestari > ~89.9% of NUI > 99.8% of JELI pre-IPO. Supra Group also spans PT Supra Sekuritas (IDX-member broker), BPR Supra Artapersada (rural bank) and property (Pancoran Chinatown/Glodok).",
           "confidence": "high",
           "sources": [
@@ -325,7 +452,11 @@
         {
           "name": "Yusuf Hamdani (Ham Pak Japyusuf Hamdani) — UBO",
           "stakePost": null,
-          "tags": ["founder", "conglomerate", "family"],
+          "tags": [
+            "founder",
+            "conglomerate",
+            "family"
+          ],
           "finding": "Ultimate beneficial owner and senior conglomerate figure (age ~85). Dirut of PT Niramas Utama since 2013 and of NUI since 2002; founder/controller of Supra Group across manufacturing, distribution, financial services and plantations. Family-run: Philip Hamdani is a JELI director; Sonny Hamdani also holds Supra Sekuritas shares. JELI is the group's first IPO. No political/government role and no legal/reputational issues surfaced.",
           "confidence": "high",
           "sources": [
@@ -336,7 +467,9 @@
         {
           "name": "Sadikun Wiratno",
           "stakePost": 0.15,
-          "tags": ["individual"],
+          "tags": [
+            "individual"
+          ],
           "finding": "Komisaris Utama with a token 0.15% stake; not part of the Hamdani controlling family. No roles at other IDX-listed companies, no conglomerate control, no political/government position found. An ICIJ Offshore Leaks record names a 'Sadikun Wiratno' (Jakarta) as a 2004-era shareholder of Lighthouse Holdings Pte Ltd (Singapore), a possible but UNCONFIRMED namesake; identity not verified and offshore holding alone is not evidence of wrongdoing.",
           "confidence": "medium",
           "sources": [
@@ -355,6 +488,9 @@
           "Group is related to a securities broker (Supra Sekuritas) and a BPR, watch for related-party transactions",
           "Unconfirmed namesake: an ICIJ Offshore Leaks 'Sadikun Wiratno' (Singapore entity, 2004) may or may not be the JELI commissioner",
           "IPO proceeds include ~10.6% to repay a related short-term bank loan rather than fully funding growth"
+        ],
+        "caveats": [
+          "An ICIJ Offshore Leaks entry names a 'Sadikun Wiratno' (Jakarta address) as a 2004 shareholder of a Singapore entity (Lighthouse Holdings). Possible namesake only, not verified to be the JELI president commissioner, and an offshore holding is not itself evidence of wrongdoing."
         ]
       }
     },
@@ -365,7 +501,11 @@
         {
           "name": "PT Prodia Utama",
           "stakePost": 35.7,
-          "tags": ["holding-co", "family", "founder"],
+          "tags": [
+            "holding-co",
+            "family",
+            "founder"
+          ],
           "finding": "Controlling shareholder and the family holding company of the Prodia group, owned in roughly equal ~16.67% shares by the six Prodia founders (Andi Widjaja, Gunawan Prawiro Soeharto, Hanoko Suryadi, Elisabeth Listijani Widjojo, Justini Hidajat, Arjati Utami). Also the controlling shareholder of listed parent PRDA (57%). No conglomerate or government ties; an independent founder-family vehicle.",
           "confidence": "high",
           "sources": [
@@ -376,7 +516,11 @@
         {
           "name": "Six Prodia founders (UBOs of PT Prodia Utama)",
           "stakePost": null,
-          "tags": ["founder", "family", "individual"],
+          "tags": [
+            "founder",
+            "family",
+            "individual"
+          ],
           "finding": "Andi Widjaja, Gunawan Prawiro Soeharto, Hanoko Suryadi, Elisabeth Listijani Widjojo, Justini Hidajat and Arjati Utami, each ~16.67% of Prodia Utama. Lead founder Andi Wijaya (b. 1936) is a documented scientist-entrepreneur (ITB pharmacy 1963, PhD molecular biology Munster 1978, academic at Universitas Hasanuddin); his only formal positions found are academic, not governmental. No PEP status, political office, or conglomerate affiliation found; the original lab was founded in Solo in 1973.",
           "confidence": "high",
           "sources": [
@@ -387,7 +531,10 @@
         {
           "name": "PT Prodia Widyahusada Tbk (PRDA)",
           "stakePost": 27.3,
-          "tags": ["affiliated-listed", "family"],
+          "tags": [
+            "affiliated-listed",
+            "family"
+          ],
           "finding": "The IDX-listed Prodia clinical-laboratory chain (PRDA) and operating parent of PRDL; affiliated-listed. PRDA is itself controlled by PT Prodia Utama (~57%). Note: media reported PT Chandra Asri Pacific (TPIA, Prajogo Pangestu / Barito) quietly bought ~1.48% of PRDA in April-May 2026 (plus ~4.6% via Henan Putihrai-managed funds), but these are small minority stakes one level up, not control, and TPIA holds no direct stake in PRDL.",
           "confidence": "high",
           "sources": [
@@ -398,7 +545,9 @@
         {
           "name": "Diasys Diagnostic Systems GmbH",
           "stakePost": 7,
-          "tags": ["foreign-strategic"],
+          "tags": [
+            "foreign-strategic"
+          ],
           "finding": "German in-vitro diagnostics company (Holzheim, est. 1991), maker of liquid-stable clinical-chemistry reagents/analyzers, fitting PRDL's IVD focus. Material note: since 1 December 2023 DiaSys is 75% owned by Shenzhen Mindray Bio-Medical (China, acquired ~EUR 115m), so this 7% stake is effectively held by a Mindray-majority-controlled subsidiary rather than a fully independent German firm.",
           "confidence": "high",
           "sources": [
@@ -413,7 +562,8 @@
         "flags": [
           "Foreign strategic shareholder DiaSys is 75% controlled by China's Shenzhen Mindray since Dec 2023, so the 7% is effectively a Mindray-affiliated stake",
           "Prajogo Pangestu / Barito group (TPIA) holds a small ~1.48% minority in listed parent PRDA (plus ~4.6% via Henan Putihrai funds) acquired just before the IPO; non-controlling and one level removed from PRDL, but flagged by media as quiet accumulation"
-        ]
+        ],
+        "caveats": []
       }
     }
   ]

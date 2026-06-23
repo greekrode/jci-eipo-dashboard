@@ -266,8 +266,24 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
               ))}
             </ul>
           )}
+          {ipo.ownership.caveats.length > 0 && (
+            <div className="rounded-[2px] border border-dashed border-border bg-secondary/20 px-3 py-2.5">
+              <div className="mb-1.5 flex items-center gap-2">
+                <Badge variant="outline" className="px-1 py-0 text-[9.5px] font-medium uppercase tracking-wide">Unverified</Badge>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">under review · not findings of wrongdoing</span>
+              </div>
+              <ul className="space-y-1">
+                {ipo.ownership.caveats.map((cv, i) => (
+                  <li key={i} className="flex gap-2 text-[11.5px] leading-snug text-muted-foreground">
+                    <span className="shrink-0 text-muted-foreground/60" aria-hidden>?</span>{cv}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/70">
-            Background flags from public-source research. Structural ownership facts only; see disclaimer.
+            Structural facts from public-source research; items marked Unverified are unproven (dated allegations or
+            possible namesakes) and may be wrong. Not findings of wrongdoing; see disclaimer.
           </p>
         </div>
       )}

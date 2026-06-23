@@ -160,6 +160,11 @@ const METRICS: Metric[] = [
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1">{tags.map((t) => <TagChip key={t} tag={t} />)}</div>
           )}
+          {(i.ownership.caveats?.length ?? 0) > 0 && (
+            <div className="font-mono text-[10px] leading-tight text-muted-foreground/70">
+              {i.ownership.caveats.length} under review
+            </div>
+          )}
         </div>
       );
     },

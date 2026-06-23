@@ -44,6 +44,9 @@ export interface OwnershipExposure {
   summary: string;
   flags: string[];
   holders: { name: string; tags: string[] }[]; // only holders carrying >=1 structural tag
+  /** Unverified / unproven items (dated allegations, possible namesakes, media noise) — surfaced
+   *  for transparency, explicitly NOT findings of wrongdoing. Rendered in a distinct caveat block. */
+  caveats: string[];
 }
 
 /** Business-model breakdown extracted from the prospectus (scripts/upcoming-supplement.json). */

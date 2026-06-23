@@ -364,6 +364,8 @@ for (const o of out as any[]) {
       holders: (rd.shareholders ?? [])
         .map((sh: any) => ({ name: sh.name, tags: (sh.tags ?? []).filter((t: string) => STRUCTURAL_TAGS.has(t)) }))
         .filter((h: any) => h.tags.length > 0),
+      // unverified / unproven items, surfaced verbatim in a distinct "under review" block
+      caveats: Array.isArray(rd.dealExposure?.caveats) ? rd.dealExposure.caveats : [],
     };
   }
 }
@@ -399,7 +401,8 @@ check(out.every((o: any) => o.ownership && typeof o.ownership.level === "string"
 check(T.RANS.ownership.level === "pep-linked" && T.RANS.ownership.holders.some((h: any) => h.name.startsWith("Raffi") && h.tags.includes("pep")), "RANS pep-linked with Raffi tagged PEP");
 check(T.BACH.ownership.level === "conglomerate-linked" && T.JELI.ownership.level === "conglomerate-linked", "BACH & JELI conglomerate-linked");
 check(out.every((o: any) => o.ownership.holders.every((h: any) => h.tags.every((t: string) => STRUCTURAL_TAGS.has(t)))), "ownership holder tags are structural only");
-check(out.every((o: any) => o.ownership.flags.every((f: string) => !SOFT_FLAG.test(f))), "soft reputational flags excluded from client bundle");
+check(out.every((o: any) => o.ownership.flags.every((f: string) => !SOFT_FLAG.test(f))), "soft reputational flags excluded from structural flags");
+check((T.RANS.ownership.caveats?.length ?? 0) >= 1 && (T.JECX.ownership.caveats?.length ?? 0) >= 1, "unverified caveats surfaced for RANS & JECX");
 // flags normalized across all deals: every red flag graded, every deal has >=5 graded green flags
 check(out.every((o: any) => o.redFlags.length >= 8 && o.redFlags.every((r: any) => typeof r.severity === "string" && r.severity)), "every deal has graded red flags");
 check(out.every((o: any) => Array.isArray(o.counterweights) && o.counterweights.length >= 5 && o.counterweights.every((c: any) => c.text && typeof c.strength === "string")), "every deal has >=5 graded green flags");
