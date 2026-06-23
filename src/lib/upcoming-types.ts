@@ -30,6 +30,16 @@ export interface RevenueSeg {
   rpBn: number | null;
 }
 
+/** Shareholder background research (scripts/shareholder-research.json), reduced at build time
+ *  to public-safe structural facts: conglomerate / PEP / listed-affiliate / foreign-strategic.
+ *  Holders carry only those structural tags; unproven reputational items are dropped pre-bundle. */
+export interface OwnershipExposure {
+  level: string; // "clean" | "family-controlled" | "conglomerate-linked" | "pep-linked" | "mixed"
+  summary: string;
+  flags: string[];
+  holders: { name: string; tags: string[] }[]; // only holders carrying >=1 structural tag
+}
+
 /** Business-model breakdown extracted from the prospectus (scripts/upcoming-supplement.json). */
 export interface BusinessModel {
   summary: string;
@@ -83,6 +93,8 @@ export interface UpcomingIPO {
   controllerLines: string[] | null;
   ubo: string | null;
   businessModel: BusinessModel | null;
+  /** Shareholder background research, reduced to public-safe structural flags. */
+  ownership: OwnershipExposure | null;
 
   useOfProceeds: UseOfProceedsItem[];
   debtAlloc: {

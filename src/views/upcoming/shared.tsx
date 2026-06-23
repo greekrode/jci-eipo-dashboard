@@ -66,3 +66,55 @@ export function proceedsTone(type: string | null): "neg" | "pos" | "secondary" |
   if (t.includes("working") || t.includes("opex") || t.includes("capital")) return "secondary";
   return "outline";
 }
+
+// ── Ownership-exposure presentation (shareholder background research) ──────────
+type Tone = "neg" | "pos" | "secondary" | "outline";
+
+const TAG_LABEL: Record<string, string> = {
+  conglomerate: "Conglomerate",
+  pep: "PEP",
+  "pep-family": "PEP family",
+  "affiliated-listed": "Listed affiliate",
+  "foreign-strategic": "Foreign strategic",
+};
+/** Display order so chips read consistently (risk-weighted first). */
+const TAG_ORDER = ["pep", "pep-family", "conglomerate", "affiliated-listed", "foreign-strategic"];
+
+function tagVariant(tag: string): Tone {
+  if (tag === "pep" || tag === "pep-family") return "neg";
+  if (tag === "conglomerate") return "secondary";
+  return "outline"; // affiliated-listed, foreign-strategic
+}
+
+/** Small chip for one structural ownership tag. */
+export function TagChip({ tag }: { tag: string }) {
+  return (
+    <Badge variant={tagVariant(tag)} className="px-1 py-0 text-[9.5px] font-medium uppercase tracking-wide">
+      {TAG_LABEL[tag] ?? tag}
+    </Badge>
+  );
+}
+
+/** Sort a holder's tags into display order. */
+export function orderTags(tags: string[]): string[] {
+  return [...tags].sort((a, b) => TAG_ORDER.indexOf(a) - TAG_ORDER.indexOf(b));
+}
+
+/** Deal-level exposure badge label + tone. */
+export function exposureMeta(level: string | null): { label: string; variant: Tone } {
+  switch (level) {
+    case "pep-linked": return { label: "PEP-linked", variant: "neg" };
+    case "conglomerate-linked": return { label: "Conglomerate-linked", variant: "secondary" };
+    case "mixed": return { label: "Mixed", variant: "secondary" };
+    case "family-controlled": return { label: "Family-controlled", variant: "outline" };
+    case "clean": return { label: "Independent", variant: "pos" };
+    default: return { label: level ?? "—", variant: "outline" };
+  }
+}
+
+/** Distinct structural tags present across a deal's flagged holders, in display order. */
+export function distinctTags(holders: { tags: string[] }[]): string[] {
+  const seen = new Set<string>();
+  for (const h of holders) for (const t of h.tags) seen.add(t);
+  return TAG_ORDER.filter((t) => seen.has(t));
+}

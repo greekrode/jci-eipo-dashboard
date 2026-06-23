@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { idr, idrBn, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
-import { fmtDate, priceRange, lockBadge, severityCount, Disclaimer } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, severityCount, Disclaimer, exposureMeta, distinctTags, TagChip } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
 
 /** A metric row in the transposed comparison matrix. `dir` marks which extreme to highlight. */
@@ -147,6 +147,23 @@ const METRICS: Metric[] = [
   },
 
   // ── Ownership & risk ────────────────────────────────────────────────────
+  {
+    group: "Ownership & risk", label: "Ownership exposure", align: "left",
+    hint: "Background check on the register from public-source research: conglomerate ties, PEP (politically exposed) holders, listed-company affiliates and foreign strategics. Structural facts only.",
+    cell: (i) => {
+      if (!i.ownership) return <span className="text-muted-foreground">—</span>;
+      const e = exposureMeta(i.ownership.level);
+      const tags = distinctTags(i.ownership.holders);
+      return (
+        <div className="space-y-1.5">
+          <Badge variant={e.variant}>{e.label}</Badge>
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-1">{tags.map((t) => <TagChip key={t} tag={t} />)}</div>
+          )}
+        </div>
+      );
+    },
+  },
   {
     group: "Ownership & risk", label: "Controller (post)", align: "left",
     cell: (i) => {

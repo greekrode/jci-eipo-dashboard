@@ -13,7 +13,13 @@ const ROOT = resolve(import.meta.dir, "..");
 const SRC = resolve(ROOT, "_sources", "upcoming");
 const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
+const RESEARCH = resolve(ROOT, "scripts", "shareholder-research.json"); // shareholder background research (committed)
 const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS"];
+
+// Tags we surface in the public UI: verifiable ownership-structure facts only.
+const STRUCTURAL_TAGS = new Set(["conglomerate", "pep", "pep-family", "affiliated-listed", "foreign-strategic"]);
+// Deal-level flags we deliberately DROP from the client bundle: unproven/uncertain reputational items.
+const SOFT_FLAG = /unproven|namesake|offshore|\b2007\b|malpractice|reputational|unverified/i;
 
 type Obj = Record<string, any>;
 const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
@@ -300,6 +306,7 @@ function normalize(raw: Obj, narrativeMd: string, ticker: string) {
     shareholdersPostOption: null, // filled from supplement (BACH only)
     businessModel: null, // filled from supplement (prospectus-PDF extraction)
     forensicMd: null, // filled from scripts/forensic/<TICKER>.md
+    ownership: null as any, // filled from scripts/shareholder-research.json (structural flags only)
     raw,
     narrativeMd,
   };
@@ -324,6 +331,12 @@ out.sort((a, b) => String(a.listingISO).localeCompare(String(b.listingISO)) || a
 // merge prospectus-PDF-derived supplement (business model; BACH post-IPO + post-option cap tables)
 let supp: Record<string, any> = {};
 try { supp = JSON.parse(readFileSync(SUPP, "utf8")); } catch { /* supplement optional */ }
+// shareholder background research, keyed by ticker (conglomerate / PEP / affiliation flags)
+let research: Record<string, any> = {};
+try {
+  const r = JSON.parse(readFileSync(RESEARCH, "utf8"));
+  research = Object.fromEntries((r.deals ?? []).map((d: any) => [d.ticker, d]));
+} catch { /* research optional */ }
 for (const o of out as any[]) {
   const s = supp[o.ticker];
   if (s) {
@@ -336,6 +349,20 @@ for (const o of out as any[]) {
   }
   // curated forensic writeup (consistent 7-heading template), one .md per ticker
   try { o.forensicMd = readFileSync(resolve(ROOT, "scripts", "forensic", `${o.ticker}.md`), "utf8").trim(); } catch { /* optional */ }
+
+  // shareholder research -> compact, public-safe ownership block:
+  // structural tags only (drop founder/individual/holding-co/unverified) and drop soft reputational flags.
+  const rd = research[o.ticker];
+  if (rd) {
+    o.ownership = {
+      level: rd.dealExposure?.level ?? null,
+      summary: rd.dealExposure?.summary ?? "",
+      flags: (rd.dealExposure?.flags ?? []).filter((f: string) => !SOFT_FLAG.test(f)),
+      holders: (rd.shareholders ?? [])
+        .map((sh: any) => ({ name: sh.name, tags: (sh.tags ?? []).filter((t: string) => STRUCTURAL_TAGS.has(t)) }))
+        .filter((h: any) => h.tags.length > 0),
+    };
+  }
 }
 
 mkdirSync(OUT, { recursive: true });
@@ -364,6 +391,12 @@ check((T.BACH as any).shareholdersPostOption?.find((s: any) => /Global Telekom/.
 check(out.every((o: any) => o.businessModel && o.businessModel.revenueBreakdown?.length > 0), "every deal has a business-model breakdown");
 check(out.every((o: any) => o.forensicMd?.startsWith("## Thesis")), "every deal has a curated forensic writeup (7-heading template)");
 check(out.every((o: any) => isNum(o.valuation.roePost) && o.valuation.roePost > 0 && o.valuation.roePost < 60), "every deal has a post-money ROE");
+// shareholder research wired in: every deal has an exposure level, only structural tags surface, soft flags dropped
+check(out.every((o: any) => o.ownership && typeof o.ownership.level === "string"), "every deal has an ownership exposure level");
+check(T.RANS.ownership.level === "pep-linked" && T.RANS.ownership.holders.some((h: any) => h.name.startsWith("Raffi") && h.tags.includes("pep")), "RANS pep-linked with Raffi tagged PEP");
+check(T.BACH.ownership.level === "conglomerate-linked" && T.JELI.ownership.level === "conglomerate-linked", "BACH & JELI conglomerate-linked");
+check(out.every((o: any) => o.ownership.holders.every((h: any) => h.tags.every((t: string) => STRUCTURAL_TAGS.has(t)))), "ownership holder tags are structural only");
+check(out.every((o: any) => o.ownership.flags.every((f: string) => !SOFT_FLAG.test(f))), "soft reputational flags excluded from client bundle");
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);

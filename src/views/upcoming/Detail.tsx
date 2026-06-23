@@ -9,7 +9,7 @@ import { StatStrip } from "@/components/stat-strip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
-import { fmtDate, priceRange, lockBadge, sevVariant, proceedsTone, Disclaimer } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, sevVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta } from "@/views/upcoming/shared";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const normKey = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
@@ -183,6 +183,11 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
   const sharesIn = (list: OwnerList, k: string) => list.find((s) => normKey(s.name) === k)?.shares ?? null;
   const rows = order.slice().sort((a, b) => (pctIn(lastList, b) ?? -1) - (pctIn(lastList, a) ?? -1));
 
+  // Structural-flag lookup (conglomerate / PEP / listed-affiliate / foreign-strategic), keyed
+  // the same way as cap-table rows so chips render inline on the holders that carry them.
+  const flagOf = new Map<string, string[]>();
+  for (const h of ipo.ownership?.holders ?? []) flagOf.set(normKey(h.name), orderTags(h.tags));
+
   return (
     <Panel title="Ownership & cap table" note={states.map((s) => s.label).join(" → ")}>
       <div className="space-y-2.5 p-4">
@@ -214,10 +219,17 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
             const sh = sharesIn(lastList, k);
             return (
               <tr key={k} className="border-b border-border/40 last:border-0">
-                <td className="max-w-[210px] px-4 py-1.5 text-left">
-                  <span className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 shrink-0 rounded-[1px]" style={{ background: m.color }} aria-hidden />
-                    <span className="truncate text-muted-foreground" title={m.name}>{m.name}</span>
+                <td className="max-w-[230px] px-4 py-1.5 text-left align-top">
+                  <span className="flex items-start gap-1.5">
+                    <span className="mt-[5px] h-2.5 w-2.5 shrink-0 rounded-[1px]" style={{ background: m.color }} aria-hidden />
+                    <span className="min-w-0">
+                      <span className="block truncate text-muted-foreground" title={m.name}>{m.name}</span>
+                      {(flagOf.get(k)?.length ?? 0) > 0 && (
+                        <span className="mt-1 flex flex-wrap gap-1">
+                          {flagOf.get(k)!.map((t) => <TagChip key={t} tag={t} />)}
+                        </span>
+                      )}
+                    </span>
                   </span>
                 </td>
                 {states.map((st) => {
@@ -235,6 +247,27 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
         <div className="space-y-0.5 border-t border-border px-4 py-2 font-mono text-[11px] leading-relaxed text-muted-foreground">
           {ipo.controllerPost && <div><span className="text-muted-foreground">Controller</span> <span className="text-foreground">{ipo.controllerPost}</span></div>}
           {ipo.ubo && <div><span className="text-muted-foreground">UBO</span> <span className="text-foreground">{ipo.ubo}</span></div>}
+        </div>
+      )}
+      {ipo.ownership && (
+        <div className="space-y-2 border-t border-border px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted-foreground">Ownership exposure</span>
+            {(() => { const e = exposureMeta(ipo.ownership.level); return <Badge variant={e.variant}>{e.label}</Badge>; })()}
+          </div>
+          <p className="text-[12px] leading-relaxed text-muted-foreground">{ipo.ownership.summary}</p>
+          {ipo.ownership.flags.length > 0 && (
+            <ul className="space-y-1">
+              {ipo.ownership.flags.map((fl, i) => (
+                <li key={i} className="flex gap-2 text-[11.5px] leading-snug text-muted-foreground">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" aria-hidden />{fl}
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/70">
+            Background flags from public-source research. Structural ownership facts only; see disclaimer.
+          </p>
         </div>
       )}
     </Panel>
