@@ -3,3 +3,6 @@ dist/
 _analysis/
 *.log
 .DS_Store
+
+*.xlsx
+logs/

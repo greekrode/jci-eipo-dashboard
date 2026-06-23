@@ -53,6 +53,7 @@ const ipos = rows.map((r) => {
   const get = (k: (typeof COLS)[number]) => r[COLS.indexOf(k)] ?? null;
   const status = String(get("status") ?? "").trim();
   const listed = status === "Closed";
+  const ticker = String(get("ticker") ?? "").trim();
 
   const daily = (["d1", "d2", "d3", "d4", "d5", "d6", "d7"] as const).map((k) => num(get(k)));
   // Cumulative compounded return if held N days (null until a day's return is missing).
@@ -89,7 +90,7 @@ const ipos = rows.map((r) => {
   return {
     status,
     listed,
-    ticker: String(get("ticker") ?? "").trim(),
+    ticker,
     company: String(get("company") ?? "").trim(),
     sector,
     subsector: (String(get("subsector") ?? "").trim() || null),
