@@ -25,7 +25,7 @@ interface Row {
   year: number | null;
 }
 type Key = keyof Row;
-type GroupBy = "none" | "lead" | "sector" | "year";
+type GroupBy = "none" | "lead" | "underwriter" | "sector" | "year";
 
 const COL_COUNT = 11;
 const selectCls =
@@ -96,12 +96,26 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
 
   const groups = useMemo(() => {
     if (groupBy === "none") return null;
-    const keyOf = (r: Row) =>
-      groupBy === "lead" ? `${r.leadCode} · ${r.lead}` : groupBy === "sector" ? r.sector : String(r.year ?? "—");
     const m = new Map<string, Row[]>();
-    for (const r of rows) (m.get(keyOf(r)) ?? m.set(keyOf(r), []).get(keyOf(r))!).push(r);
+    const add = (k: string, r: Row) => {
+      const arr = m.get(k);
+      if (arr) arr.push(r);
+      else m.set(k, [r]);
+    };
+    for (const r of rows) {
+      if (groupBy === "underwriter") {
+        // every house that touched the deal (lead + syndicate members) — a deal can fall in several groups
+        const codes = new Set<string>();
+        if (r.leadCode) codes.add(r.leadCode);
+        for (const c of r.members) codes.add(c);
+        if (codes.size === 0) add("—", r);
+        else for (const c of codes) add(`${c} · ${names[c] ?? c}`, r);
+      } else {
+        add(groupBy === "lead" ? `${r.leadCode} · ${r.lead}` : groupBy === "sector" ? r.sector : String(r.year ?? "—"), r);
+      }
+    }
     return [...m.entries()].sort((a, b) => b[1].length - a[1].length);
-  }, [rows, groupBy]);
+  }, [rows, groupBy, names]);
 
   const legend = useMemo(() => {
     const m = new Map<string, string>();
@@ -224,7 +238,8 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
             </select>
             <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as GroupBy)} className={selectCls}>
               <option value="none">No grouping</option>
-              <option value="lead">Group by lead</option>
+              <option value="lead">Group by lead underwriter</option>
+              <option value="underwriter">Group by underwriter (all roles)</option>
               <option value="sector">Group by sector</option>
               <option value="year">Group by year</option>
             </select>
