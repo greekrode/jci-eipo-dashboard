@@ -195,7 +195,9 @@ export function scoreDeal(o: any, uw: any): DealScore {
   const axes: ScoreAxis[] = [fundamentals(o), valuation(o), balanceSheet(o), gov.axis];
   const present = axes.filter((a) => isNum(a.score));
   const totalW = present.reduce((a, x) => a + x.weight, 0) || 1;
+  // headline from the precise axis means, THEN round each axis for display/storage
   const overall = Math.round(present.reduce((a, x) => a + (x.score as number) * x.weight, 0) / totalW);
+  for (const a of axes) if (isNum(a.score)) a.score = Math.round(a.score as number);
   return { overall, grade: gradeFromScore(overall), axes, underwriter: gov.underwriter, version: VERSION };
 }
 

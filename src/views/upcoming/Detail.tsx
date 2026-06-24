@@ -182,13 +182,13 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
           {/* axis bars */}
           <div className="min-w-0 flex-1 space-y-2 self-center">
             {s.axes.map((a) => (
-              <div key={a.key} className="flex items-center gap-2.5">
-                <span className="w-[112px] shrink-0 truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground" title={a.label}>{a.label}</span>
+              <div key={a.key} className="flex items-center gap-3">
+                <span className="w-[116px] shrink-0 truncate font-mono text-[10px] uppercase tracking-wide text-muted-foreground sm:w-[152px] sm:text-[10.5px]" title={a.label}>{a.label}</span>
                 <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-[1px] bg-border/60">
                   <div className={`h-full rounded-[1px] ${scoreTone(a.score)}`} style={{ width: `${a.score ?? 0}%` }} />
                 </div>
-                <span className="w-6 shrink-0 text-right font-mono text-[12px] tabnum text-foreground">{a.score ?? "—"}</span>
-                <span className="hidden w-9 shrink-0 text-right font-mono text-[10px] tabnum text-muted-foreground/60 sm:inline">{Math.round(a.weight * 100)}%</span>
+                <span className="w-8 shrink-0 text-right font-mono text-[12.5px] font-medium tabnum text-foreground">{a.score == null ? "—" : Math.round(a.score)}</span>
+                <span className="w-9 shrink-0 text-right font-mono text-[10px] tabnum text-muted-foreground/60">{Math.round(a.weight * 100)}%</span>
               </div>
             ))}
           </div>
