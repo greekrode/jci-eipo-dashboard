@@ -8,7 +8,7 @@
 // programmatically. Run: bun run scripts/build-upcoming.ts
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { scoreDeal } from "./score";
+import { scoreDeals } from "./score";
 
 const ROOT = resolve(import.meta.dir, "..");
 const SRC = resolve(ROOT, "_sources", "upcoming");
@@ -377,7 +377,9 @@ for (const o of out as any[]) {
 // Runs last so every input (supplement counterweights/redFlags, ownership, valuation) is present.
 let uwResearch: any = { _meta: {}, deals: {}, firms: {} };
 try { uwResearch = JSON.parse(readFileSync(UWR, "utf8")); } catch { /* underwriter research optional */ }
-for (const o of out as any[]) o.score = scoreDeal(o, uwResearch);
+// cohort-aware: peer/sector-relative banding needs the whole set, so score all deals together
+const _scored = scoreDeals(out as any[], uwResearch);
+(out as any[]).forEach((o, i) => (o.score = _scored[i]));
 
 mkdirSync(OUT, { recursive: true });
 writeFileSync(resolve(OUT, "upcoming-ipos.json"), JSON.stringify(out, null, 0));
@@ -429,7 +431,10 @@ check(Math.max(..._scores) - Math.min(..._scores) >= 8, `AI score spread >= 8 pt
 // v2 enrichments present and clean
 check(out.every((o: any) => { const fx = o.score.axes.find((a: any) => a.key === "fundamentals"); return fx.inputs.some((i: any) => /trend/i.test(i.label)) && fx.inputs.some((i: any) => /consistency/i.test(i.label)); }), "fundamentals carries 3-yr trend + consistency");
 check(out.every((o: any) => { const g = o.score.axes.find((a: any) => a.key === "governance"); return g.inputs.some((i: any) => /Liquidity/i.test(i.label)) && g.inputs.some((i: any) => /composition/i.test(i.label)); }), "governance carries liquidity + shareholder composition");
-check(out.every((o: any) => o.score.axes.every((a: any) => Number.isInteger(a.score)) && o.score.version === "v2"), "axis scores integer + score version v2");
+check(out.every((o: any) => o.score.axes.every((a: any) => Number.isInteger(a.score)) && o.score.version === "v3"), "axis scores integer + score version v3");
+check(out.every((o: any) => o.score.axes.find((a: any) => a.key === "fundamentals").inputs.some((i: any) => /earnings quality/i.test(i.label))), "fundamentals carries earnings quality");
+// EMMI's profit carries an analyst-flagged one-off — earnings quality should sit below a clean baseline
+check(T.EMMI.score.axes.find((a: any) => a.key === "fundamentals").inputs.find((i: any) => /earnings quality/i.test(i.label)).score <= 70, "EMMI earnings quality discounted for one-off/non-op profit");
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);

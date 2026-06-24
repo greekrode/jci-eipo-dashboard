@@ -6,8 +6,14 @@
 // Headline (0-100) = weighted mean of four axes:
 //   Fundamentals 0.30 · Valuation 0.22 · Balance sheet 0.16 · Governance & sponsor 0.32
 // Governance bundles the two things that matter most for IDX small-caps — who brings the
-// deal (underwriter track record) and who owns it (shareholder exposure) — plus deal
-// structure (lock-up / float / secondary) and the net red-vs-green flag balance.
+// deal (underwriter track record) and who owns it (shareholder composition) — plus liquidity,
+// deal structure (lock-up / secondary) and the net red-vs-green flag balance.
+//
+// v3: margins / ROE / valuation multiples are scored half on absolute bands and half on a
+// peer-relative rank (vs sector when a sector has >=3 deals, else the whole cohort) — so a
+// genset P/E is judged against gensets, not healthcare. Earnings quality discounts one-off /
+// non-operating profit (no cash-flow statement available, so it's a P&L-structure proxy plus
+// the analyst's own one-off flags). Cohort-aware scoring runs via scoreDeals().
 
 export interface ScoreInput { label: string; value: string; score: number | null; }
 export interface ScoreAxis { key: string; label: string; score: number | null; weight: number; inputs: ScoreInput[]; }
@@ -24,7 +30,7 @@ export interface DealScore {
   version: string;
 }
 
-const VERSION = "v2";
+const VERSION = "v3";
 const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x));
 const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
 
@@ -44,6 +50,59 @@ function band(x: number | null | undefined, pts: [number, number][]): number | n
 
 const mid = (lo: number | null, hi: number | null): number | null =>
   isNum(lo) && isNum(hi) ? (lo + hi) / 2 : isNum(lo) ? lo : isNum(hi) ? hi : null;
+
+/** Blend an absolute band score with a peer-relative one (50/50 when peers exist). */
+function blend(abs: number | null, rel: number | null): number | null {
+  if (!isNum(abs)) return isNum(rel) ? rel : null;
+  return isNum(rel) ? 0.5 * abs + 0.5 * rel : abs;
+}
+
+type PeerCtx = { rel: (key: string, deal: any) => number | null } | null;
+
+// Metrics scored partly vs peers (the "is this cheap/profitable *for its kind*" question).
+const PEER_METRICS: Record<string, { get: (d: any) => number | null; higher: boolean }> = {
+  pe: { get: (d) => mid(d.valuation?.peLow, d.valuation?.peHigh), higher: false },
+  pb: { get: (d) => mid(d.valuation?.pbLow, d.valuation?.pbHigh), higher: false },
+  grossMargin: { get: (d) => (isNum(d.metrics?.grossMargin2025) ? d.metrics.grossMargin2025 : null), higher: true },
+  netMargin: { get: (d) => (isNum(d.metrics?.netMargin2025) ? d.metrics.netMargin2025 : null), higher: true },
+  roe: { get: (d) => (isNum(d.metrics?.roe2025) ? d.metrics.roe2025 : null), higher: true },
+};
+
+/** Percentile-rank a deal's metric vs its sector peers (>=3 in the group) or the whole cohort,
+ *  mapped to 30..95. Returns null when there aren't enough peers to rank. */
+function buildPeerCtx(deals: any[]): PeerCtx {
+  const whole: Record<string, number[]> = {};
+  const bySector: Record<string, Record<string, number[]>> = {};
+  for (const k of Object.keys(PEER_METRICS)) {
+    whole[k] = deals.map((d) => PEER_METRICS[k].get(d)).filter(isNum) as number[];
+    bySector[k] = {};
+    for (const d of deals) {
+      const v = PEER_METRICS[k].get(d);
+      if (isNum(v)) (bySector[k][d.sectorGroup ?? "_"] ??= []).push(v);
+    }
+  }
+  return {
+    rel(k, d) {
+      const m = PEER_METRICS[k];
+      if (!m) return null;
+      const v = m.get(d);
+      if (!isNum(v)) return null;
+      const sec = bySector[k][d.sectorGroup ?? "_"] ?? [];
+      const pool = sec.length >= 3 ? sec : whole[k]; // sector when it has enough peers, else the cohort
+      if (pool.length < 3) return null;
+      const beaten = pool.filter((x) => (m.higher ? x < v : x > v)).length;
+      const ties = pool.filter((x) => x === v).length - 1;
+      const pr = clamp((beaten + ties * 0.5) / (pool.length - 1), 0, 1);
+      return 30 + pr * 65;
+    },
+  };
+}
+
+/** Cohort-aware scoring: precomputes peer context, then scores each deal. Use this from the build. */
+export function scoreDeals(deals: any[], uw: any): DealScore[] {
+  const peer = buildPeerCtx(deals);
+  return deals.map((d) => scoreDeal(d, uw, peer));
+}
 
 /** mean of the non-null scores; null if none present */
 function meanScore(inputs: ScoreInput[]): number | null {
@@ -85,16 +144,40 @@ function greenWeight(str: string | null | undefined): number {
 const shortFirm = (name: string) =>
   (name || "").replace(/^PT\s+/i, "").replace(/\s+Tbk\b.*/i, "").split(/[(,]/)[0].trim();
 
+/** Earnings-quality discount. No cash-flow statement is available, so this is a P&L-structure
+ *  proxy (non-operating leakage, sudden margin spike, minority share) plus the analyst's own
+ *  one-off flags — it catches profit that won't repeat (e.g. revaluation / JV equity income). */
+function earningsQuality(o: any): ScoreInput {
+  const f = o.financials ?? {};
+  const rev: any[] = f.revenue ?? [], npt: any[] = f.netProfitTotal ?? [], npp: any[] = f.netProfitParent ?? [], gp: any[] = f.grossProfit ?? [];
+  const nm = (i: number) => (isNum(npt[i]) && isNum(rev[i]) && rev[i] !== 0 ? (npt[i] / rev[i]) * 100 : null);
+  const nm2 = nm(2), prior = [nm(0), nm(1)].filter(isNum) as number[];
+  const priorAvg = prior.length ? prior.reduce((a, b) => a + b, 0) / prior.length : null;
+  let q = 78;
+  const notes: string[] = [];
+  if (isNum(npt[2]) && isNum(gp[2]) && gp[2] > 0) {
+    const ng = npt[2] / gp[2]; // net profit as a share of gross — high = income leaking in below the operating line
+    if (ng >= 0.7) { q -= 16; notes.push("net≈gross profit"); }
+    else if (ng >= 0.55) { q -= 8; notes.push("high net/gross"); }
+  }
+  const txt = ((o.redFlags ?? []).map((r: any) => r.text ?? "").join(" ") + " " + (o.primaryRisk ?? "")).toLowerCase();
+  if (/reval|one-off|one-time|non-recurring|nonrecurring|equity income|gain on|fair value|associate income|jv income/.test(txt)) { q -= 14; notes.push("one-off / non-op flag"); }
+  if (isNum(nm2) && isNum(priorAvg) && priorAvg > 0 && nm2 / priorAvg >= 2) { q -= 8; notes.push("margin spike"); }
+  if (isNum(npp[2]) && isNum(npt[2]) && npt[2] > 0 && npp[2] / npt[2] < 0.7) { q -= 6; notes.push("minority-heavy"); }
+  return { label: "Earnings quality", value: notes.length ? notes.join(", ") : "clean / cash-like", score: Math.round(clamp(q, 22, 92)) };
+}
+
 // ---- axes --------------------------------------------------------------------
 
-function fundamentals(o: any): ScoreAxis {
+function fundamentals(o: any, peer: PeerCtx): ScoreAxis {
   const m = o.metrics ?? {};
+  const rel = (k: string) => (peer ? peer.rel(k, o) : null);
   const inputs: ScoreInput[] = [
     { label: "Revenue growth (FY25)", value: pct(m.revGrowth2025), score: band(m.revGrowth2025, [[-20, 25], [0, 45], [15, 65], [30, 78], [60, 90], [120, 100]]) },
     { label: "Net-profit growth (FY25)", value: pct(m.netGrowth2025), score: band(m.netGrowth2025, [[-30, 22], [0, 45], [20, 65], [50, 80], [120, 92], [250, 100]]) },
-    { label: "Gross margin (FY25)", value: pct(m.grossMargin2025), score: band(m.grossMargin2025, [[10, 40], [20, 55], [35, 70], [50, 85], [70, 96]]) },
-    { label: "Net margin (FY25)", value: pct(m.netMargin2025), score: band(m.netMargin2025, [[2, 38], [6, 55], [10, 68], [16, 82], [25, 95]]) },
-    { label: "ROE (FY25)", value: pct(m.roe2025), score: band(m.roe2025, [[5, 38], [12, 58], [18, 70], [26, 84], [40, 96]]) },
+    { label: "Gross margin (FY25)", value: pct(m.grossMargin2025), score: blend(band(m.grossMargin2025, [[10, 40], [20, 55], [35, 70], [50, 85], [70, 96]]), rel("grossMargin")) },
+    { label: "Net margin (FY25)", value: pct(m.netMargin2025), score: blend(band(m.netMargin2025, [[2, 38], [6, 55], [10, 68], [16, 82], [25, 95]]), rel("netMargin")) },
+    { label: "ROE (FY25)", value: pct(m.roe2025), score: blend(band(m.roe2025, [[5, 38], [12, 58], [18, 70], [26, 84], [40, 96]]), rel("roe")) },
   ];
   // 3-year quality: trajectory + consistency (so a one-year spike doesn't carry the score)
   const f = o.financials ?? {};
@@ -114,15 +197,17 @@ function fundamentals(o: any): ScoreAxis {
     value: yrsData ? `${yrsPos}/${yrsData} yrs profitable` : "n/d",
     score: yrsData ? band(yrsPos / yrsData, [[0, 20], [0.34, 40], [0.67, 64], [1, 90]]) : null,
   });
+  inputs.push(earningsQuality(o)); // discount one-off / non-operating profit
   return { key: "fundamentals", label: "Fundamentals", weight: 0.30, score: meanScore(inputs), inputs };
 }
 
-function valuation(o: any): ScoreAxis {
+function valuation(o: any, peer: PeerCtx): ScoreAxis {
   const v = o.valuation ?? {};
   const pe = mid(v.peLow, v.peHigh), pb = mid(v.pbLow, v.pbHigh);
+  const rel = (k: string) => (peer ? peer.rel(k, o) : null);
   const inputs: ScoreInput[] = [
-    { label: "P/E (post-money)", value: isNum(pe) ? `${num(pe)}×` : "n/d", score: band(pe, [[6, 95], [10, 84], [14, 72], [20, 56], [28, 42], [45, 25], [70, 12]]) },
-    { label: "P/B (post-money)", value: isNum(pb) ? `${num(pb, 2)}×` : "n/d", score: band(pb, [[0.8, 92], [1.2, 82], [2, 68], [3, 54], [4.5, 40], [7, 24]]) },
+    { label: "P/E (post-money)", value: isNum(pe) ? `${num(pe)}×` : "n/d", score: blend(band(pe, [[6, 95], [10, 84], [14, 72], [20, 56], [28, 42], [45, 25], [70, 12]]), rel("pe")) },
+    { label: "P/B (post-money)", value: isNum(pb) ? `${num(pb, 2)}×` : "n/d", score: blend(band(pb, [[0.8, 92], [1.2, 82], [2, 68], [3, 54], [4.5, 40], [7, 24]]), rel("pb")) },
     { label: "Analyst verdict", value: typeof v.verdict === "string" && v.verdict ? v.verdict : "n/d", score: verdictScore(v.verdict) },
   ];
   return { key: "valuation", label: "Valuation", weight: 0.22, score: meanScore(inputs), inputs };
@@ -226,9 +311,9 @@ export function gradeFromScore(x: number): string {
   return "E";
 }
 
-export function scoreDeal(o: any, uw: any): DealScore {
+export function scoreDeal(o: any, uw: any, peer: PeerCtx = null): DealScore {
   const gov = governance(o, uw);
-  const axes: ScoreAxis[] = [fundamentals(o), valuation(o), balanceSheet(o), gov.axis];
+  const axes: ScoreAxis[] = [fundamentals(o, peer), valuation(o, peer), balanceSheet(o), gov.axis];
   const present = axes.filter((a) => isNum(a.score));
   const totalW = present.reduce((a, x) => a + x.weight, 0) || 1;
   // headline from the precise axis means, THEN round each axis for display/storage
@@ -251,7 +336,7 @@ if (import.meta.main) {
   const strong = {
     ticker: "STRONG",
     metrics: { revGrowth2025: 55, netGrowth2025: 70, grossMargin2025: 52, netMargin2025: 18, roe2025: 28, der: [0.4, 0.4, 0.5], derPost: 0.3 },
-    financials: { revenue: [800, 1100, 1700], netProfitTotal: [120, 180, 300], netProfitParent: [120, 180, 300] },
+    sectorGroup: "Consumer", financials: { revenue: [800, 1100, 1700], grossProfit: [400, 560, 880], netProfitTotal: [120, 180, 300], netProfitParent: [120, 180, 300] },
     valuation: { peLow: 8, peHigh: 11, pbLow: 1.1, pbHigh: 1.4, verdict: "Attractive vs peers", mcapLow: 1.5e12, mcapHigh: 1.8e12 },
     debtAlloc: { pct: 10 }, lockup: { strength: "Hard lock" }, freeFloat: 22, hasSecondary: false, esa: { exists: true },
     shareholdersPost: [{ name: "Founder", pct: 52 }, { name: "Public", pct: 22 }, { name: "Strategic", pct: 14 }, { name: "ESA", pct: 12 }],
@@ -262,13 +347,13 @@ if (import.meta.main) {
   const weak = {
     ticker: "WEAK",
     metrics: { revGrowth2025: -10, netGrowth2025: -25, grossMargin2025: 14, netMargin2025: 3, roe2025: 6, der: [3.2, 3.5, 3.8], derPost: 2.8 },
-    financials: { revenue: [900, 820, 760], netProfitTotal: [40, 10, 8], netProfitParent: [40, -5, 8] },
+    sectorGroup: "Consumer", financials: { revenue: [900, 820, 760], grossProfit: [200, 150, 130], netProfitTotal: [40, 10, 8], netProfitParent: [40, -5, 8] },
     valuation: { peLow: 45, peHigh: 65, pbLow: 5, pbHigh: 7, verdict: "Premium / stretched", mcapLow: 1.5e11, mcapHigh: 2e11 },
     debtAlloc: { pct: 70 }, lockup: { strength: "None" }, freeFloat: 6, hasSecondary: true, esa: { exists: false },
     shareholdersPost: [{ name: "Controller", pct: 90 }, { name: "Public", pct: 6 }, { name: "Other", pct: 4 }],
     ownership: { level: "pep-linked", flags: ["a", "b"], caveats: ["c"], holders: [{ name: "X", tags: ["pep"] }] },
     counterweights: [{ strength: "Minor" }],
-    redFlags: [{ severity: "High" }, { severity: "High" }, { severity: "Med-High" }, { severity: "Med" }, { severity: "Med" }],
+    redFlags: [{ severity: "High", text: "Net profit boosted by a one-off land revaluation gain" }, { severity: "High" }, { severity: "Med-High" }, { severity: "Med" }, { severity: "Med" }],
   };
   const a = scoreDeal(strong, uw), b = scoreDeal(weak, uw);
   const assert = (c: boolean, m: string) => { if (!c) throw new Error("self-check FAILED: " + m); };
@@ -282,5 +367,16 @@ if (import.meta.main) {
   assert(a.underwriter.leadGrade === "A" && b.underwriter.jointGrade === "C", "underwriter grades wired");
   assert(b.underwriter.score === Math.round(50 * 0.8 + 50 * 0.2), "joint blend 0.8/0.2");
   assert(gradeFromScore(a.overall) === a.grade, "grade matches band");
-  console.log(`score.ts self-check OK (v2) — strong ${a.overall}/${a.grade}, weak ${b.overall}/${b.grade}`);
+  // earnings quality present + discounts the one-off-flagged deal
+  const eqOf = (s: DealScore) => s.axes[0].inputs.find((i) => /earnings quality/i.test(i.label))!.score!;
+  assert(a.axes[0].inputs.some((i) => /earnings quality/i.test(i.label)), "fundamentals has earnings quality");
+  assert(eqOf(a) > eqOf(b), `earnings quality discounts the one-off deal (${eqOf(a)} vs ${eqOf(b)})`);
+  // peer-relative: in a cohort, the cheapest-multiple deal out-scores the priciest on Valuation
+  const mk = (t: string, pe: number, pb: number, gm: number, nmg: number, roe: number) =>
+    ({ ticker: t, sectorGroup: "X", valuation: { peLow: pe, peHigh: pe, pbLow: pb, pbHigh: pb }, metrics: { grossMargin2025: gm, netMargin2025: nmg, roe2025: roe }, financials: {} });
+  const cohort = [mk("CHEAP", 8, 1, 40, 12, 18), mk("MID", 19, 2, 30, 8, 12), mk("RICH", 55, 6, 20, 4, 7)];
+  const cs = scoreDeals(cohort, uw);
+  const valOf = (t: string) => cs[cohort.findIndex((d) => d.ticker === t)].axes.find((x) => x.key === "valuation")!.score!;
+  assert(valOf("CHEAP") > valOf("RICH"), `peer-relative valuation: cheap (${valOf("CHEAP")}) > rich (${valOf("RICH")})`);
+  console.log(`score.ts self-check OK (v3) — strong ${a.overall}/${a.grade}, weak ${b.overall}/${b.grade}; EQ ${eqOf(a)}/${eqOf(b)}; peer val cheap ${valOf("CHEAP")} > rich ${valOf("RICH")}`);
 }

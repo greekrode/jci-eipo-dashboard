@@ -239,7 +239,7 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
             ))}
           </div>
           <p className="mt-2.5 font-mono text-[10px] leading-relaxed text-muted-foreground/70">
-            Each axis is a 0–100 blend of the inputs shown; the headline is their weighted mean (Fundamentals 30 · Valuation 22 · Balance sheet 16 · Governance &amp; sponsor 32). Deterministic and auditable — educational only, not a recommendation. See disclaimer.
+            Each axis is a 0–100 blend of the inputs shown; the headline is their weighted mean (Fundamentals 30 · Valuation 22 · Balance sheet 16 · Governance &amp; sponsor 32). Margins, ROE and valuation multiples are scored half on absolute bands, half against sector / cohort peers; earnings quality discounts one-off / non-operating profit. Deterministic and auditable — educational only, not a recommendation. See disclaimer.
           </p>
         </details>
       </CardContent>
