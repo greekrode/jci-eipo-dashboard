@@ -24,7 +24,7 @@ export interface DealScore {
   version: string;
 }
 
-const VERSION = "v1";
+const VERSION = "v2";
 const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x));
 const isNum = (x: unknown): x is number => typeof x === "number" && Number.isFinite(x);
 
@@ -53,6 +53,9 @@ function meanScore(inputs: ScoreInput[]): number | null {
 
 const pct = (x: number | null | undefined, d = 1) => (isNum(x) ? `${x.toFixed(d)}%` : "n/d");
 const num = (x: number | null | undefined, d = 1) => (isNum(x) ? x.toFixed(d) : "n/d");
+/** Compact rupiah for score labels: Rp1.8T / Rp640bn / Rp90m. */
+const rpShort = (x: number | null | undefined): string =>
+  !isNum(x) ? "n/d" : x >= 1e12 ? `Rp${(x / 1e12).toFixed(1)}T` : x >= 1e9 ? `Rp${Math.round(x / 1e9)}bn` : `Rp${Math.round(x / 1e6)}m`;
 
 function verdictScore(v: string | null | undefined): number | null {
   if (typeof v !== "string") return null;
@@ -93,6 +96,24 @@ function fundamentals(o: any): ScoreAxis {
     { label: "Net margin (FY25)", value: pct(m.netMargin2025), score: band(m.netMargin2025, [[2, 38], [6, 55], [10, 68], [16, 82], [25, 95]]) },
     { label: "ROE (FY25)", value: pct(m.roe2025), score: band(m.roe2025, [[5, 38], [12, 58], [18, 70], [26, 84], [40, 96]]) },
   ];
+  // 3-year quality: trajectory + consistency (so a one-year spike doesn't carry the score)
+  const f = o.financials ?? {};
+  const rev: (number | null)[] = f.revenue ?? [], npt: (number | null)[] = f.netProfitTotal ?? [], npp: (number | null)[] = f.netProfitParent ?? [];
+  const nm = (i: number) => (isNum(npt[i]) && isNum(rev[i]) && rev[i] !== 0 ? (npt[i]! / rev[i]!) * 100 : null);
+  const nm0 = nm(0), nm2 = nm(2);
+  const mDelta = isNum(nm0) && isNum(nm2) ? nm2! - nm0! : null;
+  inputs.push({
+    label: "Net-margin trend (3-yr)",
+    value: isNum(nm0) && isNum(nm2) ? `${nm0!.toFixed(0)}%→${nm2!.toFixed(0)}%` : "n/d",
+    score: band(mDelta, [[-15, 28], [-6, 42], [0, 56], [5, 70], [12, 86], [20, 94]]),
+  });
+  const yrsPos = [0, 1, 2].filter((i) => isNum(npp[i]) && npp[i]! > 0).length;
+  const yrsData = [0, 1, 2].filter((i) => isNum(npp[i])).length;
+  inputs.push({
+    label: "Profit consistency (3-yr)",
+    value: yrsData ? `${yrsPos}/${yrsData} yrs profitable` : "n/d",
+    score: yrsData ? band(yrsPos / yrsData, [[0, 20], [0.34, 40], [0.67, 64], [1, 90]]) : null,
+  });
   return { key: "fundamentals", label: "Fundamentals", weight: 0.30, score: meanScore(inputs), inputs };
 }
 
@@ -144,23 +165,37 @@ function governance(o: any, uw: any): { axis: ScoreAxis; underwriter: Underwrite
   const uwValue = `${shortFirm(underwriter.leadName)} (${underwriter.leadGrade})` +
     (jointFirm ? ` + ${shortFirm(jointFirm.legalName)} (${jointFirm.grade})` : "");
 
-  // --- ownership / shareholder exposure ---
+  // --- shareholder composition: exposure level + concentration + diversity + quality backing ---
   const own = o.ownership ?? {};
-  const ownBase = LEVEL_BASE[own.level] ?? 60;
-  const ownScore = Math.round(clamp(ownBase - 3 * (own.flags?.length ?? 0) - 2 * (own.caveats?.length ?? 0), 35, 90));
-  const ownValue = `${own.level ?? "n/d"}` +
-    ((own.holders?.length ?? 0) ? ` · ${own.holders.length} flagged holder${own.holders.length > 1 ? "s" : ""}` : "");
+  const post: any[] = Array.isArray(o.shareholdersPost) ? o.shareholdersPost : [];
+  const pcts = post.map((p) => (isNum(p.pct) ? p.pct : 0));
+  const topStake = pcts.length ? Math.max(...pcts) : null; // largest post-IPO holder
+  const subst = post.filter((p) => isNum(p.pct) && p.pct >= 5).length; // substantial holders
+  const ownTags = new Set<string>((own.holders ?? []).flatMap((h: any) => h.tags ?? []));
+  let comp = LEVEL_BASE[own.level] ?? 60;
+  if (isNum(topStake)) { if (topStake >= 85) comp -= 6; else if (topStake >= 70) comp -= 2; else if (topStake >= 45) comp += 3; } // a clear (not absolute) controller is healthy
+  if (subst >= 4) comp += 3; else if (subst <= 1 && post.length > 0) comp -= 3; // diversity vs one-holder concentration
+  if (ownTags.has("foreign-strategic") || ownTags.has("affiliated-listed")) comp += 4; // strategic / institutional anchor
+  comp -= 3 * (own.flags?.length ?? 0) + 2 * (own.caveats?.length ?? 0);
+  const compScore = Math.round(clamp(comp, 32, 92));
+  const compValue = `${own.level ?? "n/d"}` + (subst ? ` · ${subst} holders ≥5%` : "") + (isNum(topStake) && topStake > 0 ? ` · top ${num(topStake, 0)}%` : "");
 
-  // --- deal structure: lock-up + free float + secondary + ESA ---
-  const lk = o.lockup?.strength;
-  let s = lk === "Hard lock" ? 78 : lk === "Control only" ? 60 : 42;
+  // --- liquidity & deal size: post-IPO market cap + free float (IDX small-cap illiquidity risk) ---
+  const mcap = mid(o.valuation?.mcapLow, o.valuation?.mcapHigh);
   const ff = o.freeFloat;
-  if (isNum(ff)) { if (ff < 8) s -= 8; else if (ff < 15) s -= 2; else if (ff <= 40) s += 4; }
-  if (o.hasSecondary) s -= 6;
-  if (o.esa?.exists) s += 3;
-  const structScore = Math.round(clamp(s, 30, 92));
-  const structValue = `${lk ?? "n/d"}` + (isNum(ff) ? `, ${num(ff, 0)}% float` : "") +
-    (o.hasSecondary ? ", secondary sale" : "");
+  const sizeScore = band(mcap, [[2e11, 34], [5e11, 50], [1e12, 64], [2e12, 77], [5e12, 90]]);
+  const floatScore = band(ff, [[5, 38], [10, 55], [20, 74], [35, 82], [55, 74]]); // too thin or unusually high both shade down
+  const liqParts = [sizeScore, floatScore].filter(isNum) as number[];
+  const liqScore = liqParts.length ? Math.round(liqParts.reduce((a, b) => a + b, 0) / liqParts.length) : 50;
+  const liqValue = `${rpShort(mcap)} mcap` + (isNum(ff) ? ` · ${num(ff, 0)}% float` : "");
+
+  // --- deal structure: lock-up + secondary + ESA (free float now scored under liquidity) ---
+  const lk = o.lockup?.strength;
+  let st = lk === "Hard lock" ? 78 : lk === "Control only" ? 58 : 42;
+  if (o.hasSecondary) st -= 8;
+  if (o.esa?.exists) st += 4;
+  const structScore = Math.round(clamp(st, 30, 90));
+  const structValue = `${lk ?? "n/d"}` + (o.hasSecondary ? " · secondary sale" : "") + (o.esa?.exists ? " · ESA" : "");
 
   // --- net red-vs-green flag balance ---
   const greens = o.counterweights ?? [], reds = o.redFlags ?? [];
@@ -171,11 +206,12 @@ function governance(o: any, uw: any): { axis: ScoreAxis; underwriter: Underwrite
 
   const inputs: ScoreInput[] = [
     { label: "Underwriter track record", value: uwValue, score: uwScore },
-    { label: "Ownership exposure", value: ownValue, score: ownScore },
+    { label: "Shareholder composition", value: compValue, score: compScore },
+    { label: "Liquidity & deal size", value: liqValue, score: liqScore },
     { label: "Deal structure", value: structValue, score: structScore },
     { label: "Red / green flag balance", value: flagValue, score: flagScore },
   ];
-  const axisScore = Math.round(0.30 * uwScore + 0.25 * ownScore + 0.20 * structScore + 0.25 * flagScore);
+  const axisScore = Math.round(0.26 * uwScore + 0.24 * compScore + 0.16 * liqScore + 0.14 * structScore + 0.20 * flagScore);
   return { axis: { key: "governance", label: "Governance & sponsor", weight: 0.32, score: axisScore, inputs }, underwriter };
 }
 
@@ -215,8 +251,10 @@ if (import.meta.main) {
   const strong = {
     ticker: "STRONG",
     metrics: { revGrowth2025: 55, netGrowth2025: 70, grossMargin2025: 52, netMargin2025: 18, roe2025: 28, der: [0.4, 0.4, 0.5], derPost: 0.3 },
-    valuation: { peLow: 8, peHigh: 11, pbLow: 1.1, pbHigh: 1.4, verdict: "Attractive vs peers" },
+    financials: { revenue: [800, 1100, 1700], netProfitTotal: [120, 180, 300], netProfitParent: [120, 180, 300] },
+    valuation: { peLow: 8, peHigh: 11, pbLow: 1.1, pbHigh: 1.4, verdict: "Attractive vs peers", mcapLow: 1.5e12, mcapHigh: 1.8e12 },
     debtAlloc: { pct: 10 }, lockup: { strength: "Hard lock" }, freeFloat: 22, hasSecondary: false, esa: { exists: true },
+    shareholdersPost: [{ name: "Founder", pct: 52 }, { name: "Public", pct: 22 }, { name: "Strategic", pct: 14 }, { name: "ESA", pct: 12 }],
     ownership: { level: "clean", flags: [], caveats: [], holders: [] },
     counterweights: [{ strength: "Strong" }, { strength: "Strong" }, { strength: "Moderate" }],
     redFlags: [{ severity: "Low" }, { severity: "Med" }],
@@ -224,8 +262,10 @@ if (import.meta.main) {
   const weak = {
     ticker: "WEAK",
     metrics: { revGrowth2025: -10, netGrowth2025: -25, grossMargin2025: 14, netMargin2025: 3, roe2025: 6, der: [3.2, 3.5, 3.8], derPost: 2.8 },
-    valuation: { peLow: 45, peHigh: 65, pbLow: 5, pbHigh: 7, verdict: "Premium / stretched" },
+    financials: { revenue: [900, 820, 760], netProfitTotal: [40, 10, 8], netProfitParent: [40, -5, 8] },
+    valuation: { peLow: 45, peHigh: 65, pbLow: 5, pbHigh: 7, verdict: "Premium / stretched", mcapLow: 1.5e11, mcapHigh: 2e11 },
     debtAlloc: { pct: 70 }, lockup: { strength: "None" }, freeFloat: 6, hasSecondary: true, esa: { exists: false },
+    shareholdersPost: [{ name: "Controller", pct: 90 }, { name: "Public", pct: 6 }, { name: "Other", pct: 4 }],
     ownership: { level: "pep-linked", flags: ["a", "b"], caveats: ["c"], holders: [{ name: "X", tags: ["pep"] }] },
     counterweights: [{ strength: "Minor" }],
     redFlags: [{ severity: "High" }, { severity: "High" }, { severity: "Med-High" }, { severity: "Med" }, { severity: "Med" }],
@@ -233,10 +273,14 @@ if (import.meta.main) {
   const a = scoreDeal(strong, uw), b = scoreDeal(weak, uw);
   const assert = (c: boolean, m: string) => { if (!c) throw new Error("self-check FAILED: " + m); };
   assert(a.overall > b.overall, "strong must outscore weak");
-  assert(a.overall >= 75 && b.overall <= 50, `spread sane (${a.overall} vs ${b.overall})`);
+  assert(a.overall >= 72 && b.overall <= 52, `spread sane (${a.overall} vs ${b.overall})`);
   assert(a.axes.every((x) => isNum(x.score) && x.score! >= 0 && x.score! <= 100), "all axes 0-100");
+  assert(Number.isInteger(a.axes[0].score), "axis scores are integers");
+  assert(a.axes[0].inputs.some((i) => /trend/i.test(i.label)) && a.axes[0].inputs.some((i) => /consistency/i.test(i.label)), "fundamentals has 3-yr trend + consistency");
+  const ga = a.axes.find((x) => x.key === "governance")!;
+  assert(ga.inputs.some((i) => /Liquidity/i.test(i.label)) && ga.inputs.some((i) => /composition/i.test(i.label)), "governance has liquidity + shareholder composition");
   assert(a.underwriter.leadGrade === "A" && b.underwriter.jointGrade === "C", "underwriter grades wired");
   assert(b.underwriter.score === Math.round(50 * 0.8 + 50 * 0.2), "joint blend 0.8/0.2");
   assert(gradeFromScore(a.overall) === a.grade, "grade matches band");
-  console.log(`score.ts self-check OK — strong ${a.overall}/${a.grade}, weak ${b.overall}/${b.grade}`);
+  console.log(`score.ts self-check OK (v2) — strong ${a.overall}/${a.grade}, weak ${b.overall}/${b.grade}`);
 }

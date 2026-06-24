@@ -426,6 +426,10 @@ check(T.RANS.score.underwriter.leadGrade === "A" && T.BACH.score.underwriter.lea
 check(T.EMMI.score.underwriter.jointGrade === "C", "EMMI joint underwriter resolved (INA, grade C)");
 const _scores = out.map((o: any) => o.score.overall);
 check(Math.max(..._scores) - Math.min(..._scores) >= 8, `AI score spread >= 8 pts (got ${Math.max(..._scores) - Math.min(..._scores)})`);
+// v2 enrichments present and clean
+check(out.every((o: any) => { const fx = o.score.axes.find((a: any) => a.key === "fundamentals"); return fx.inputs.some((i: any) => /trend/i.test(i.label)) && fx.inputs.some((i: any) => /consistency/i.test(i.label)); }), "fundamentals carries 3-yr trend + consistency");
+check(out.every((o: any) => { const g = o.score.axes.find((a: any) => a.key === "governance"); return g.inputs.some((i: any) => /Liquidity/i.test(i.label)) && g.inputs.some((i: any) => /composition/i.test(i.label)); }), "governance carries liquidity + shareholder composition");
+check(out.every((o: any) => o.score.axes.every((a: any) => Number.isInteger(a.score)) && o.score.version === "v2"), "axis scores integer + score version v2");
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);
