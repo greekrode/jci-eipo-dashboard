@@ -49,6 +49,39 @@ export interface OwnershipExposure {
   caveats: string[];
 }
 
+/** AI Score — a transparent, deterministic composite (scripts/score.ts) computed at build time
+ *  from the criteria above. Headline 0–100 = weighted mean of four axes; every axis carries its
+ *  named inputs so the number is auditable, not a black box. The "Governance & sponsor" axis folds
+ *  in the underwriter's IDX IPO track record (scripts/underwriter-research.json). */
+export interface ScoreInput {
+  label: string;
+  value: string; // human-readable input value, e.g. "P/E 24×", "Trimegah (A)"
+  score: number | null; // 0–100 contribution, or null when the input is n/d
+}
+export interface ScoreAxis {
+  key: string; // "fundamentals" | "valuation" | "balance" | "governance"
+  label: string;
+  score: number | null; // 0–100
+  weight: number; // share of the headline (0–1)
+  inputs: ScoreInput[];
+}
+export interface UnderwriterScore {
+  leadName: string;
+  leadGrade: string; // "A" | "B" | "C" | "D"
+  jointName: string | null;
+  jointGrade: string | null;
+  score: number; // 0–100 (lead, or 0.8·lead + 0.2·joint)
+  tier: string; // "large" | "established-mid" | "small"
+  summary: string; // post-listing track-record summary
+}
+export interface DealScore {
+  overall: number; // 0–100 weighted composite
+  grade: string; // "A" | "B+" | "B" | "C+" | "C" | "D+" | "D" | "E"
+  axes: ScoreAxis[]; // Fundamentals / Valuation / Balance sheet / Governance & sponsor
+  underwriter: UnderwriterScore;
+  version: string;
+}
+
 /** Business-model breakdown extracted from the prospectus (scripts/upcoming-supplement.json). */
 export interface BusinessModel {
   summary: string;
@@ -104,6 +137,8 @@ export interface UpcomingIPO {
   businessModel: BusinessModel | null;
   /** Shareholder background research, reduced to public-safe structural flags. */
   ownership: OwnershipExposure | null;
+  /** Transparent composite "AI Score" over all criteria, incl. underwriter track record. */
+  score: DealScore | null;
 
   useOfProceeds: UseOfProceedsItem[];
   debtAlloc: {

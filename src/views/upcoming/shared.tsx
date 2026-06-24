@@ -56,6 +56,39 @@ export function strengthCount(flags: { strength: string }[], level: string): num
   return flags.filter((g) => (g.strength ?? "").toLowerCase().includes(l)).length;
 }
 
+// ── AI Score presentation ─────────────────────────────────────────────────────
+
+/** Badge tone for an AI-Score letter grade (A best → E worst). */
+export function gradeVariant(grade: string): "pos" | "secondary" | "outline" | "neg" {
+  const g = (grade ?? "").toUpperCase();
+  if (g === "A" || g === "B+") return "pos";
+  if (g === "B" || g === "C+") return "secondary";
+  if (g === "C" || g === "D+") return "outline";
+  return "neg"; // D, E
+}
+
+/** Tailwind bg class for a 0–100 score-bar fill (3 tiers, restrained). */
+export function scoreTone(n: number | null): string {
+  if (n == null) return "bg-muted-foreground/30";
+  if (n >= 70) return "bg-pos/70";
+  if (n >= 55) return "bg-primary/65";
+  return "bg-neg/65";
+}
+
+/** Badge tone for an underwriter track-record grade (A/B/C/D). */
+export function uwGradeVariant(grade: string): "pos" | "secondary" | "outline" | "neg" {
+  const g = (grade ?? "").toUpperCase();
+  if (g === "A") return "pos";
+  if (g === "B") return "secondary";
+  if (g === "C") return "outline";
+  return "neg"; // D
+}
+
+/** "PT Trimegah Sekuritas Indonesia Tbk" -> "Trimegah Sekuritas Indonesia". */
+export function firmShort(name: string): string {
+  return (name ?? "").replace(/^PT\s+/i, "").replace(/\s+Tbk\b.*/i, "").split(/[(,]/)[0].trim();
+}
+
 /** NFA / DYOR disclaimer shown on every Upcoming surface (compare + detail). */
 export function Disclaimer() {
   return (

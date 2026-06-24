@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { idr, idrBn, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
-import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip, gradeVariant, uwGradeVariant } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
 
 /** A metric row in the transposed comparison matrix. `dir` marks which extreme to highlight. */
@@ -29,6 +29,24 @@ const rangeCell = (a: number | null, b: number | null, fmt: (x: number | null) =
   a == null && b == null ? "—" : a === b ? `${fmt(a)}${suffix}` : `${fmt(a)}–${fmt(b)}${suffix}`;
 
 const METRICS: Metric[] = [
+  // ── AI Score (headline synthesis) ─────────────────────────────────────────
+  {
+    group: "AI Score",
+    label: "AI Score",
+    hint: "Transparent composite (0–100) over the criteria below — fundamentals, valuation, balance sheet, and governance (incl. the underwriter's IDX IPO track record). Deterministic, auditable; educational only, not a recommendation.",
+    dir: "high", rank: (i) => i.score?.overall ?? null,
+    cell: (i, best) => {
+      const s = i.score;
+      if (!s) return <span className="text-muted-foreground">—</span>;
+      return (
+        <span className="inline-flex items-center gap-1.5">
+          <Strong on={best}>{s.overall}</Strong>
+          <Badge variant={gradeVariant(s.grade)}>{s.grade}</Badge>
+        </span>
+      );
+    },
+  },
+
   // ── Deal ────────────────────────────────────────────────────────────────
   { group: "Deal", label: "Listing date", cell: (i) => fmtDate(i.listingISO) },
   {
@@ -42,7 +60,16 @@ const METRICS: Metric[] = [
   },
   {
     group: "Deal", label: "Lead underwriter",
-    cell: (i) => <span className="text-muted-foreground">{shortUW(i.underwriter)}</span>,
+    hint: "IDX IPO track-record grade for the lead underwriter (A best → D), from post-listing performance of their recent deals.",
+    cell: (i) => {
+      const g = i.score?.underwriter?.leadGrade;
+      return (
+        <span className="inline-flex items-center justify-center gap-1.5">
+          <span className="text-muted-foreground">{shortUW(i.underwriter)}</span>
+          {g && <Badge variant={uwGradeVariant(g)}>{g}</Badge>}
+        </span>
+      );
+    },
   },
   { group: "Deal", label: "Offer price", cell: (i) => priceRange(i.offering.priceLow, i.offering.priceHigh) },
   {

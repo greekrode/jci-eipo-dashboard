@@ -8,12 +8,14 @@
 // programmatically. Run: bun run scripts/build-upcoming.ts
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { scoreDeal } from "./score";
 
 const ROOT = resolve(import.meta.dir, "..");
 const SRC = resolve(ROOT, "_sources", "upcoming");
 const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
 const RESEARCH = resolve(ROOT, "scripts", "shareholder-research.json"); // shareholder background research (committed)
+const UWR = resolve(ROOT, "scripts", "underwriter-research.json"); // underwriter IPO track-record research (committed)
 const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS"];
 
 // Tags we surface in the public UI: verifiable ownership-structure facts only.
@@ -307,6 +309,7 @@ function normalize(raw: Obj, narrativeMd: string, ticker: string) {
     businessModel: null, // filled from supplement (prospectus-PDF extraction)
     forensicMd: null, // filled from scripts/forensic/<TICKER>.md
     ownership: null as any, // filled from scripts/shareholder-research.json (structural flags only)
+    score: null as any, // filled below by scoreDeal() once all merges are in
     raw,
     narrativeMd,
   };
@@ -370,6 +373,12 @@ for (const o of out as any[]) {
   }
 }
 
+// AI Score — transparent composite over the merged criteria (incl. underwriter track record).
+// Runs last so every input (supplement counterweights/redFlags, ownership, valuation) is present.
+let uwResearch: any = { _meta: {}, deals: {}, firms: {} };
+try { uwResearch = JSON.parse(readFileSync(UWR, "utf8")); } catch { /* underwriter research optional */ }
+for (const o of out as any[]) o.score = scoreDeal(o, uwResearch);
+
 mkdirSync(OUT, { recursive: true });
 writeFileSync(resolve(OUT, "upcoming-ipos.json"), JSON.stringify(out, null, 0));
 
@@ -406,6 +415,17 @@ check((T.RANS.ownership.caveats?.length ?? 0) >= 1 && (T.JECX.ownership.caveats?
 // flags normalized across all deals: every red flag graded, every deal has >=5 graded green flags
 check(out.every((o: any) => o.redFlags.length >= 8 && o.redFlags.every((r: any) => typeof r.severity === "string" && r.severity)), "every deal has graded red flags");
 check(out.every((o: any) => Array.isArray(o.counterweights) && o.counterweights.length >= 5 && o.counterweights.every((c: any) => c.text && typeof c.strength === "string")), "every deal has >=5 graded green flags");
+// AI Score wired in: every deal scored 0-100 with grade + 4 axes + resolved underwriter
+check(out.every((o: any) => o.score && isNum(o.score.overall) && o.score.overall >= 0 && o.score.overall <= 100), "every deal has an AI score in 0-100");
+check(out.every((o: any) => typeof o.score.grade === "string" && o.score.grade), "every deal has a letter grade");
+check(out.every((o: any) => Array.isArray(o.score.axes) && o.score.axes.length === 4 && o.score.axes.every((a: any) => isNum(a.score) && a.inputs.length > 0)), "every deal has 4 scored axes with inputs");
+check(out.every((o: any) => o.score.underwriter?.leadName && o.score.underwriter?.leadGrade), "every deal has a resolved underwriter");
+const uwSub = (o: any) => o.score.axes.find((a: any) => a.key === "governance").inputs.find((i: any) => /Underwriter/.test(i.label)).score;
+check(uwSub(T.JECX) > uwSub(T.BACH) && uwSub(T.RANS) > uwSub(T.BACH), "Trimegah-led (A) deals out-score Erdikha-led (C) on the underwriter sub-score");
+check(T.RANS.score.underwriter.leadGrade === "A" && T.BACH.score.underwriter.leadGrade === "C", "RANS underwriter A (Trimegah), BACH underwriter C (Erdikha)");
+check(T.EMMI.score.underwriter.jointGrade === "C", "EMMI joint underwriter resolved (INA, grade C)");
+const _scores = out.map((o: any) => o.score.overall);
+check(Math.max(..._scores) - Math.min(..._scores) >= 8, `AI score spread >= 8 pts (got ${Math.max(..._scores) - Math.min(..._scores)})`);
 for (const o of out as any[]) {
   const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);
@@ -416,4 +436,5 @@ console.log(`Wrote ${out.length} upcoming IPOs -> src/data/upcoming-ipos.json`);
 for (const o of out) {
   console.log(`  ${o.ticker}  list ${o.listingISO}  float ${o.freeFloat}%  rev25 Rp${o.financials.revenue[2]}bn  P/E ${o.valuation.peLow}-${o.valuation.peHigh}  DER ${o.metrics.der[2]}  →debt ${o.debtAlloc.pct ?? `${o.debtAlloc.low}-${o.debtAlloc.high}`}% ${o.debtAlloc.basis}  lock:${o.lockup.strength}`);
 }
+console.log("AI scores: " + out.map((o: any) => `${o.ticker} ${o.score.overall}/${o.score.grade} [uw ${o.score.underwriter.leadGrade}]`).join("  ·  "));
 console.log("All sanity asserts passed ✓");

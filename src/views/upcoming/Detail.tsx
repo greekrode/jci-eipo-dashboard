@@ -9,7 +9,7 @@ import { StatStrip } from "@/components/stat-strip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
-import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort } from "@/views/upcoming/shared";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const normKey = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
@@ -92,6 +92,8 @@ export default function Detail({
           </CardContent>
         </Card>
 
+        <ScorePanel ipo={ipo} />
+
         <StatStrip items={kpis} cols={6} />
 
         {/* panels — masonry so uneven card heights pack tightly; staggered entrance */}
@@ -150,6 +152,97 @@ function Panel({ title, note, children, defaultOpen = true }: { title: string; n
         </summary>
         <CardContent className="p-0">{children}</CardContent>
       </details>
+    </Card>
+  );
+}
+
+/** AI Score — the headline synthesis. Big number + grade, the four axis bars, an underwriter
+ *  callout (the user-requested sponsor signal), and an expandable per-input breakdown so the
+ *  number stays auditable rather than a black box. */
+function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
+  const s = ipo.score;
+  if (!s) return null;
+  const uw = s.underwriter;
+  return (
+    <Card>
+      <CardContent className="space-y-4 p-4 sm:p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+          {/* headline number + grade */}
+          <div className="flex shrink-0 items-center gap-4 sm:flex-col sm:items-start sm:justify-center sm:gap-1.5 sm:border-r sm:border-border sm:pr-6">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">AI Score</span>
+            <div className="flex items-baseline gap-1">
+              <span className="tabnum text-[46px] font-semibold leading-none tracking-tight text-foreground">{s.overall}</span>
+              <span className="font-mono text-[13px] text-muted-foreground">/100</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant={gradeVariant(s.grade)} className="px-1.5 py-0.5 text-[12px]">{s.grade}</Badge>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">{s.version}</span>
+            </div>
+          </div>
+          {/* axis bars */}
+          <div className="min-w-0 flex-1 space-y-2 self-center">
+            {s.axes.map((a) => (
+              <div key={a.key} className="flex items-center gap-2.5">
+                <span className="w-[112px] shrink-0 truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground" title={a.label}>{a.label}</span>
+                <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-[1px] bg-border/60">
+                  <div className={`h-full rounded-[1px] ${scoreTone(a.score)}`} style={{ width: `${a.score ?? 0}%` }} />
+                </div>
+                <span className="w-6 shrink-0 text-right font-mono text-[12px] tabnum text-foreground">{a.score ?? "—"}</span>
+                <span className="hidden w-9 shrink-0 text-right font-mono text-[10px] tabnum text-muted-foreground/60 sm:inline">{Math.round(a.weight * 100)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* underwriter callout — sponsor track record */}
+        <div className="rounded-[2px] border border-border bg-secondary/30 px-3 py-2.5">
+          <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Underwriter</span>
+            <span className="text-[12.5px] text-foreground">{firmShort(uw.leadName)}</span>
+            <Badge variant={uwGradeVariant(uw.leadGrade)} className="px-1 py-0 text-[9.5px]">{uw.leadGrade}</Badge>
+            {uw.jointName && (
+              <>
+                <span className="text-[11.5px] text-muted-foreground">+ {firmShort(uw.jointName)}</span>
+                <Badge variant={uwGradeVariant(uw.jointGrade ?? "")} className="px-1 py-0 text-[9.5px]">{uw.jointGrade}</Badge>
+              </>
+            )}
+            {uw.tier && <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">· {uw.tier}</span>}
+          </div>
+          {uw.summary && <p className="text-[11.5px] leading-relaxed text-muted-foreground">{uw.summary}</p>}
+        </div>
+
+        {/* see why — per-axis inputs */}
+        <details className="group">
+          <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+            <span className="text-[9px] transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
+            How each axis scores
+          </summary>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {s.axes.map((a) => (
+              <div key={a.key} className="rounded-[2px] border border-border/60 p-2.5">
+                <div className="mb-1.5 flex items-center justify-between border-b border-border/50 pb-1.5">
+                  <span className="font-mono text-[10.5px] uppercase tracking-wider text-foreground">{a.label}</span>
+                  <span className="font-mono text-[11px] tabnum text-muted-foreground">{a.score ?? "—"} · {Math.round(a.weight * 100)}%</span>
+                </div>
+                <ul className="space-y-1">
+                  {a.inputs.map((inp, i) => (
+                    <li key={i} className="flex items-baseline justify-between gap-2 text-[11.5px]">
+                      <span className="min-w-0 truncate text-muted-foreground" title={inp.label}>{inp.label}</span>
+                      <span className="flex max-w-[58%] shrink-0 items-baseline gap-2">
+                        <span className="min-w-0 truncate text-right font-mono tabnum text-foreground/90" title={inp.value}>{inp.value}</span>
+                        <span className={`w-5 shrink-0 text-right font-mono text-[10px] tabnum ${inp.score == null ? "text-muted-foreground/40" : "text-muted-foreground"}`}>{inp.score == null ? "n/d" : Math.round(inp.score)}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2.5 font-mono text-[10px] leading-relaxed text-muted-foreground/70">
+            Each axis is a 0–100 blend of the inputs shown; the headline is their weighted mean (Fundamentals 30 · Valuation 22 · Balance sheet 16 · Governance &amp; sponsor 32). Deterministic and auditable — educational only, not a recommendation. See disclaimer.
+          </p>
+        </details>
+      </CardContent>
     </Card>
   );
 }

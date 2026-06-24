@@ -1,0 +1,170 @@
+{
+  "_meta": {
+    "asOf": "2026-06-24",
+    "purpose": "Underwriter (penjamin emisi efek) IDX IPO track-record research, feeding the 'sponsor' component of the AI Score. The key signal is post-listing performance: do this house's recent lead IPOs hold up, or pop-and-fade.",
+    "disclaimer": "Track records are research-grade summaries compiled from public sources as of the asOf date and conservatively graded. Past underwriter performance does not predict any individual IPO's outcome. Not investment advice — DYOR.",
+    "gradeScale": "A = large reputable house, listings generally hold up; B = established mid-tier, mixed but credible book; C = small house or thin/weak post-listing record; D = poor record or regulatory flags.",
+    "gradePoints": { "A": 90, "B": 72, "C": 50, "D": 28 }
+  },
+  "deals": {
+    "BACH": { "lead": "erdikha" },
+    "JECX": { "lead": "trimegah" },
+    "JELI": { "lead": "sucor" },
+    "EMMI": { "lead": "bri-danareksa", "joint": "ina" },
+    "PRDL": { "lead": "sucor" },
+    "RANS": { "lead": "trimegah" }
+  },
+  "firms": {
+    "trimegah": {
+      "key": "trimegah",
+      "legalName": "PT Trimegah Sekuritas Indonesia Tbk",
+      "group": "Controlled by Garibaldi 'Boy' Thohir (Adaro founder; brother of Erick Thohir), controlling shareholder since March 2022. Itself publicly listed on IDX as TRIM.",
+      "tier": "large",
+      "ipoLeadCount_2022_2025": 4,
+      "notableDeals": [
+        { "ticker": "CBDK", "year": 2025, "note": "Sole lead (Rp2.3T, largest IPO of early 2025). Hit Auto Reject Atas (ARA, +25%) day-1; oversubscribed ~344x; up ~157% within the first week." },
+        { "ticker": "CDIA", "year": 2025, "note": "Co-lead; Rp2.37T, largest IPO of 2025. Debut ARA +34.7%, multi-day ARA run, ~+300% vs IPO by mid-2026." },
+        { "ticker": "AADI", "year": 2024, "note": "Lead for Adaro Andalan Indonesia (Boy Thohir affiliate). Trading ~+42% vs IPO mid-2026; holds up well above offer." },
+        { "ticker": "PSAT", "year": 2025, "note": "Underwriter. Reliable post-listing data not confirmed in this pass." },
+        { "ticker": "MINE", "year": 2025, "note": "Underwriter. Reliable post-listing data not confirmed in this pass." }
+      ],
+      "performanceSummary": "Top-tier IDX equity underwriter: #1 in the 2022 Bloomberg equity-underwriting league (Rp5.2T, 14.5% share) and the busiest IPO lead in 2025 (~4 deals incl. the two largest, CDIA and CBDK). Its marquee recent lead IPOs held up strongly: CBDK (+157% in a week), CDIA (~+300%), AADI (~+42%). Performance confirmed for the headline deals; smaller 2025 names (PSAT, MINE) unverified.",
+      "firstDayPattern": "Headline recent lead deals opened strong, multiple hitting ARA on debut (CBDK +25%, CDIA +34.7%); no confirmed instance of a recent flagship breaking issue below offer.",
+      "underwaterNote": "Of the verifiable recent lead IPOs (CBDK, CDIA, AADI), none are underwater vs IPO as of mid-2026 — all trade well above offer. Full-portfolio underwater share not aggregated by any single source.",
+      "flags": [],
+      "grade": "A",
+      "gradeRationale": "Large, reputable, IDX-listed house (TRIM) backed by Garibaldi Thohir; #1 equity-underwriting league in 2022 and busiest IPO lead in 2025; no OJK/IDX sanctions found and verifiable lead IPOs all hold up strongly above offer.",
+      "confidence": "high",
+      "sources": [
+        "https://www.idnfinancials.com/trim/pt-trimegah-sekuritas-indonesia-tbk",
+        "https://investor.id/market-and-corporate/323633/trimegah-trim-jawara-penjaminan-emisi-saham-dirut-usia-27-tahun",
+        "https://market.bisnis.com/read/20250714/7/1892911/sederet-perusahaan-sekuritas-raup-cuan-underwriter-ipo-siapa-jawara",
+        "https://www.cnbcindonesia.com/market/20250113090728-17-602661/listing-perdana-saham-cbdk-terbang-dan-sentuh-batas-ara",
+        "https://stockbit.com/symbol/CDIA",
+        "https://www.idnfinancials.com/aadi/pt-adaro-andalan-indonesia-tbk"
+      ]
+    },
+    "sucor": {
+      "key": "sucor",
+      "legalName": "PT Sucor Sekuritas",
+      "group": "Sucor Group / Sucorinvest (financial services group founded 1989, Surabaya); IDX broker code AZ. The spun-off sister PT Sucorinvest Asset Management is a separate legal entity since Oct 2018.",
+      "tier": "established-mid",
+      "ipoLeadCount_2022_2025": 8,
+      "notableDeals": [
+        { "ticker": "RATU", "year": 2025, "note": "Joint lead. Debut +24.78% to ARA, then ~10 straight ARA sessions; oversubscribed 313x. Up ~+795% vs IPO — a major winner." },
+        { "ticker": "CYBR", "year": 2023, "note": "ISTEC Asia; joint lead. Up ~+1,130% since Aug 2023 listing — strong multi-bagger." },
+        { "ticker": "MBMA", "year": 2023, "note": "Merdeka Battery Materials; underwriter on Rp8.7T jumbo. First day +6.92%. Now ~-33% vs IPO." },
+        { "ticker": "HILL", "year": 2023, "note": "Hillcon; joint lead (~45.5% share), debut +110%. Subsequently collapsed ~95%, placed under special monitoring, dropped from FTSE — a crater / 'nyangkut' case." },
+        { "ticker": "GOTO", "year": 2022, "note": "GoTo; underwriter on jumbo IPO. Debut +13%. Now ~-80% vs IPO Rp338 — deeply underwater." },
+        { "ticker": "SUPA", "year": 2025, "note": "Superbank; one of 6 underwriters. >Rp2.7T, oversubscribed ~318x. Current price not reliably confirmed." }
+      ],
+      "performanceSummary": "Sucor lands real, sometimes jumbo mandates (GOTO, MBMA, SUPA, RATU) and has produced standout winners (RATU ~+795%, CYBR ~+1,130%). But the book is genuinely mixed: GOTO (~-80%), BUKA (~-59%), MBMA (~-33%) and especially HILL (~-95%, special-monitoring) are well underwater. First-day pops/ARA are common; durable holding-up is hit-or-miss.",
+      "firstDayPattern": "Frequently strong first-day demand — multiple deals hit ARA on debut (RATU 10 straight ARA sessions, HILL +110%) with big oversubscription. No first-day break below offer observed in the deals found.",
+      "underwaterNote": "Mixed/material. Of verifiable lead deals, roughly 4 of ~9 with confirmable current prices are underwater (GOTO ~-80%, BUKA ~-59%, MBMA ~-33%, HILL ~-95%); the rest flat-to-strongly-positive.",
+      "flags": [
+        "No OJK/IDX sanctions or suspensions found against PT Sucor Sekuritas (the brokerage) itself.",
+        "Distinct-entity caveat: a 2021 OJK suspension of two mutual funds was against the SPUN-OFF sister PT Sucorinvest Asset Management — not the brokerage, unrelated to underwriting.",
+        "Underwriting-quality flag (not a regulator sanction): HILL, a Sucor 2023 joint-lead, later cratered ~95% into special monitoring; GOTO and BUKA also sit deeply underwater."
+      ],
+      "grade": "B",
+      "gradeRationale": "Established mid-tier house with a real, active IPO franchise winning marquee jumbo mandates and no regulatory flags on the brokerage. Held back from A by a genuinely mixed post-listing record — multiple deeply underwater names (GOTO, BUKA, MBMA) and one crater (HILL).",
+      "confidence": "medium",
+      "sources": [
+        "https://market.bisnis.com/read/20260614/192/1980780/underwriter-ipo-jeli-sucor-sekuritas-punya-rekam-jejak-bawa-goto-hingga-mbma",
+        "https://www.cnbcindonesia.com/market/20231120163112-17-490479/sucor-sukses-buat-investor-cuan-banyak-di-ipo-4-emiten-ini",
+        "https://emitennews.com/news/dua-ipo-baru-prdl-jeli-diboyong-tunggal-underwriter-sucor-az",
+        "https://www.kabarbursa.com/market-hari-ini/jejak-hill-yang-didepak-ftse-dari-harga-ipo-rp1250-hingga-terjun-ke-rp14",
+        "https://www.idx.co.id/id/anggota-bursa-dan-partisipan/profil-anggota-bursa/AZ"
+      ]
+    },
+    "bri-danareksa": {
+      "key": "bri-danareksa",
+      "legalName": "PT BRI Danareksa Sekuritas",
+      "group": "BRI Group (PT Bank Rakyat Indonesia (Persero) Tbk holds ~67% since Dec 2018); originally PT Danareksa Sekuritas, est. 1992. State-linked.",
+      "tier": "established-mid",
+      "ipoLeadCount_2022_2025": 4,
+      "notableDeals": [
+        { "ticker": "MSJA", "year": 2024, "note": "Multi Spunindo Jaya. BRIDS underwriter. IPO Rp300, oversubscribed 3.75x. Strong debut +20% to Rp360. Now ~Rp426 (above IPO); pays dividend — a winner." },
+        { "ticker": "UNTD", "year": 2024, "note": "Terang Dunia Internusa (United Bike). BRIDS lead-tier. IPO Rp240, weak debut +0.83% (no ARA). Now ~Rp82-93 (~-60-65%) — classic nyangkut." },
+        { "ticker": "AMMN", "year": 2023, "note": "Amman Mineral, ~Rp10.7T (one of IDX's largest). BRIDS co-underwriter (not lead bookrunner). IPO Rp1,695. Now ~+225% — strong long-run performer." },
+        { "ticker": "MTEL", "year": 2021, "note": "Mitratel (SOE telecom towers), ~Rp18.3T. BRIDS syndicate underwriter. IPO Rp800. Now ~-34% vs IPO — dividend-focused, stayed underwater. (Outside 2022-25 lead window.)" }
+      ],
+      "performanceSummary": "Post-listing record is genuinely MIXED. The two small-cap IPOs where BRIDS was lead split evenly: MSJA (+20% debut, now above IPO) is a clear winner while UNTD (flat debut, ~-62%) is deeply underwater. On large syndicated SOE/big-cap deals (co-underwriter), AMMN is a strong winner (+225%) while MTEL is underwater (-34%). A credible state-linked bank (Bloomberg #6 IPO league 2024, #1 govt-bond brokerage) but a thin lead-equity book (~4 IPOs/yr).",
+      "firstDayPattern": "No consistent first-day pop. MSJA opened +20% (strong), UNTD opened +0.83% (essentially flat). Mixed/lukewarm rather than a reliable ARA machine.",
+      "underwaterNote": "Roughly half of verifiable BRIDS-associated names are currently underwater: UNTD (~-62%) and MTEL (~-34%) below offer; MSJA (~+42%) and AMMN (~+225%) above. Small sample.",
+      "flags": [
+        "Pre-BRI legacy flag (timing caveat): the OLD PT Danareksa Sekuritas was suspended by IDX on 11 Nov 2015 and probed by OJK over alleged sham trading ('transaksi semu') in PT Sekawan Intipratama (SIAP). This predates BRI's ~67% acquisition in 2018 and the current franchise/management. No sourced OJK/IDX sanction against the firm in 2022-2026.",
+        "No evidence of penny-stock / saham gocap pump-and-dump underwriting; recent deals (UNTD, MSJA, EMMI) are real operating companies."
+      ],
+      "grade": "B",
+      "gradeRationale": "Established mid-tier, state-linked (BRI) bank with a top-6 IDX IPO league position and dominant fixed-income franchise, no recent regulatory flags (only a 2015 SIAP suspension under the pre-BRI legacy entity). Held back from A by a thin lead-equity book and genuinely mixed post-listing results (UNTD ~-60% offsetting MSJA's win).",
+      "confidence": "medium",
+      "sources": [
+        "https://www.bridanareksasekuritas.co.id/profil",
+        "https://www.idnfinancials.com/id/news/65031/esa-medika-mandiri-lepas-30-saham-lewat-ipo-bidik-dana-rp269-miliar",
+        "https://market.bisnis.com/read/20251005/192/1917608/penyebab-harga-saham-untd-produsen-sepeda-united-bike-turun",
+        "https://investasi.kontan.co.id/news/multi-spunindo-jaya-msja-resmi-melantai-di-bei-harga-sahamnya-naik-4",
+        "https://www.tempo.co/ekonomi/ini-sanksi-untuk-tiga-broker-penggoreng-saham-1406903"
+      ]
+    },
+    "erdikha": {
+      "key": "erdikha",
+      "legalName": "PT Erdikha Elit Sekuritas",
+      "group": "Independent / no major financial-group parent. Founded 1989 as PT Erdikha Mulyatama, renamed 2008. IDX broker code AO.",
+      "tier": "small",
+      "ipoLeadCount_2022_2025": 3,
+      "notableDeals": [
+        { "ticker": "SMKM", "year": 2022, "note": "Erdikha sole/lead. IPO Rp264 (raised ~Rp66bn). Now ~Rp83 (~-69%) — deeply underwater, illiquid near-gocap penny stock. Worst outcome of the lead deals." },
+        { "ticker": "VAST", "year": 2023, "note": "Erdikha lead. IPO Rp108. Despite ~Rp1.2T oversubscription did NOT hit ARA — opened then fell -3.7% same day; sank to ATL Rp52. Recovered to ~Rp119, modestly above offer." },
+        { "ticker": "GRIA", "year": 2023, "note": "Erdikha lead. IPO Rp120. Weak debut (opened Rp102, below offer, no ARA). Choppy; dipped below IPO late 2025. Roughly at/above offer but volatile." },
+        { "ticker": "TOSK", "year": 2024, "note": "Co-underwriter (MNC lead). IPO Rp125. Pumped to Rp168 then crashed to gocap Rp50; now ~-49%. Pump-then-fade." },
+        { "ticker": "MEJA", "year": 2024, "note": "Co-underwriter (MNC lead). IPO Rp103. Spiked to Rp382 then collapsed to Rp27; now down ~-66% YoY. Severe pump-and-crater." }
+      ],
+      "performanceSummary": "Small-house franchise focused on micro-cap / nascent-board listings (deal sizes ~Rp66-207bn). Across the three confirmed Erdikha-led IPOs (SMKM, VAST, GRIA) post-listing performance is weak-to-mixed: SMKM is ~-69% and a dead penny stock; VAST and GRIA touched gocap-area lows before recovering to around/slightly above offer. Two co-underwritten 2024 deals (TOSK, MEJA) show textbook pump-then-crater behavior.",
+      "firstDayPattern": "Erdikha-led debuts have generally been weak, NOT strong ARA pops: VAST broke below offer the same day (no ARA despite heavy oversubscription) and GRIA opened below its IPO price.",
+      "underwaterNote": "Of 3 confirmed lead deals, 1 (SMKM) is clearly deeply underwater (~-69%); VAST and GRIA are roughly around/slightly above offer but each spent time well below it. Of the broader 5-deal set (incl. co-roles), at least 2-3 are below offer now.",
+      "flags": [
+        "No OJK/IDX sanctions or license issues against PT Erdikha Elit Sekuritas found (the OJK sanction in results was for a different firm, PT Sinergi Millenium Sekuritas) — absence of evidence, not a verified clean record.",
+        "Pattern flag (not misconduct): lead/co deals skew to micro-cap construction/property/tech names that faded hard post-listing (SMKM, TOSK, MEJA into/near gocap), consistent with low-quality small-cap underwriting.",
+        "Namesake note: spelling 'Erdhika' in some sources refers to the same firm (broker code AO)."
+      ],
+      "grade": "C",
+      "gradeRationale": "Small, long-established boutique (broker code AO) with a thin micro-cap IPO franchise and a weak/mixed post-listing record: muted (non-ARA) debuts and multiple lead/co deals that faded toward or below offer, including a deeply-underwater dead penny stock (SMKM ~-69%). No regulatory flags found, which keeps it off a D.",
+      "confidence": "medium",
+      "sources": [
+        "https://idx.co.id/id/anggota-bursa-dan-partisipan/profil-anggota-bursa/detail-profil-anggota-bursa/?kodeEmiten=AO",
+        "https://investasi.kontan.co.id/news/erdikha-elit-sekuritas-targetkan-empat-ipo-tahun-ini",
+        "https://market.bisnis.com/read/20230208/7/1625876/oversubscribed-rp12-triliun-saham-vast-kok-tidak-ara-usai-ipo",
+        "https://stockbit.com/symbol/TOSK",
+        "https://www.cnbcindonesia.com/market/20260623070311-17-744832/perusahaan-grup-djarum--bach--mau-ipo-tawarkan-saham-rp400-rp500"
+      ]
+    },
+    "ina": {
+      "key": "ina",
+      "legalName": "PT INA Sekuritas Indonesia (broker code RB; formerly PT Nikko Sekuritas Indonesia, est. 1990; renamed to INA on 12 Jun 2023)",
+      "group": "Controlled by PT Gema Insani Karya (78.12%); SMBC Nikko Securities holds a residual 19.84%. NOT affiliated with Bank Ina Perdana and NOT the INA sovereign wealth fund (Indonesia Investment Authority) — identity confirmed via broker code RB / OJK profile.",
+      "tier": "small",
+      "ipoLeadCount_2022_2025": 0,
+      "notableDeals": [
+        { "ticker": "EMMI", "year": 2026, "note": "Joint lead underwriter with BRI Danareksa on the July 2026 IPO. This is INA's re-entry into equity IPO underwriting after no recorded IDX stock IPOs in the prior 5 years — too recent for any post-listing data." }
+      ],
+      "performanceSummary": "No evaluable post-listing track record exists. Stockbit Snips states plainly that PT INA Sekuritas Indonesia was not recorded as an IDX stock-IPO underwriter in the last 5 years, so there is no recent book of listings to assess. EMMI (2026) appears to be its first recent equity IPO, and it sits in the junior/joint seat behind BRI Danareksa.",
+      "firstDayPattern": "Not reliably available — no recent IDX IPOs underwritten, so no first-day pattern can be established.",
+      "underwaterNote": "not reliably available",
+      "flags": [
+        "Effectively no equity IPO franchise: not recorded as an IDX stock-IPO underwriter in the prior ~5 years (source: Stockbit Snips); EMMI is a re-entry deal.",
+        "Small house; junior/joint role on EMMI, not the substantive lead.",
+        "No OJK/IDX sanctions, suspensions or pump-and-dump associations found for this specific firm."
+      ],
+      "grade": "C",
+      "gradeRationale": "Small, long-established but equity-ECM-dormant house with no verifiable recent IPO track record to grade — thin data rather than a documented bad record, and no regulatory flags. Only a joint underwriter on EMMI (BRI Danareksa is the substantive lead), so its weight in the score is minor.",
+      "confidence": "medium",
+      "sources": [
+        "https://www.idx.co.id/id/anggota-bursa-dan-partisipan/profil-anggota-bursa/RB",
+        "https://pasarmodal.ojk.go.id/PerusahaanEfek/Detail/RB",
+        "https://snips.stockbit.com/unboxing-ipo/unboxing-ipo-emmi-distributor-produsen-alat-kesehatan",
+        "https://www.inasekuritas.com/profile/corporate-overview"
+      ]
+    }
+  }
+}
