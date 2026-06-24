@@ -53,15 +53,27 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
     [ipos]
   );
   const sectors = useMemo(() => [...new Set(ipos.map((i) => i.sector))].sort(), [ipos]);
+  // every underwriter that appears as a lead OR a syndicate member, code · name, sorted by code
+  const underwriters = useMemo(() => {
+    const codes = new Set<string>();
+    for (const r of base) { if (r.leadCode) codes.add(r.leadCode); for (const c of r.members) codes.add(c); }
+    return [...codes].filter(Boolean).sort().map((c) => ({ code: c, name: names[c] ?? c }));
+  }, [base, names]);
 
   const [q, setQ] = useState("");
   const [sec, setSec] = useState("all");
+  const [uw, setUw] = useState("all");
   const [listedOnly, setListedOnly] = useState(true);
   const [groupBy, setGroupBy] = useState<GroupBy>("none");
   const [sort, setSort] = useState<{ key: Key; dir: 1 | -1 }>({ key: "d1", dir: -1 });
 
   const rows = useMemo(() => {
-    let r = base.filter((x) => (!listedOnly || x.listed) && (sec === "all" || x.sector === sec));
+    let r = base.filter(
+      (x) =>
+        (!listedOnly || x.listed) &&
+        (sec === "all" || x.sector === sec) &&
+        (uw === "all" || x.leadCode === uw || x.members.includes(uw)) // lead or syndicate member
+    );
     const s = q.trim().toLowerCase();
     if (s) r = r.filter((x) => x.ticker.toLowerCase().includes(s) || x.company.toLowerCase().includes(s));
     return r.sort((a, b) => {
@@ -74,7 +86,13 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
       const bn = bv === null || bv === undefined ? -Infinity : (bv as number);
       return an < bn ? -sort.dir : an > bn ? sort.dir : 0;
     });
-  }, [base, q, sec, listedOnly, sort]);
+  }, [base, q, sec, uw, listedOnly, sort]);
+
+  // median D1 of the visible set — handy when filtered to one underwriter (their listing-day track record)
+  const medD1 = useMemo(
+    () => (uw === "all" ? null : median(rows.map((r) => r.d1).filter((x): x is number => x !== null))),
+    [rows, uw]
+  );
 
   const groups = useMemo(() => {
     if (groupBy === "none") return null;
@@ -178,7 +196,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
       <Card>
         <CardHeader>
           <CardTitle>IPO explorer</CardTitle>
-          <CardDescription>all 246 deals · D1–D7 cumulative · hover a lead or member code for the broker name</CardDescription>
+          <CardDescription>all 246 deals · D1–D7 cumulative · filter or group by underwriter · hover a code for the broker name</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="flex flex-wrap items-center gap-2.5 border-b border-border px-4 py-3.5">
@@ -196,6 +214,14 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
                 </option>
               ))}
             </select>
+            <select value={uw} onChange={(e) => setUw(e.target.value)} className={`${selectCls} max-w-[230px]`} title="Filter by underwriter (lead or syndicate member)">
+              <option value="all">All underwriters</option>
+              {underwriters.map((u) => (
+                <option key={u.code} value={u.code}>
+                  {u.code} · {u.name}
+                </option>
+              ))}
+            </select>
             <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as GroupBy)} className={selectCls}>
               <option value="none">No grouping</option>
               <option value="lead">Group by lead</option>
@@ -207,7 +233,14 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
               Listed only
             </label>
             <span className="tabnum ml-auto text-[12.5px] text-muted-foreground">
-              {rows.length} deals{groups ? ` · ${groups.length} groups` : ""}
+              {rows.length} deals
+              {uw !== "all" && medD1 !== null && (
+                <>
+                  {" · median D1 "}
+                  <span className={signClass(medD1)}>{pct(medD1)}</span>
+                </>
+              )}
+              {groups ? ` · ${groups.length} groups` : ""}
             </span>
           </div>
 
