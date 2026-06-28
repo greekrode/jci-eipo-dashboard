@@ -4,7 +4,7 @@ import {
   ScatterChart, Scatter, ZAxis, LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Cell, ReferenceLine, Legend,
 } from "recharts";
-import type { Bucket, FadePoint, SectorRow, YearRow, RoleRow, RegimeFadePoint, RegimeScatterPoint } from "@/lib/compute";
+import type { Bucket, FadePoint, SectorRow, YearRow, RoleRow, RegimeFadePoint, RegimeScatterPoint, RegimeDistBin } from "@/lib/compute";
 import { sectorColor, brokerColor } from "@/lib/colors";
 import { idr } from "@/lib/format";
 
@@ -251,6 +251,44 @@ export function RegimeFadeChart({ data }: { data: RegimeFadePoint[] }) {
         <Line type="monotone" dataKey="performing" name="Performing (JCI ≥ MA200)" stroke={c.pos} strokeWidth={2.25} dot={{ r: 2.5, fill: c.pos }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
         <Line type="monotone" dataKey="choppy" name="Choppy (JCI < MA200)" stroke={c.neg} strokeWidth={2.5} dot={{ r: 3, fill: c.neg }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
       </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+// Share of each regime cohort by D+7 outcome bucket — choppy (red) vs performing (green).
+// Reads as a risk profile: which markets produce more tail outcomes vs steady gains.
+function DistTip({ active, payload, label }: { active?: boolean; payload?: Array<{ payload?: RegimeDistBin; name?: string; value?: number; color?: string }>; label?: string }) {
+  if (!active || !payload?.length) return null;
+  const b = payload[0]?.payload;
+  return (
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+      <div className="mb-1 font-semibold text-foreground">D7 {label}</div>
+      {payload.map((p, i) => (
+        <div key={i} className="flex justify-between gap-4 text-muted-foreground">
+          <span style={{ color: p.color }}>{p.name}</span>
+          <span className="tabnum font-medium text-foreground">
+            {((p.value ?? 0) * 100).toFixed(0)}%
+            {b ? ` · ${p.name === "Choppy" ? b.choppyN : b.performingN}` : ""}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function RegimeDistChart({ data }: { data: RegimeDistBin[] }) {
+  const c = useChartColors();
+  return (
+    <ResponsiveContainer width="100%" height={290}>
+      <BarChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 2 }} barGap={2}>
+        <CartesianGrid stroke={c.grid} vertical={false} />
+        <XAxis dataKey="bucket" tickLine={false} axisLine={false} interval={0} tick={{ fontSize: 11 }} />
+        <YAxis tickFormatter={pctTick} tickLine={false} axisLine={false} width={40} />
+        <Tooltip cursor={{ fill: "rgba(128,128,128,0.15)" }} content={<DistTip />} />
+        <Legend wrapperStyle={legendStyle(c)} />
+        <Bar dataKey="performing" name="Performing" radius={[0, 0, 0, 0]} fill={c.pos} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+        <Bar dataKey="choppy" name="Choppy" radius={[0, 0, 0, 0]} fill={c.neg} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+      </BarChart>
     </ResponsiveContainer>
   );
 }

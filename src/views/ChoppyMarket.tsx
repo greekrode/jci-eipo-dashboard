@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import type { IPO } from "@/lib/types";
-import { byRegime, milestoneStats, regimeFade, regimeScatter, sectorAgg } from "@/lib/compute";
+import { byRegime, milestoneStats, regimeD7Distribution, regimeFade, regimeScatter, sectorAgg } from "@/lib/compute";
 import { StatStrip } from "@/components/stat-strip";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { RegimeFadeChart, ChoppyScatter, CHOPPY_BUCKETS } from "@/components/charts";
+import { RegimeFadeChart, RegimeDistChart, ChoppyScatter, CHOPPY_BUCKETS } from "@/components/charts";
 import { sectorColor } from "@/lib/colors";
 import { pct, pctAbs, idr, signClass } from "@/lib/format";
 
@@ -15,6 +15,13 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
   const msP = useMemo(() => milestoneStats(performing), [performing]);
   const fade = useMemo(() => regimeFade(ipos), [ipos]);
   const scatter = useMemo(() => regimeScatter(ipos, "choppy"), [ipos]);
+  const dist = useMemo(() => regimeD7Distribution(ipos), [ipos]);
+
+  // Tail vs middle shares, for the distribution caption.
+  const choppyLossBig = dist[0]?.choppy ?? null; // ≤ −25%
+  const performLossBig = dist[0]?.performing ?? null;
+  const choppyDouble = (dist[5]?.choppy ?? 0) + (dist[6]?.choppy ?? 0); // ≥ 100%
+  const performDouble = (dist[5]?.performing ?? 0) + (dist[6]?.performing ?? 0);
 
   // Milestone rows keyed by hold-day for the choppy-vs-performing comparison table.
   const rows = msC.map((c, i) => ({ day: c.day, c, p: msP[i] }));
@@ -135,43 +142,61 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>By sector — choppy tape</CardTitle>
-          <CardDescription>median cumulative · strongest D7 first · n per sector</CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="static">Sector</TableHead>
-                <TableHead>n</TableHead>
-                <TableHead>Med D1</TableHead>
-                <TableHead>Med D3</TableHead>
-                <TableHead>Med D5</TableHead>
-                <TableHead>Med D7</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sectors.map((s) => (
-                <TableRow key={s.sector}>
-                  <TableCell className="text-left">
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-[1px]" style={{ background: sectorColor(s.sector) }} />
-                      <span className="text-foreground">{s.sector}</span>
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{s.count}</TableCell>
-                  <TableCell className={signClass(s.d1)}>{pct(s.d1)}</TableCell>
-                  <TableCell className={signClass(s.d3)}>{pct(s.d3)}</TableCell>
-                  <TableCell className={signClass(s.d5)}>{pct(s.d5)}</TableCell>
-                  <TableCell className={signClass(s.d7)}>{pct(s.d7)}</TableCell>
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Outcome distribution by regime</CardTitle>
+            <CardDescription>share of each cohort by D7 return · choppy vs performing</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RegimeDistChart data={dist} />
+            <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">
+              Choppy markets are more polarized: <span className="font-medium text-foreground">{pctAbs(choppyLossBig)}</span> of deals
+              fell 25%+ by D7 (vs <span className="font-medium text-foreground">{pctAbs(performLossBig)}</span> in a rising market) and{" "}
+              <span className="font-medium text-foreground">{pctAbs(choppyDouble)}</span> more than doubled (vs{" "}
+              <span className="font-medium text-foreground">{pctAbs(performDouble)}</span>) — fewer land in the safe middle.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>By sector — choppy tape</CardTitle>
+            <CardDescription>median cumulative · strongest D7 first · n per sector</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="static">Sector</TableHead>
+                  <TableHead>n</TableHead>
+                  <TableHead>Med D1</TableHead>
+                  <TableHead>Med D3</TableHead>
+                  <TableHead>Med D5</TableHead>
+                  <TableHead>Med D7</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+              </TableHeader>
+              <TableBody>
+                {sectors.map((s) => (
+                  <TableRow key={s.sector}>
+                    <TableCell className="text-left">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-[1px]" style={{ background: sectorColor(s.sector) }} />
+                        <span className="text-foreground">{s.sector}</span>
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{s.count}</TableCell>
+                    <TableCell className={signClass(s.d1)}>{pct(s.d1)}</TableCell>
+                    <TableCell className={signClass(s.d3)}>{pct(s.d3)}</TableCell>
+                    <TableCell className={signClass(s.d5)}>{pct(s.d5)}</TableCell>
+                    <TableCell className={signClass(s.d7)}>{pct(s.d7)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>

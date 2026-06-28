@@ -13,9 +13,11 @@ Dark, semi-brutalist theme; Inter throughout with tabular figures.
   a return-milestone table (D1/D3/D5/D7 with median, mean, std dev, min, max, % up), the
   median-vs-mean 7-day fade curve, and the day-1 return distribution.
 - **Choppy Market** — D1→D7 behavior for deals that listed while the JCI sat **below its 200-day MA**
-  ("choppy" tape), set against deals that listed into a rising market. A KPI strip, a choppy-vs-performing
-  median fade curve, a side-by-side milestone table, a day-1-pop-vs-day-7-hold scatter (one bubble per
-  deal, colored by sector, sized by proceeds), and the full choppy-market listing table.
+  ("choppy" tape), set against deals that listed into a rising market. A KPI strip (incl. best / worst D7),
+  a choppy-vs-performing median fade curve, a side-by-side milestone table, a per-deal D+7 return scatter
+  (chronological, bucketed at 0% / +50%, median line, standouts labelled, hover/tap for detail), a
+  choppy-vs-performing **outcome-distribution** histogram, a per-sector breakdown, and the full
+  choppy-market listing table covering every deal.
 - **Underwriters** — a global **All / Lead / Member** toggle drives a market stat strip, a
   capital-raised ranking, an activity-vs-performance scatter (deals × median D1, bubble = proceeds),
   and a searchable league table (proceeds, D1–D7 fade, win rate). Lead-vs-member and solo-vs-syndicated

@@ -57,6 +57,42 @@ export function regimeFade(ipos: IPO[]): RegimeFadePoint[] {
 const medAtDay = (deals: IPO[], dayIdx: number) =>
   median(deals.map((d) => d.cum[dayIdx]).filter((x): x is number => x !== null));
 
+export interface RegimeDistBin {
+  bucket: string;
+  choppy: number; // share of the choppy cohort (0–1)
+  performing: number; // share of the performing cohort (0–1)
+  choppyN: number;
+  performingN: number;
+}
+
+// Where each deal's D+7 cumulative return falls, as a share of its regime cohort — so the
+// shapes are comparable despite different n. Tells whether choppy markets are more polarized.
+export function regimeD7Distribution(ipos: IPO[]): RegimeDistBin[] {
+  const bins: Array<{ bucket: string; test: (x: number) => boolean }> = [
+    { bucket: "≤ −25%", test: (x) => x <= -0.25 },
+    { bucket: "−25–0%", test: (x) => x > -0.25 && x < 0 },
+    { bucket: "0–25%", test: (x) => x >= 0 && x < 0.25 },
+    { bucket: "25–50%", test: (x) => x >= 0.25 && x < 0.5 },
+    { bucket: "50–100%", test: (x) => x >= 0.5 && x < 1 },
+    { bucket: "100–250%", test: (x) => x >= 1 && x < 2.5 },
+    { bucket: "≥ 250%", test: (x) => x >= 2.5 },
+  ];
+  const d7 = (deals: IPO[]) => deals.map((i) => i.cum[6]).filter((x): x is number => x !== null);
+  const ch = d7(byRegime(ipos, "choppy"));
+  const pf = d7(byRegime(ipos, "performing"));
+  return bins.map((b) => {
+    const choppyN = ch.filter(b.test).length;
+    const performingN = pf.filter(b.test).length;
+    return {
+      bucket: b.bucket,
+      choppy: ch.length ? choppyN / ch.length : 0,
+      performing: pf.length ? performingN / pf.length : 0,
+      choppyN,
+      performingN,
+    };
+  });
+}
+
 export interface Kpis {
   total: number;
   listed: number;
