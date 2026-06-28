@@ -4,7 +4,7 @@ import { byRegime, milestoneStats, regimeFade, regimeScatter } from "@/lib/compu
 import { StatStrip } from "@/components/stat-strip";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { RegimeFadeChart, ChoppyScatter } from "@/components/charts";
+import { RegimeFadeChart, ChoppyScatter, CHOPPY_BUCKETS } from "@/components/charts";
 import { sectorColor } from "@/lib/colors";
 import { pct, pctAbs, idr } from "@/lib/format";
 import { signClass } from "@/lib/format";
@@ -26,11 +26,15 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
   const winD7 = msC[3]?.pctPos ?? null;
   const raised = choppy.reduce((a, i) => a + (i.raised ?? 0), 0);
 
-  // Sectors present, ordered by deal count, for the scatter legend.
-  const legend = useMemo(() => {
-    const n = new Map<string, number>();
-    for (const p of scatter) n.set(p.sector, (n.get(p.sector) ?? 0) + 1);
-    return [...n.entries()].sort((a, b) => b[1] - a[1]).map(([sector, count]) => ({ sector, count }));
+  // D7-return buckets for the scatter legend, matching the chart palette.
+  const buckets = useMemo(() => {
+    let over = 0, mid = 0, neg = 0;
+    for (const p of scatter) (p.d7 > 0.5 ? (over++) : p.d7 >= 0 ? (mid++) : (neg++));
+    return [
+      { key: "over", label: "Over +50%", color: CHOPPY_BUCKETS.over, count: over },
+      { key: "mid", label: "0% to +50%", color: CHOPPY_BUCKETS.mid, count: mid },
+      { key: "neg", label: "Below 0%", color: CHOPPY_BUCKETS.neg, count: neg },
+    ];
   }, [scatter]);
 
   // Full choppy table, best D7 first.
@@ -103,16 +107,16 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Day-1 pop vs day-7 hold</CardTitle>
-          <CardDescription>each bubble a choppy-tape deal · size = proceeds · above the zero line = still green at D7</CardDescription>
+          <CardTitle>D+7 return, every choppy-market deal</CardTitle>
+          <CardDescription>listed earliest → most recent · dashed line: cohort median {pct(d7C)} · hover for detail</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChoppyScatter data={scatter} />
+          <ChoppyScatter data={scatter} median={d7C} />
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
-            {legend.map((l) => (
-              <span key={l.sector} className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-muted-foreground">
-                <span className="inline-block h-2.5 w-2.5 rounded-[1px]" style={{ background: sectorColor(l.sector) }} />
-                {l.sector} <span className="text-foreground">{l.count}</span>
+            {buckets.map((b) => (
+              <span key={b.key} className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-muted-foreground">
+                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: b.color }} />
+                {b.label} <span className="text-foreground">{b.count}</span>
               </span>
             ))}
           </div>

@@ -242,60 +242,77 @@ export function RegimeFadeChart({ data }: { data: RegimeFadePoint[] }) {
   );
 }
 
-function ChoppyScatterTip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: RegimeScatterPoint }> }) {
+// Three-way bucket on the D+7 cumulative return, matching the house palette/legend.
+export const CHOPPY_BUCKETS = { over: "#38c98a", mid: "#f5a623", neg: "#ef5b54" } as const;
+const d7Bucket = (v: number): keyof typeof CHOPPY_BUCKETS => (v > 0.5 ? "over" : v >= 0 ? "mid" : "neg");
+
+type ChoppyPoint = RegimeScatterPoint & { x: number; label: string };
+
+function ChoppyScatterTip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: ChoppyPoint }> }) {
   if (!active || !payload?.length || !payload[0].payload) return null;
   const d = payload[0].payload;
   return (
     <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
       <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
-        <span className="inline-block h-2 w-2 rounded-[1px]" style={{ background: sectorColor(d.sector) }} />
+        <span className="inline-block h-2 w-2 rounded-full" style={{ background: CHOPPY_BUCKETS[d7Bucket(d.d7)] }} />
         {d.ticker}
-        <span className="font-mono text-[10.5px] font-normal text-muted-foreground">{d.listingDate ?? ""}</span>
+        <span className="font-mono text-[10.5px] font-normal text-muted-foreground">{d.listingDate ?? "n/a"}</span>
       </div>
       <div className="flex justify-between gap-4 text-muted-foreground"><span>{d.sector}</span></div>
+      <div className="flex justify-between gap-4 text-muted-foreground"><span>D7 return</span><span className="tabnum font-semibold text-foreground">{pctVal(d.d7)}</span></div>
       <div className="flex justify-between gap-4 text-muted-foreground"><span>D1 pop</span><span className="tabnum font-medium text-foreground">{pctVal(d.d1)}</span></div>
-      <div className="flex justify-between gap-4 text-muted-foreground"><span>D7 cumulative</span><span className="tabnum font-medium text-foreground">{pctVal(d.d7)}</span></div>
       <div className="flex justify-between gap-4 text-muted-foreground"><span>Raised</span><span className="tabnum font-medium text-foreground">{idr(d.raised)}</span></div>
     </div>
   );
 }
 
-// Day-1 pop (x) vs day-7 cumulative (y), one bubble per deal, colored by sector, sized by proceeds.
-// Axes scale independently (D1 is capped near ±35% daily; D7 cumulative runs much wider), so the
-// zero lines read as the quadrant split: above y=0 the deal is still green a week in.
-export function ChoppyScatter({ data }: { data: RegimeScatterPoint[] }) {
+// D+7 cumulative return per choppy-market deal. Deals run left→right in listing order (x is
+// chronological rank, not a dated axis), y is the D7 return, color buckets at 0% and +50%, and
+// the dashed line marks the cohort median. The biggest winners and losers are labelled inline.
+export function ChoppyScatter({ data, median }: { data: RegimeScatterPoint[]; median: number | null }) {
   const c = useChartColors();
-  const pad = (vals: number[]): [number, number] => {
-    const lo = Math.min(0, ...vals);
-    const hi = Math.max(0, ...vals);
-    const m = (hi - lo) * 0.05 || 0.02;
-    return [lo - m, hi + m];
-  };
-  const xDom = pad(data.map((d) => d.d1));
-  const yDom = pad(data.map((d) => d.d7));
+  // Chronological order; deals with no listing date (corrupt source cell) sort last as most-recent.
+  const ordered = [...data].sort((a, b) => (a.listingDate ?? "9999").localeCompare(b.listingDate ?? "9999"));
+  const byD7 = [...ordered].sort((a, b) => b.d7 - a.d7);
+  const flagged = new Set<string>([...byD7.slice(0, 10), ...byD7.slice(-5)].map((p) => p.ticker));
+  const pts: ChoppyPoint[] = ordered.map((p, i) => ({
+    ...p,
+    x: i,
+    label: flagged.has(p.ticker) ? `${p.ticker} ${pctTick(p.d7)}` : "",
+  }));
+  const ys = pts.map((p) => p.d7);
+  const lo = Math.min(0, ...ys);
+  const hi = Math.max(0, ...ys);
+  const m = (hi - lo) * 0.08;
   return (
-    <ResponsiveContainer width="100%" height={420}>
-      <ScatterChart margin={{ top: 12, right: 16, left: -6, bottom: 16 }}>
-        <CartesianGrid stroke={c.grid} />
+    <ResponsiveContainer width="100%" height={460}>
+      <ScatterChart margin={{ top: 16, right: 12, left: -6, bottom: 8 }}>
+        <CartesianGrid stroke={c.grid} vertical={false} />
         <XAxis
           type="number"
-          dataKey="d1"
-          name="D1 pop"
-          domain={xDom}
-          tickFormatter={pctTick}
+          dataKey="x"
+          domain={[-1, pts.length]}
+          tick={false}
           tickLine={false}
           axisLine={false}
-          label={{ value: "day-1 pop", position: "insideBottom", offset: -6, fill: c.neutral, fontSize: 12 }}
+          label={{ value: "earliest → most recent listing", position: "insideBottom", offset: 0, fill: c.neutral, fontSize: 11 }}
         />
-        <YAxis type="number" dataKey="d7" name="D7 cumulative" domain={yDom} tickFormatter={pctTick} tickLine={false} axisLine={false} width={44} />
-        <ZAxis type="number" dataKey="raised" range={[28, 360]} name="Raised" />
-        <ReferenceLine x={0} stroke={c.grid} />
+        <YAxis type="number" dataKey="d7" name="D7 return" domain={[lo - m, hi + m]} tickFormatter={pctTick} tickLine={false} axisLine={false} width={46} />
         <ReferenceLine y={0} stroke={c.grid} />
+        {median !== null && (
+          <ReferenceLine
+            y={median}
+            stroke={c.blue}
+            strokeDasharray="6 4"
+            label={{ value: `median ${pctTick(median)}`, position: "insideTopLeft", fill: c.blue, fontSize: 11 }}
+          />
+        )}
         <Tooltip cursor={{ strokeDasharray: "3 3", stroke: c.grid }} content={<ChoppyScatterTip />} />
-        <Scatter data={data} isAnimationActive animationDuration={650} animationEasing="ease-out">
-          {data.map((p, i) => (
-            <Cell key={i} fill={sectorColor(p.sector)} fillOpacity={0.62} stroke={sectorColor(p.sector)} />
+        <Scatter data={pts} isAnimationActive animationDuration={650} animationEasing="ease-out">
+          {pts.map((p, i) => (
+            <Cell key={i} fill={CHOPPY_BUCKETS[d7Bucket(p.d7)]} fillOpacity={0.9} stroke="none" />
           ))}
+          <LabelList dataKey="label" position="top" offset={8} fill={c.text} style={{ fontSize: 9.5 }} />
         </Scatter>
       </ScatterChart>
     </ResponsiveContainer>
