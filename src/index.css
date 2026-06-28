@@ -3,53 +3,56 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Semi-brutalist fintech theme. Structure carried by borders, not elevation.
-   Light is the default (:root); .dark overrides to the concrete-dark variant. */
+/* Klinik Penyesalan brand theme. Structure carried by borders, not elevation.
+   Teal accent on warm surfaces (cream light / near-black dark), lifted from the
+   klinikpenyesalan.com token set. Light is the default (:root); .dark overrides.
+   Gain/loss red & green are tuned to sit with the teal — green pulled to ~150°
+   so it stays distinct from the 176° accent, loss a warm coral. */
 :root {
   color-scheme: light;
-  --background: 240 13% 97%;        /* clean cool off-white (not cream/sand) */
-  --foreground: 240 14% 12%;        /* near-black, faint cool tint */
-  --card: 0 0% 100%;                /* white flat panel */
-  --card-foreground: 240 14% 12%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 14% 12%;
-  --primary: 222 83% 51%;           /* structural accent, darkened for AA on white */
+  --background: 45 19% 92%;         /* warm cream  #eeece6 */
+  --foreground: 210 15% 11%;        /* near-black, cool tint  #171b1f */
+  --card: 40 30% 96%;               /* soft panel  #f8f6f2 */
+  --card-foreground: 210 15% 11%;
+  --popover: 0 0% 100%;             /* white  #ffffff */
+  --popover-foreground: 210 15% 11%;
+  --primary: 176 80% 27%;           /* brand teal, darkened for AA  #0e7d76 */
   --primary-foreground: 0 0% 100%;
-  --secondary: 240 9% 93%;
-  --secondary-foreground: 240 14% 18%;
-  --muted: 240 9% 93%;
-  --muted-foreground: 240 5% 38%;   /* AA on white/card */
-  --accent: 240 9% 89%;
-  --accent-foreground: 240 14% 14%;
-  --border: 240 8% 83%;             /* visible structural line on white */
-  --input: 240 8% 76%;
-  --ring: 222 83% 51%;
-  --pos: 152 62% 32%;               /* up, darkened for contrast on white */
-  --neg: 0 72% 47%;                 /* down */
+  --secondary: 42 20% 90%;
+  --secondary-foreground: 210 15% 18%;
+  --muted: 42 20% 90%;
+  --muted-foreground: 208 11% 37%;  /* dim  #566069 · AA on cream */
+  --accent: 42 18% 88%;
+  --accent-foreground: 210 15% 14%;
+  --border: 42 10% 73%;             /* warm structural line */
+  --input: 42 10% 66%;
+  --ring: 176 80% 27%;
+  --pos: 150 66% 30%;               /* up, darkened for contrast on cream */
+  --neg: 6 68% 46%;                 /* down, warm coral-red */
   --radius: 0.125rem;               /* near-square edges */
 }
 
 .dark {
   color-scheme: dark;
-  --background: 240 5% 7%;          /* concrete near-black */
-  --foreground: 240 6% 95%;
-  --card: 240 5% 10%;               /* flat panel */
-  --card-foreground: 240 6% 95%;
-  --popover: 240 5% 11%;
-  --popover-foreground: 240 6% 95%;
-  --primary: 222 100% 62%;          /* single structural accent */
-  --primary-foreground: 0 0% 100%;
-  --secondary: 240 4% 15%;
-  --secondary-foreground: 240 6% 95%;
-  --muted: 240 4% 15%;
-  --muted-foreground: 240 6% 75%;
-  --accent: 240 4% 17%;
-  --accent-foreground: 240 6% 96%;
-  --border: 240 4% 24%;             /* strong, visible structural lines */
-  --input: 240 4% 30%;
-  --ring: 222 100% 62%;
-  --pos: 152 56% 50%;               /* up */
-  --neg: 4 84% 63%;                 /* down */
+  --background: 210 17% 9%;          /* near-black, cool  #13171b */
+  --foreground: 210 16% 93%;         /* #e9ecef */
+  --card: 213 19% 12%;               /* surface  #181d23 */
+  --card-foreground: 210 16% 93%;
+  --popover: 212 18% 14%;            /* surface-2  #1e242b */
+  --popover-foreground: 210 16% 93%;
+  --primary: 176 52% 48%;            /* brand teal  #3bbcb4 */
+  --primary-foreground: 162 55% 6%;  /* on-accent, dark teal-black  #06130f */
+  --secondary: 212 16% 17%;
+  --secondary-foreground: 210 16% 93%;
+  --muted: 212 16% 17%;
+  --muted-foreground: 208 9% 64%;    /* dim  #9aa3ab */
+  --accent: 212 16% 19%;
+  --accent-foreground: 210 16% 95%;
+  --border: 208 9% 22%;              /* visible structural line on near-black */
+  --input: 208 9% 30%;
+  --ring: 176 52% 48%;
+  --pos: 150 58% 50%;                /* up */
+  --neg: 6 80% 64%;                  /* down, warm coral-red */
 }
 
 @layer base {

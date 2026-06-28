@@ -247,9 +247,9 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
   );
 }
 
-const OWNER_PALETTE = ["#a78bfa", "#38c98a", "#f5a623", "#e0654f", "#2dd4bf", "#f472b6", "#eab308", "#c084fc", "#fb923c", "#60a5fa"];
+const OWNER_PALETTE = ["#a78bfa", "#2eb87d", "#f5a623", "#e0654f", "#2dd4bf", "#f472b6", "#eab308", "#c084fc", "#fb923c", "#60a5fa"];
 function ownerColor(name: string, idx: number): string {
-  if (/masyarakat|public|publik/i.test(name)) return "hsl(222 100% 62%)"; // structural accent for the float
+  if (/masyarakat|public|publik/i.test(name)) return "hsl(176 52% 48%)"; // structural accent for the float
   if (/\besa\b|esop|karyawan/i.test(name)) return "#7c8598";
   return OWNER_PALETTE[idx % OWNER_PALETTE.length];
 }
@@ -384,7 +384,7 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
   );
 }
 
-const SEG_PALETTE = ["hsl(222 100% 62%)", "#38c98a", "#f5a623", "#a78bfa", "#e0654f", "#2dd4bf", "#f472b6", "#eab308"];
+const SEG_PALETTE = ["hsl(176 52% 48%)", "#2eb87d", "#f5a623", "#a78bfa", "#e0654f", "#2dd4bf", "#f472b6", "#eab308"];
 function BusinessModel({ ipo }: { ipo: UpcomingIPO }) {
   const bm = ipo.businessModel;
   if (!bm) return null;
@@ -498,13 +498,13 @@ function Financials({ ipo }: { ipo: UpcomingIPO }) {
       <div className="p-4 pb-1">
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={chart} margin={{ top: 4, right: 8, left: 6, bottom: 0 }} barGap={3}>
-            <CartesianGrid stroke="hsl(240 4% 24%)" vertical={false} />
+            <CartesianGrid stroke="hsl(208 9% 22%)" vertical={false} />
             <XAxis dataKey="year" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
             <YAxis tickFormatter={axisBn} tickLine={false} axisLine={false} width={42} tick={{ fontSize: 11 }} />
             <RTooltip cursor={{ fill: "rgba(255,255,255,0.04)" }} content={<MiniTip />} />
-            <Legend wrapperStyle={{ fontSize: 12, color: "#aab2c5" }} />
-            <Bar dataKey="Revenue" fill="#3d75ff" isAnimationActive animationDuration={650} animationEasing="ease-out" />
-            <Bar dataKey="Net profit" fill="#38c98a" isAnimationActive animationDuration={650} animationEasing="ease-out" />
+            <Legend wrapperStyle={{ fontSize: 12, color: "#9aa3ab" }} />
+            <Bar dataKey="Revenue" fill="#3bbcb4" isAnimationActive animationDuration={650} animationEasing="ease-out" />
+            <Bar dataKey="Net profit" fill="#2eb87d" isAnimationActive animationDuration={650} animationEasing="ease-out" />
           </BarChart>
         </ResponsiveContainer>
       </div>

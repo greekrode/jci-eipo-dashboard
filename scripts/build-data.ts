@@ -37,8 +37,43 @@ const toISO = (v: unknown): string | null => {
 };
 
 const wb = XLSX.readFile(SRC, { cellDates: true });
-const aoa = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets["e-IPO Data"], { header: 1, raw: true, defval: null });
+// Master sheet is "e-IPO Data" in the original export and "IPO History" in the
+// choppy-market workbook; accept either so the pipeline tracks whichever file is present.
+const masterSheet = wb.Sheets["e-IPO Data"] ?? wb.Sheets["IPO History"];
+if (!masterSheet) throw new Error('No master sheet ("e-IPO Data" or "IPO History") found in workbook.');
+const aoa = XLSX.utils.sheet_to_json<unknown[]>(masterSheet, { header: 1, raw: true, defval: null });
 const rows = aoa.slice(1).filter((r) => r && r.some((c) => c !== null));
+
+// --- Market regime: JCI close vs its own 200-day MA, as of each IPO's listing date. ---
+// The "JCI Trend" sheet carries Date / Close / MA200. A listing is "choppy" when the
+// index closed below its MA200 on (or just before) the listing date, else "performing".
+// jciGap is close/MA200 - 1 (how far above/below the trend the index sat that day).
+interface JciPoint { t: number; close: number; ma200: number }
+const jciSheet = wb.Sheets["JCI Trend"];
+const jci: JciPoint[] = [];
+if (jciSheet) {
+  const jrows = XLSX.utils.sheet_to_json<unknown[]>(jciSheet, { header: 1, raw: true, defval: null }).slice(1);
+  for (const r of jrows) {
+    const d = r[0];
+    const close = num(r[1]);
+    const ma200 = num(r[2]);
+    const t = d instanceof Date && !isNaN(d.getTime()) ? d.getTime() : null;
+    if (t !== null && close !== null && ma200 !== null) jci.push({ t, close, ma200 });
+  }
+  jci.sort((a, b) => a.t - b.t);
+}
+type Regime = "choppy" | "performing";
+const regimeAt = (iso: string | null): { regime: Regime | null; gap: number | null } => {
+  if (!iso || !jci.length) return { regime: null, gap: null };
+  const t = new Date(iso + "T00:00:00Z").getTime();
+  let hit: JciPoint | null = null;
+  for (const p of jci) {
+    if (p.t <= t) hit = p;
+    else break;
+  }
+  if (!hit) return { regime: null, gap: null };
+  return { regime: hit.close < hit.ma200 ? "choppy" : "performing", gap: hit.close / hit.ma200 - 1 };
+};
 
 const codeName: Record<string, string> = {};
 for (const r of rows) {
@@ -86,6 +121,10 @@ const ipos = rows.map((r) => {
   const sector = SECTOR_FIX[rawSector] ?? rawSector;
   const listingDate = toISO(get("listingDate"));
   const warrantRatio = num(get("warrantRatio"));
+  // Classify on the listing date; if that cell is corrupt (e.g. WBSA's is the string "I"),
+  // fall back to the distribution date — the index regime is the same a day either side.
+  const regimeDate = listingDate ?? toISO(get("distDate"));
+  const { regime, gap } = listed ? regimeAt(regimeDate) : { regime: null, gap: null };
 
   return {
     status,
@@ -111,6 +150,8 @@ const ipos = rows.map((r) => {
     listingDate,
     listingYear: listingDate ? Number(listingDate.slice(0, 4)) : null,
     warrant: warrantRatio !== null && warrantRatio > 0,
+    marketRegime: regime,
+    jciGap: gap,
   };
 });
 
@@ -119,7 +160,29 @@ writeFileSync(resolve(OUT, "ipos.json"), JSON.stringify(ipos, null, 0));
 writeFileSync(resolve(OUT, "brokers.json"), JSON.stringify(codeName, null, 2));
 
 const listed = ipos.filter((i) => i.listed).length;
+const choppy = ipos.filter((i) => i.marketRegime === "choppy").length;
+const performing = ipos.filter((i) => i.marketRegime === "performing").length;
 console.log(`Wrote ${ipos.length} IPOs (${listed} listed) and ${Object.keys(codeName).length} brokers.`);
+console.log(`Regime: ${choppy} choppy + ${performing} performing = ${choppy + performing} classified (of ${listed} listed).`);
 // Sanity asserts (ISC-1, ISC-3)
 const leadOk = ipos.every((i) => !i.leadCode || codeName[i.leadCode] !== undefined);
 console.log(`ISC-1 count==246: ${ipos.length === 246}  |  ISC-3 every lead resolvable: ${leadOk}`);
+
+// ISC-4: computed regime must match the workbook's own Choppy/Perform ticker split (when present).
+const sheetTickers = (name: string) =>
+  wb.Sheets[name]
+    ? new Set(
+        XLSX.utils
+          .sheet_to_json<unknown[]>(wb.Sheets[name], { header: 1, raw: true, defval: null })
+          .slice(1)
+          .map((r) => String(r[1] ?? "").trim())
+          .filter(Boolean)
+      )
+    : null;
+const choppySheet = sheetTickers("Choppy Market");
+if (choppySheet) {
+  const mismatches = ipos.filter(
+    (i) => i.listed && i.marketRegime !== null && choppySheet.has(i.ticker) !== (i.marketRegime === "choppy")
+  );
+  console.log(`ISC-4 regime matches workbook split: ${mismatches.length === 0}${mismatches.length ? ` (${mismatches.map((m) => m.ticker).join(", ")})` : ""}`);
+}
