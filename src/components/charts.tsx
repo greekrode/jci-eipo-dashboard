@@ -14,7 +14,7 @@ import { idr } from "@/lib/format";
 type ChartColors = { grid: string; blue: string; pos: string; neg: string; neutral: string; text: string };
 function readChartColors(): ChartColors {
   if (typeof window === "undefined")
-    return { grid: "hsl(240 4% 24%)", blue: "#3d75ff", pos: "#38c98a", neg: "#ef5b54", neutral: "#8b93a8", text: "#e8e8ea" };
+    return { grid: "hsl(208 9% 22%)", blue: "#3bbcb4", pos: "#3fc88a", neg: "#ef6a60", neutral: "#9aa3ab", text: "#e9ecef" };
   const s = getComputedStyle(document.documentElement);
   const v = (n: string) => `hsl(${s.getPropertyValue(n).trim()})`;
   return { grid: v("--border"), blue: v("--primary"), pos: v("--pos"), neg: v("--neg"), neutral: v("--muted-foreground"), text: v("--foreground") };
@@ -294,7 +294,8 @@ export function RegimeDistChart({ data }: { data: RegimeDistBin[] }) {
 }
 
 // Three-way bucket on the D+7 cumulative return, matching the house palette/legend.
-export const CHOPPY_BUCKETS = { over: "#38c98a", mid: "#f5a623", neg: "#ef5b54" } as const;
+// Green/red tuned to the brand teal; amber kept warm to read on both cream and near-black.
+export const CHOPPY_BUCKETS = { over: "#2eb87d", mid: "#e8a23a", neg: "#e85c50" } as const;
 const d7Bucket = (v: number): keyof typeof CHOPPY_BUCKETS => (v > 0.5 ? "over" : v >= 0 ? "mid" : "neg");
 
 type ChoppyPoint = RegimeScatterPoint & { x: number; label: string };
