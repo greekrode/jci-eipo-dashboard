@@ -1,13 +1,12 @@
 import { useMemo } from "react";
 import type { IPO } from "@/lib/types";
-import { byRegime, milestoneStats, regimeFade, regimeScatter } from "@/lib/compute";
+import { byRegime, milestoneStats, regimeFade, regimeScatter, sectorAgg } from "@/lib/compute";
 import { StatStrip } from "@/components/stat-strip";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { RegimeFadeChart, ChoppyScatter, CHOPPY_BUCKETS } from "@/components/charts";
 import { sectorColor } from "@/lib/colors";
-import { pct, pctAbs, idr } from "@/lib/format";
-import { signClass } from "@/lib/format";
+import { pct, pctAbs, idr, signClass } from "@/lib/format";
 
 export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
   const choppy = useMemo(() => byRegime(ipos, "choppy"), [ipos]);
@@ -24,7 +23,20 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
   const d7C = msC[3]?.median ?? null;
   const d7P = msP[3]?.median ?? null;
   const winD7 = msC[3]?.pctPos ?? null;
-  const raised = choppy.reduce((a, i) => a + (i.raised ?? 0), 0);
+
+  // Best / worst single deal by D7, for the KPI strip.
+  const rankedD7 = useMemo(
+    () => choppy.filter((i) => i.cum[6] !== null).sort((a, b) => (b.cum[6] as number) - (a.cum[6] as number)),
+    [choppy]
+  );
+  const best = rankedD7[0] ?? null;
+  const worst = rankedD7[rankedD7.length - 1] ?? null;
+
+  // Per-sector medians within the choppy cohort, strongest D7 first.
+  const sectors = useMemo(
+    () => sectorAgg(choppy).sort((a, b) => (b.d7 ?? -Infinity) - (a.d7 ?? -Infinity)),
+    [choppy]
+  );
 
   // D7-return buckets for the scatter legend, matching the chart palette.
   const buckets = useMemo(() => {
@@ -51,8 +63,8 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
           { label: "Median D1", value: pct(d1C), valueClass: signClass(d1C), sub: "first-day pop" },
           { label: "Median D7", value: pct(d7C), valueClass: signClass(d7C), sub: "held 7 days" },
           { label: "Win Rate D7", value: pctAbs(winD7), sub: "green after 7 days" },
-          { label: "Performing D7", value: pct(d7P), valueClass: signClass(d7P), sub: "median, for contrast" },
-          { label: "Capital Raised", value: idr(raised), sub: "choppy-tape proceeds" },
+          { label: "Best D7", value: pct(best?.cum[6] ?? null), valueClass: "text-pos", sub: best?.ticker },
+          { label: "Worst D7", value: pct(worst?.cum[6] ?? null), valueClass: "text-neg", sub: worst?.ticker },
         ]}
       />
 
@@ -108,7 +120,7 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
       <Card>
         <CardHeader>
           <CardTitle>D+7 return, every choppy-market deal</CardTitle>
-          <CardDescription>listed earliest → most recent · dashed line: cohort median {pct(d7C)} · hover for detail</CardDescription>
+          <CardDescription>listed earliest → most recent · dashed line: cohort median {pct(d7C)} · hover or tap a dot for detail</CardDescription>
         </CardHeader>
         <CardContent>
           <ChoppyScatter data={scatter} median={d7C} />
@@ -120,6 +132,44 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
               </span>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>By sector — choppy tape</CardTitle>
+          <CardDescription>median cumulative · strongest D7 first · n per sector</CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="static">Sector</TableHead>
+                <TableHead>n</TableHead>
+                <TableHead>Med D1</TableHead>
+                <TableHead>Med D3</TableHead>
+                <TableHead>Med D5</TableHead>
+                <TableHead>Med D7</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sectors.map((s) => (
+                <TableRow key={s.sector}>
+                  <TableCell className="text-left">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-[1px]" style={{ background: sectorColor(s.sector) }} />
+                      <span className="text-foreground">{s.sector}</span>
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{s.count}</TableCell>
+                  <TableCell className={signClass(s.d1)}>{pct(s.d1)}</TableCell>
+                  <TableCell className={signClass(s.d3)}>{pct(s.d3)}</TableCell>
+                  <TableCell className={signClass(s.d5)}>{pct(s.d5)}</TableCell>
+                  <TableCell className={signClass(s.d7)}>{pct(s.d7)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 

@@ -28,6 +28,19 @@ function useChartColors(): ChartColors {
   }, []);
   return c;
 }
+// Tracks a viewport breakpoint so charts can thin out labels on small screens.
+function useMediaQuery(query: string): boolean {
+  const [m, setM] = useState<boolean>(() => (typeof window === "undefined" ? false : window.matchMedia(query).matches));
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const h = () => setM(mq.matches);
+    mq.addEventListener("change", h);
+    setM(mq.matches);
+    return () => mq.removeEventListener("change", h);
+  }, [query]);
+  return m;
+}
+
 const kindColor = (c: ChartColors): Record<Bucket["kind"], string> => ({ neg: c.neg, flat: c.neutral, pos: c.pos, ara: c.blue });
 const legendStyle = (c: ChartColors) => ({ fontSize: 13, color: c.neutral });
 
@@ -268,25 +281,40 @@ function ChoppyScatterTip({ active, payload }: { active?: boolean; payload?: Arr
 
 // D+7 cumulative return per choppy-market deal. Deals run left→right in listing order (x is
 // chronological rank, not a dated axis), y is the D7 return, color buckets at 0% and +50%, and
-// the dashed line marks the cohort median. The biggest winners and losers are labelled inline.
+// the dashed line marks the cohort median. Winners (green) are labelled above their dot and
+// losers (red) below theirs, so the spread-out extremes don't collide; the dense middle band is
+// left to the hover tooltip. Labels thin out on mobile. Every dot is hoverable/tappable.
 export function ChoppyScatter({ data, median }: { data: RegimeScatterPoint[]; median: number | null }) {
   const c = useChartColors();
+  const mobile = useMediaQuery("(max-width: 640px)");
   // Chronological order; deals with no listing date (corrupt source cell) sort last as most-recent.
   const ordered = [...data].sort((a, b) => (a.listingDate ?? "9999").localeCompare(b.listingDate ?? "9999"));
   const byD7 = [...ordered].sort((a, b) => b.d7 - a.d7);
-  const flagged = new Set<string>([...byD7.slice(0, 10), ...byD7.slice(-5)].map((p) => p.ticker));
+  // On phones the biggest winners cluster at the right edge and labels pile up, so drop inline
+  // labels there entirely and rely on tap-to-show-tooltip (every deal is also in the table below).
+  const topN = mobile ? 0 : 14;
+  const botN = mobile ? 0 : 9;
+  // Guard botN===0: slice(-0) is slice(0) and would flag every point, not none.
+  const extremes = [...byD7.slice(0, topN), ...(botN ? byD7.slice(-botN) : [])];
+  const flagged = new Set<string>(extremes.map((p) => p.ticker));
   const pts: ChoppyPoint[] = ordered.map((p, i) => ({
     ...p,
     x: i,
     label: flagged.has(p.ticker) ? `${p.ticker} ${pctTick(p.d7)}` : "",
   }));
+  // Three series so winner labels sit above and loser labels below, in their own empty space.
+  const winners = pts.filter((p) => p.d7 > 0.5);
+  const mids = pts.filter((p) => p.d7 <= 0.5 && p.d7 >= 0);
+  const losers = pts.filter((p) => p.d7 < 0);
   const ys = pts.map((p) => p.d7);
   const lo = Math.min(0, ...ys);
   const hi = Math.max(0, ...ys);
-  const m = (hi - lo) * 0.08;
+  const m = (hi - lo) * 0.1;
+  const r = mobile ? 4 : 5;
+  const labelStyle = { fontSize: mobile ? 8.5 : 9.5 } as const;
   return (
-    <ResponsiveContainer width="100%" height={460}>
-      <ScatterChart margin={{ top: 16, right: 12, left: -6, bottom: 8 }}>
+    <ResponsiveContainer width="100%" height={mobile ? 380 : 470}>
+      <ScatterChart margin={{ top: 18, right: 14, left: -6, bottom: 8 }}>
         <CartesianGrid stroke={c.grid} vertical={false} />
         <XAxis
           type="number"
@@ -308,11 +336,16 @@ export function ChoppyScatter({ data, median }: { data: RegimeScatterPoint[]; me
           />
         )}
         <Tooltip cursor={{ strokeDasharray: "3 3", stroke: c.grid }} content={<ChoppyScatterTip />} />
-        <Scatter data={pts} isAnimationActive animationDuration={650} animationEasing="ease-out">
-          {pts.map((p, i) => (
-            <Cell key={i} fill={CHOPPY_BUCKETS[d7Bucket(p.d7)]} fillOpacity={0.9} stroke="none" />
-          ))}
-          <LabelList dataKey="label" position="top" offset={8} fill={c.text} style={{ fontSize: 9.5 }} />
+        <Scatter data={losers} fill={CHOPPY_BUCKETS.neg} shape="circle" isAnimationActive={false}>
+          {losers.map((_, i) => <Cell key={i} r={r} fillOpacity={0.9} stroke="none" />)}
+          <LabelList dataKey="label" position="bottom" offset={9} fill={c.text} style={labelStyle} />
+        </Scatter>
+        <Scatter data={mids} fill={CHOPPY_BUCKETS.mid} shape="circle" isAnimationActive={false}>
+          {mids.map((_, i) => <Cell key={i} r={r} fillOpacity={0.9} stroke="none" />)}
+        </Scatter>
+        <Scatter data={winners} fill={CHOPPY_BUCKETS.over} shape="circle" isAnimationActive={false}>
+          {winners.map((_, i) => <Cell key={i} r={r} fillOpacity={0.9} stroke="none" />)}
+          <LabelList dataKey="label" position="top" offset={9} fill={c.text} style={labelStyle} />
         </Scatter>
       </ScatterChart>
     </ResponsiveContainer>
