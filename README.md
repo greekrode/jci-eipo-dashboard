@@ -12,6 +12,10 @@ Dark, semi-brutalist theme; Inter throughout with tabular figures.
 - **Overview** — KPI strip (listed count, median D1, win rate, capital raised, best / worst D1),
   a return-milestone table (D1/D3/D5/D7 with median, mean, std dev, min, max, % up), the
   median-vs-mean 7-day fade curve, and the day-1 return distribution.
+- **Choppy Market** — D1→D7 behavior for deals that listed while the JCI sat **below its 200-day MA**
+  ("choppy" tape), set against deals that listed into a rising market. A KPI strip, a choppy-vs-performing
+  median fade curve, a side-by-side milestone table, a day-1-pop-vs-day-7-hold scatter (one bubble per
+  deal, colored by sector, sized by proceeds), and the full choppy-market listing table.
 - **Underwriters** — a global **All / Lead / Member** toggle drives a market stat strip, a
   capital-raised ranking, an activity-vs-performance scatter (deals × median D1, bubble = proceeds),
   and a searchable league table (proceeds, D1–D7 fade, win rate). Lead-vs-member and solo-vs-syndicated
@@ -40,12 +44,17 @@ bun run preview   # serve the production build
 ## Data
 
 `scripts/build-data.ts` parses `e-IPO Data.xlsx` into `src/data/ipos.json` (typed) and
-`src/data/brokers.json` (broker code → name).
+`src/data/brokers.json` (broker code → name). The master sheet is read as either `e-IPO Data` or
+`IPO History` (whichever the workbook exposes).
 
 - **Final price** is the final IPO offer price (post book-building).
 - **D1–D7** are *daily* returns; the per-IPO cumulative series is compounded from them.
 - **Median** is the headline statistic (returns are right-skewed); sample size `n` is shown on every cut.
 - Non-listed deals (canceled / postponed / book-building) are excluded from return stats.
+- **Market regime** (`marketRegime` / `jciGap`) is derived from the workbook's `JCI Trend` sheet
+  (Date / Close / MA200): each listing is tagged `choppy` when the index closed below its 200-day MA
+  on (or just before) the listing date, else `performing`. `jciGap` is `close / MA200 − 1`. The build
+  cross-checks this split against the workbook's own `Choppy Market` / `Perform Market` tabs (assert ISC-4).
 - Underwriter names that the source can't resolve (member-only and foreign joint-venture codes such as
   C3 CIMB Niaga, C4 Citigroup, D4 Deutsche, S0 Morgan Stanley, Y0 BNP Paribas) are filled in
   `NAME_OVERRIDES` in `src/lib/compute.ts`.

@@ -6,6 +6,7 @@ import type { IPO } from "./lib/types";
 import type { UpcomingIPO } from "./lib/upcoming-types";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Overview from "./views/Overview";
+import ChoppyMarket from "./views/ChoppyMarket";
 import Underwriters from "./views/Underwriters";
 import SectorsTime from "./views/SectorsTime";
 import Explorer from "./views/Explorer";
@@ -13,7 +14,7 @@ import Upcoming from "./views/Upcoming";
 
 const ipos = iposData as unknown as IPO[];
 const upcoming = upcomingData as unknown as UpcomingIPO[];
-const TAB_IDS = ["overview", "underwriters", "sectors", "explorer", "upcoming"];
+const TAB_IDS = ["overview", "choppy", "underwriters", "sectors", "explorer", "upcoming"];
 
 // Owner brand mark (Klinik Penyesalan). Lives in public/, BASE_URL keeps it
 // correct under the relative ("./") build base.
@@ -96,12 +97,14 @@ export default function App() {
       <Tabs value={tab} onValueChange={onTab} className="mt-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="choppy">Choppy Market</TabsTrigger>
           <TabsTrigger value="underwriters">Underwriters</TabsTrigger>
           <TabsTrigger value="sectors">Sectors &amp; Time</TabsTrigger>
           <TabsTrigger value="explorer">Explorer</TabsTrigger>
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
         </TabsList>
         <TabsContent value="overview"><Overview ipos={ipos} /></TabsContent>
+        <TabsContent value="choppy"><ChoppyMarket ipos={ipos} /></TabsContent>
         <TabsContent value="underwriters"><Underwriters ipos={ipos} /></TabsContent>
         <TabsContent value="sectors"><SectorsTime ipos={ipos} /></TabsContent>
         <TabsContent value="explorer"><Explorer ipos={ipos} /></TabsContent>

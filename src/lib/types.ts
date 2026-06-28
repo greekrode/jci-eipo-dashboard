@@ -25,4 +25,8 @@ export interface IPO {
   listingDate: string | null;
   listingYear: number | null;
   warrant: boolean;
+  /** Market regime at listing: JCI below its 200-day MA ("choppy") or above ("performing"). null if unclassifiable. */
+  marketRegime: "choppy" | "performing" | null;
+  /** JCI close / MA200 − 1 on the listing date: how far above (+) or below (−) trend the index sat. */
+  jciGap: number | null;
 }

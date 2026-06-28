@@ -4,7 +4,7 @@ import {
   ScatterChart, Scatter, ZAxis, LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Cell, ReferenceLine, Legend,
 } from "recharts";
-import type { Bucket, FadePoint, SectorRow, YearRow, RoleRow } from "@/lib/compute";
+import type { Bucket, FadePoint, SectorRow, YearRow, RoleRow, RegimeFadePoint, RegimeScatterPoint } from "@/lib/compute";
 import { sectorColor, brokerColor } from "@/lib/colors";
 import { idr } from "@/lib/format";
 
@@ -217,6 +217,85 @@ export function ActivityScatter({ data }: { data: Array<{ code: string; deals: n
             <Cell key={i} fill={brokerColor(p.code)} fillOpacity={0.6} stroke={brokerColor(p.code)} />
           ))}
           <LabelList dataKey="label" position="top" style={{ fill: c.text, fontSize: 11 }} />
+        </Scatter>
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
+}
+
+// Median 7-day fade, choppy vs performing markets, on one axis for direct comparison.
+export function RegimeFadeChart({ data }: { data: RegimeFadePoint[] }) {
+  const c = useChartColors();
+  return (
+    <ResponsiveContainer width="100%" height={290}>
+      <LineChart data={data} margin={{ top: 8, right: 14, left: -12, bottom: 2 }}>
+        <CartesianGrid stroke={c.grid} vertical={false} />
+        <XAxis dataKey="day" tickLine={false} axisLine={false} />
+        <YAxis tickFormatter={pctTick} tickLine={false} axisLine={false} width={42} />
+        <ReferenceLine y={0} stroke={c.grid} />
+        <Tooltip content={<Tip fmt={pctVal} />} />
+        <Legend wrapperStyle={legendStyle(c)} />
+        <Line type="monotone" dataKey="performing" name="Performing (JCI ≥ MA200)" stroke={c.pos} strokeWidth={2.25} dot={{ r: 2.5, fill: c.pos }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+        <Line type="monotone" dataKey="choppy" name="Choppy (JCI < MA200)" stroke={c.neg} strokeWidth={2.5} dot={{ r: 3, fill: c.neg }} isAnimationActive animationDuration={650} animationEasing="ease-out" />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+}
+
+function ChoppyScatterTip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: RegimeScatterPoint }> }) {
+  if (!active || !payload?.length || !payload[0].payload) return null;
+  const d = payload[0].payload;
+  return (
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+      <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
+        <span className="inline-block h-2 w-2 rounded-[1px]" style={{ background: sectorColor(d.sector) }} />
+        {d.ticker}
+        <span className="font-mono text-[10.5px] font-normal text-muted-foreground">{d.listingDate ?? ""}</span>
+      </div>
+      <div className="flex justify-between gap-4 text-muted-foreground"><span>{d.sector}</span></div>
+      <div className="flex justify-between gap-4 text-muted-foreground"><span>D1 pop</span><span className="tabnum font-medium text-foreground">{pctVal(d.d1)}</span></div>
+      <div className="flex justify-between gap-4 text-muted-foreground"><span>D7 cumulative</span><span className="tabnum font-medium text-foreground">{pctVal(d.d7)}</span></div>
+      <div className="flex justify-between gap-4 text-muted-foreground"><span>Raised</span><span className="tabnum font-medium text-foreground">{idr(d.raised)}</span></div>
+    </div>
+  );
+}
+
+// Day-1 pop (x) vs day-7 cumulative (y), one bubble per deal, colored by sector, sized by proceeds.
+// Axes scale independently (D1 is capped near ±35% daily; D7 cumulative runs much wider), so the
+// zero lines read as the quadrant split: above y=0 the deal is still green a week in.
+export function ChoppyScatter({ data }: { data: RegimeScatterPoint[] }) {
+  const c = useChartColors();
+  const pad = (vals: number[]): [number, number] => {
+    const lo = Math.min(0, ...vals);
+    const hi = Math.max(0, ...vals);
+    const m = (hi - lo) * 0.05 || 0.02;
+    return [lo - m, hi + m];
+  };
+  const xDom = pad(data.map((d) => d.d1));
+  const yDom = pad(data.map((d) => d.d7));
+  return (
+    <ResponsiveContainer width="100%" height={420}>
+      <ScatterChart margin={{ top: 12, right: 16, left: -6, bottom: 16 }}>
+        <CartesianGrid stroke={c.grid} />
+        <XAxis
+          type="number"
+          dataKey="d1"
+          name="D1 pop"
+          domain={xDom}
+          tickFormatter={pctTick}
+          tickLine={false}
+          axisLine={false}
+          label={{ value: "day-1 pop", position: "insideBottom", offset: -6, fill: c.neutral, fontSize: 12 }}
+        />
+        <YAxis type="number" dataKey="d7" name="D7 cumulative" domain={yDom} tickFormatter={pctTick} tickLine={false} axisLine={false} width={44} />
+        <ZAxis type="number" dataKey="raised" range={[28, 360]} name="Raised" />
+        <ReferenceLine x={0} stroke={c.grid} />
+        <ReferenceLine y={0} stroke={c.grid} />
+        <Tooltip cursor={{ strokeDasharray: "3 3", stroke: c.grid }} content={<ChoppyScatterTip />} />
+        <Scatter data={data} isAnimationActive animationDuration={650} animationEasing="ease-out">
+          {data.map((p, i) => (
+            <Cell key={i} fill={sectorColor(p.sector)} fillOpacity={0.62} stroke={sectorColor(p.sector)} />
+          ))}
         </Scatter>
       </ScatterChart>
     </ResponsiveContainer>

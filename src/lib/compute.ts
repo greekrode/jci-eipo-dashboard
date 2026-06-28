@@ -5,6 +5,54 @@ export const listedOnly = (ipos: IPO[]) => ipos.filter((i) => i.listed && i.dail
 
 const d1Of = (ipos: IPO[]) => ipos.map((i) => i.daily[0]).filter((x): x is number => x !== null);
 
+export type Regime = "choppy" | "performing";
+
+/** Listed deals filtered to one market regime (JCI below / above its 200-day MA at listing). */
+export const byRegime = (ipos: IPO[], regime: Regime) =>
+  listedOnly(ipos).filter((i) => i.marketRegime === regime);
+
+export interface RegimeScatterPoint {
+  ticker: string;
+  sector: string;
+  listingDate: string | null;
+  d1: number;
+  d7: number;
+  raised: number;
+  gap: number | null;
+}
+
+/** One point per listed deal in a regime: day-1 pop (x) vs day-7 cumulative (y), bubble = proceeds. */
+export function regimeScatter(ipos: IPO[], regime: Regime): RegimeScatterPoint[] {
+  return byRegime(ipos, regime)
+    .map((i) => ({
+      ticker: i.ticker,
+      sector: i.sector,
+      listingDate: i.listingDate,
+      d1: i.daily[0],
+      d7: i.cum[6],
+      raised: i.raised ?? 0,
+      gap: i.jciGap,
+    }))
+    .filter((p): p is RegimeScatterPoint => p.d1 !== null && p.d7 !== null);
+}
+
+export interface RegimeFadePoint {
+  day: string;
+  choppy: number | null;
+  performing: number | null;
+}
+
+/** Median cumulative-return fade curve, choppy vs performing, side by side for D1..D7. */
+export function regimeFade(ipos: IPO[]): RegimeFadePoint[] {
+  const ch = byRegime(ipos, "choppy");
+  const pf = byRegime(ipos, "performing");
+  return Array.from({ length: 7 }, (_, n) => ({
+    day: `D${n + 1}`,
+    choppy: medAtDay(ch, n),
+    performing: medAtDay(pf, n),
+  }));
+}
+
 /** Median cumulative return across a set of deals at a given hold-day index (0=D1, 2=D3, ...). */
 const medAtDay = (deals: IPO[], dayIdx: number) =>
   median(deals.map((d) => d.cum[dayIdx]).filter((x): x is number => x !== null));
