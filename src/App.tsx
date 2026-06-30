@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Sun, Moon } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import iposData from "./data/ipos.json";
 import upcomingData from "./data/upcoming-ipos.json";
 import type { IPO } from "./lib/types";
@@ -54,8 +55,10 @@ export default function App() {
     });
 
   return (
-    <div className="mx-auto w-full max-w-[2100px] px-3 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-6">
-      <header className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border pb-3 sm:mb-5 sm:items-end sm:pb-4">
+    <>
+      <Analytics />
+      <div className="mx-auto w-full max-w-[2100px] px-3 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-6">
+        <header className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-border pb-3 sm:mb-5 sm:items-end sm:pb-4">
         <div className="flex items-center gap-2.5">
           <a
             href={DISCORD_URL}
@@ -154,6 +157,7 @@ export default function App() {
           </a>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
