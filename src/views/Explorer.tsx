@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import type { IPO } from "@/lib/types";
 import { brokerNames } from "@/lib/compute";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { pct, idrPrice, signClass } from "@/lib/format";
 import { median } from "@/lib/stats";
+import { cleanSearchTerm, trackUserAction } from "@/lib/analytics";
 
 interface Row {
   ticker: string;
@@ -32,6 +33,7 @@ const selectCls =
   "h-9 rounded-[2px] border border-input bg-secondary px-2 text-[14px] text-foreground focus-visible:border-primary focus-visible:outline-none";
 
 export default function Explorer({ ipos }: { ipos: IPO[] }) {
+  const lastSearchEvent = useRef("");
   const names = useMemo(() => brokerNames(ipos), [ipos]);
   const base: Row[] = useMemo(
     () =>
@@ -126,9 +128,59 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
     return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }, [rows, names]);
 
+  useEffect(() => {
+    const query = cleanSearchTerm(q);
+    if (query.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      const lower = query.toLowerCase();
+      const matches = base.filter((x) => x.ticker.toLowerCase().includes(lower) || x.company.toLowerCase().includes(lower));
+      const matchedTickers = matches.slice(0, 8).map((x) => x.ticker).join(",");
+      const exactTicker = base.find((x) => x.ticker.toLowerCase() === lower)?.ticker ?? null;
+      const signature = `${query}|${rows.length}|${matchedTickers}`;
+
+      if (signature === lastSearchEvent.current) return;
+      lastSearchEvent.current = signature;
+      trackUserAction("Explorer Search", {
+        query,
+        exactTicker,
+        matchedTickers: matchedTickers || null,
+        resultCount: rows.length,
+      });
+    }, 650);
+
+    return () => window.clearTimeout(timer);
+  }, [base, q, rows.length]);
+
+  const setSectorFilter = (value: string) => {
+    setSec(value);
+    trackUserAction("Explorer Filter Changed", { filter: "sector", value });
+  };
+
+  const setUnderwriterFilter = (value: string) => {
+    setUw(value);
+    trackUserAction("Explorer Filter Changed", { filter: "underwriter", value });
+  };
+
+  const setGroupFilter = (value: GroupBy) => {
+    setGroupBy(value);
+    trackUserAction("Explorer Filter Changed", { filter: "groupBy", value });
+  };
+
+  const setListedFilter = (value: boolean) => {
+    setListedOnly(value);
+    trackUserAction("Explorer Filter Changed", { filter: "listedOnly", value });
+  };
+
+  const setSortColumn = (key: Key) => {
+    const dir = sort.key === key ? ((-sort.dir) as 1 | -1) : -1;
+    setSort({ key, dir });
+    trackUserAction("Explorer Sort Changed", { column: key, direction: dir === -1 ? "desc" : "asc" });
+  };
+
   const sortable = (key: Key, label: string, cls = "") => (
     <TableHead
-      onClick={() => setSort((p) => ({ key, dir: p.key === key ? ((-p.dir) as 1 | -1) : -1 }))}
+      onClick={() => setSortColumn(key)}
       className={`cursor-pointer hover:text-foreground ${cls}`}
     >
       {label}
@@ -220,7 +272,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
               onChange={(e) => setQ(e.target.value)}
               className="w-60"
             />
-            <select value={sec} onChange={(e) => setSec(e.target.value)} className={selectCls}>
+            <select value={sec} onChange={(e) => setSectorFilter(e.target.value)} className={selectCls}>
               <option value="all">All sectors</option>
               {sectors.map((s) => (
                 <option key={s} value={s}>
@@ -228,7 +280,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
                 </option>
               ))}
             </select>
-            <select value={uw} onChange={(e) => setUw(e.target.value)} className={`${selectCls} max-w-[230px]`} title="Filter by underwriter (lead or syndicate member)">
+            <select value={uw} onChange={(e) => setUnderwriterFilter(e.target.value)} className={`${selectCls} max-w-[230px]`} title="Filter by underwriter (lead or syndicate member)">
               <option value="all">All underwriters</option>
               {underwriters.map((u) => (
                 <option key={u.code} value={u.code}>
@@ -236,7 +288,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
                 </option>
               ))}
             </select>
-            <select value={groupBy} onChange={(e) => setGroupBy(e.target.value as GroupBy)} className={selectCls}>
+            <select value={groupBy} onChange={(e) => setGroupFilter(e.target.value as GroupBy)} className={selectCls}>
               <option value="none">No grouping</option>
               <option value="lead">Group by lead underwriter</option>
               <option value="underwriter">Group by underwriter (all roles)</option>
@@ -244,7 +296,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
               <option value="year">Group by year</option>
             </select>
             <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px] uppercase tracking-wider text-muted-foreground">
-              <input type="checkbox" checked={listedOnly} onChange={(e) => setListedOnly(e.target.checked)} className="accent-primary" />
+              <input type="checkbox" checked={listedOnly} onChange={(e) => setListedFilter(e.target.checked)} className="accent-primary" />
               Listed only
             </label>
             <span className="tabnum ml-auto text-[12.5px] text-muted-foreground">

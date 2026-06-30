@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { Analytics } from "@vercel/analytics/react";
 import iposData from "./data/ipos.json";
@@ -12,6 +12,7 @@ import Underwriters from "./views/Underwriters";
 import SectorsTime from "./views/SectorsTime";
 import Explorer from "./views/Explorer";
 import Upcoming from "./views/Upcoming";
+import { trackEvent, trackUserAction } from "./lib/analytics";
 
 const ipos = iposData as unknown as IPO[];
 const upcoming = upcomingData as unknown as UpcomingIPO[];
@@ -36,8 +37,12 @@ function initialTab(): string {
 }
 
 export default function App() {
+  const appOpenedTracked = useRef(false);
   const [tab, setTab] = useState<string>(initialTab);
   const onTab = (v: string) => {
+    if (v !== tab) {
+      trackUserAction("Tab Selected", { tab: v, previousTab: tab });
+    }
     setTab(v);
     if (typeof window !== "undefined") window.history.replaceState(null, "", `#${v}`);
   };
@@ -46,13 +51,28 @@ export default function App() {
   const [dark, setDark] = useState<boolean>(
     () => typeof document !== "undefined" && document.documentElement.classList.contains("dark")
   );
-  const toggleTheme = () =>
-    setDark((d) => {
-      const next = !d;
-      document.documentElement.classList.toggle("dark", next);
-      try { localStorage.setItem("theme", next ? "dark" : "light"); } catch { /* private mode */ }
-      return next;
+
+  useEffect(() => {
+    if (appOpenedTracked.current) return;
+    appOpenedTracked.current = true;
+
+    trackEvent("App Opened", {
+      initialTab: tab,
+      theme: dark ? "dark" : "light",
+      listedDeals: ipos.filter((i) => i.listed).length,
+      upcomingDeals: upcoming.length,
     });
+    // App-open context should be captured once per page load.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch { /* private mode */ }
+    trackUserAction("Theme Changed", { theme: next ? "dark" : "light" });
+  };
 
   return (
     <>
@@ -65,6 +85,7 @@ export default function App() {
             target="_blank"
             rel="noreferrer"
             title="Klinik Penyesalan — join the Discord"
+            onClick={() => trackUserAction("External Link Clicked", { target: "discord", location: "header_logo" })}
             className="shrink-0 rounded-[3px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             <img
@@ -119,7 +140,13 @@ export default function App() {
           <span className="font-medium text-foreground">Definitions.</span> Final price is the final IPO offer price (post
           book-building). D1–D7 are daily returns; cumulative compounds them. Returns are right-skewed, so median leads and
           sample size (n) is shown on every cut. Source:{" "}
-          <a href="https://e-ipo.co.id" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+          <a
+            href="https://e-ipo.co.id"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackUserAction("External Link Clicked", { target: "e-ipo", location: "footer_source" })}
+            className="text-primary hover:underline"
+          >
             e-ipo.co.id
           </a>
           .
@@ -139,6 +166,7 @@ export default function App() {
                 href={DISCORD_URL}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackUserAction("External Link Clicked", { target: "discord", location: "footer_owner" })}
                 className="font-medium text-foreground hover:text-primary hover:underline"
               >
                 Klinik Penyesalan
@@ -150,6 +178,7 @@ export default function App() {
             href={DISCORD_URL}
             target="_blank"
             rel="noreferrer"
+            onClick={() => trackUserAction("External Link Clicked", { target: "discord", location: "footer_button" })}
             className="inline-flex w-fit items-center gap-1.5 rounded-[2px] border border-border bg-card px-2.5 py-1.5 font-medium text-foreground transition-colors hover:bg-accent hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             <DiscordIcon className="h-3.5 w-3.5" />

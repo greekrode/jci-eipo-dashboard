@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, Legend } from "recharts";
@@ -10,6 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort } from "@/views/upcoming/shared";
+import { trackUserAction } from "@/lib/analytics";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const normKey = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
@@ -20,6 +21,8 @@ const axisBn = (v: number) => {
   if (a >= 1) return `${Math.round(v)}B`;
   return "0";
 };
+
+const DetailTickerContext = createContext<string | null>(null);
 
 export default function Detail({
   ipo, all, onBack, onSelect,
@@ -36,6 +39,7 @@ export default function Detail({
 
   return (
     <TooltipProvider delayDuration={120}>
+      <DetailTickerContext.Provider value={ipo.ticker}>
       <div key={ipo.ticker} className="anim-fade space-y-4">
         {/* nav — sticky so the ticker switcher / back stay reachable on long pages */}
         <div className="sticky top-0 z-20 -mx-3 flex flex-wrap items-center gap-2 border-b border-transparent bg-background/90 px-3 py-2 backdrop-blur sm:-mx-6 sm:px-6">
@@ -111,7 +115,13 @@ export default function Detail({
         {/* full narrative */}
         <Card>
           <details className="group">
-            <summary className="flex cursor-pointer list-none items-center justify-between border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+            <summary
+              onClick={(e) => {
+                const detail = e.currentTarget.parentElement as HTMLDetailsElement | null;
+                trackUserAction("Upcoming Writeup Toggled", { ticker: ipo.ticker, open: !detail?.open });
+              }}
+              className="flex cursor-pointer list-none items-center justify-between border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+            >
               <span className="flex items-baseline gap-2">
                 <span className="self-center font-mono text-[9px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
                 <span className="text-[15px] font-semibold tracking-tight text-foreground">Full forensic writeup</span>
@@ -134,16 +144,25 @@ export default function Detail({
 
         <Disclaimer />
       </div>
+      </DetailTickerContext.Provider>
     </TooltipProvider>
   );
 }
 
 // ── panels ──────────────────────────────────────────────────────────────────
 function Panel({ title, note, children, defaultOpen = true }: { title: string; note?: string; children: ReactNode; defaultOpen?: boolean }) {
+  const ticker = useContext(DetailTickerContext);
+
   return (
     <Card>
       <details open={defaultOpen} className="group">
-        <summary className="flex cursor-pointer list-none items-baseline justify-between gap-3 border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+        <summary
+          onClick={(e) => {
+            const detail = e.currentTarget.parentElement as HTMLDetailsElement | null;
+            trackUserAction("Upcoming Detail Section Toggled", { ticker, section: title, open: !detail?.open });
+          }}
+          className="flex cursor-pointer list-none items-baseline justify-between gap-3 border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+        >
           <span className="flex items-baseline gap-2">
             <span className="self-center font-mono text-[9px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
             <CardTitle>{title}</CardTitle>
@@ -213,7 +232,13 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
 
         {/* see why — per-axis inputs */}
         <details className="group">
-          <summary className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+          <summary
+            onClick={(e) => {
+              const detail = e.currentTarget.parentElement as HTMLDetailsElement | null;
+              trackUserAction("Upcoming Detail Section Toggled", { ticker: ipo.ticker, section: "Score inputs", open: !detail?.open });
+            }}
+            className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+          >
             <span className="text-[9px] transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
             How each axis scores
           </summary>

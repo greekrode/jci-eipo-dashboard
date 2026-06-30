@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { IPO } from "@/lib/types";
 import { leadVsMember, soloVsSyndicated, participationTable, type PartRow, type PartRoleStat } from "@/lib/compute";
 import { StatStrip } from "@/components/stat-strip";
@@ -10,6 +10,7 @@ import { LeadMemberBars, ProceedsBars, ActivityScatter } from "@/components/char
 import { pct, pctAbs, idr, signClass } from "@/lib/format";
 import { brokerColor } from "@/lib/colors";
 import { cn } from "@/lib/utils";
+import { cleanSearchTerm, trackUserAction } from "@/lib/analytics";
 
 type Role = "all" | "lead" | "member";
 type SortKey = "led" | "member" | "raised" | "d1" | "d3" | "d5" | "d7" | "pctGreen";
@@ -34,6 +35,7 @@ const PROCEEDS_DESC: Record<Role, string> = {
 };
 
 export default function Underwriters({ ipos }: { ipos: IPO[] }) {
+  const lastSearchEvent = useRef("");
   const part = useMemo(() => participationTable(ipos), [ipos]);
   const roles = useMemo(() => leadVsMember(ipos), [ipos]);
   const ss = useMemo(() => soloVsSyndicated(ipos), [ipos]);
@@ -43,6 +45,9 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: "led", dir: -1 });
 
   const pickRole = (r: Role) => {
+    if (r !== role) {
+      trackUserAction("Underwriter Role Changed", { role: r, previousRole: role });
+    }
     setRole(r);
     setSort({ key: r === "member" ? "member" : "led", dir: -1 });
   };
@@ -81,9 +86,42 @@ export default function Underwriters({ ipos }: { ipos: IPO[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [part, role, search, sort]);
 
+  useEffect(() => {
+    const query = cleanSearchTerm(search);
+    if (query.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      const lower = query.toLowerCase();
+      const matches = part
+        .filter((p) => p[role].n > 0)
+        .filter((p) => p.name.toLowerCase().includes(lower) || p.code.toLowerCase().includes(lower));
+      const matchedCodes = matches.slice(0, 8).map((p) => p.code).join(",");
+      const exactCode = part.find((p) => p.code.toLowerCase() === lower)?.code ?? null;
+      const signature = `${query}|${role}|${rows.length}|${matchedCodes}`;
+
+      if (signature === lastSearchEvent.current) return;
+      lastSearchEvent.current = signature;
+      trackUserAction("Underwriter Search", {
+        query,
+        role,
+        exactCode,
+        matchedCodes: matchedCodes || null,
+        resultCount: rows.length,
+      });
+    }, 650);
+
+    return () => window.clearTimeout(timer);
+  }, [part, role, rows.length, search]);
+
+  const setSortColumn = (key: SortKey) => {
+    const dir = sort.key === key ? ((-sort.dir) as 1 | -1) : -1;
+    setSort({ key, dir });
+    trackUserAction("Underwriter Sort Changed", { column: key, direction: dir === -1 ? "desc" : "asc", role });
+  };
+
   const sortable = (key: SortKey, label: string) => (
     <TableHead
-      onClick={() => setSort((s) => ({ key, dir: s.key === key ? ((-s.dir) as 1 | -1) : -1 }))}
+      onClick={() => setSortColumn(key)}
       className="cursor-pointer hover:text-foreground"
     >
       {label}

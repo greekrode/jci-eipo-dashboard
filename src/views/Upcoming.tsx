@@ -8,6 +8,7 @@ import { idr, idrBn, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
 import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip, gradeVariant, uwGradeVariant } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
+import { trackUserAction } from "@/lib/analytics";
 
 /** A metric row in the transposed comparison matrix. `dir` marks which extreme to highlight. */
 interface Metric {
@@ -254,8 +255,19 @@ const GROUPS = [...new Set(METRICS.map((m) => m.group))];
 
 export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const select = (t: string | null) => {
+  const select = (t: string | null, source: string) => {
     setSelected(t);
+    if (t) {
+      const ipo = ipos.find((i) => i.ticker === t);
+      trackUserAction("Upcoming Stock Opened", {
+        ticker: t,
+        source,
+        sector: ipo?.sectorGroup,
+        score: ipo?.score?.overall ?? null,
+      });
+    } else {
+      trackUserAction("Upcoming Compare Opened", { source });
+    }
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -272,7 +284,7 @@ export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
 
   if (selected) {
     const ipo = ipos.find((i) => i.ticker === selected);
-    if (ipo) return <Detail ipo={ipo} all={ipos} onBack={() => select(null)} onSelect={select} />;
+    if (ipo) return <Detail ipo={ipo} all={ipos} onBack={() => select(null, "detail_back")} onSelect={(ticker) => select(ticker, "detail_switcher")} />;
   }
 
   return (
@@ -297,9 +309,9 @@ export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
                     role="button"
                     tabIndex={0}
                     aria-label={`Open ${i.ticker} detail`}
-                    onClick={() => select(i.ticker)}
+                    onClick={() => select(i.ticker, "comparison_table")}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker); }
+                      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "comparison_table_keyboard"); }
                     }}
                     className="cursor-pointer text-center align-bottom hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
                   >
