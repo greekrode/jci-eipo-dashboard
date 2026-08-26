@@ -303,7 +303,7 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
 
   if (selected) {
     const ipo = ipos.find((i) => i.ticker === selected);
-    if (ipo) return <Detail ipo={ipo} all={ipos} onBack={() => select(null, "detail_back")} onSelect={(ticker) => select(ticker, "detail_switcher")} />;
+    if (ipo) return <Detail ipo={ipo} all={ipos} listedTickers={new Set(listed.map((i) => i.ticker))} onBack={() => select(null, "detail_back")} onSelect={(ticker) => select(ticker, "detail_switcher")} />;
   }
 
   return (

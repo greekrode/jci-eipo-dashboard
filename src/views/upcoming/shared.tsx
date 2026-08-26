@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import type { RedFlag } from "@/lib/upcoming-types";
 
@@ -157,6 +158,55 @@ export function exposureMeta(level: string | null): { label: string; variant: To
     case "clean": return { label: "Independent", variant: "pos" };
     default: return { label: level ?? "—", variant: "outline" };
   }
+}
+
+// ── Inline emphasis for analyst prose ─────────────────────────────────────────
+
+/** One tokenizer pass over a line of analyst prose. Ordered alternation:
+ *  1. trailing prospectus citation `(PAGE 29, 425, 408)` — captured, demoted to `p. …`
+ *  2. rupiah amounts — `Rp1.42bn`, `Rp 120`, `Rp138-149bn`
+ *  3. percentages — `30%`, `68.7%`
+ *  4. multiples — `10.6x`, `228-246x`, `97 to 105x`
+ *  Years and period tokens (FY2025, 2M-2026) carry no `Rp` / `%` / `x`, so they stay unbolded. */
+const EMPH_RX =
+  /\s*\(PAGE\s+([^)]*)\)\.?|\bRp\s?\d+(?:[.,]\d+)*(?:\s?[–-]\s?\d+(?:[.,]\d+)*)?(?:bn|tn|m|k)?|\b\d+(?:\.\d+)?%|\b\d+(?:\.\d+)?(?:\s?(?:to|–|-)\s?\d+(?:\.\d+)?)?\s?[x×]/g;
+
+/** Longest "Profit quality:" style lead-in still treated as a label rather than prose. */
+const LEAD_MAX = 45;
+
+function emphTokens(s: string): ReactNode[] {
+  const out: ReactNode[] = [];
+  let last = 0;
+  let key = 0;
+  EMPH_RX.lastIndex = 0;
+  for (let m = EMPH_RX.exec(s); m !== null; m = EMPH_RX.exec(s)) {
+    if (m.index > last) out.push(s.slice(last, m.index));
+    if (m[1] !== undefined) {
+      out.push(
+        <span key={key++} className="ml-1 font-mono text-[12px] text-muted-foreground/80">p. {m[1].trim()}</span>,
+      );
+    } else {
+      out.push(<strong key={key++} className="font-semibold text-foreground">{m[0]}</strong>);
+    }
+    last = m.index + m[0].length;
+  }
+  if (last < s.length) out.push(s.slice(last));
+  return out;
+}
+
+/** Renders one line of analyst prose with the figures that carry the argument set in bold,
+ *  a short `Label:` lead-in promoted to a heading weight, and a trailing prospectus page
+ *  citation demoted to a quiet mono `p. 29, 425, 408`. No HTML injection — pure nodes. */
+export function Emph({ text }: { text: string }) {
+  const s = text ?? "";
+  const colon = s.indexOf(":");
+  const lead = colon > 0 && colon <= LEAD_MAX && !s.slice(0, colon).includes("\n");
+  return (
+    <>
+      {lead && <span className="font-semibold text-foreground">{s.slice(0, colon + 1)}</span>}
+      {emphTokens(lead ? s.slice(colon + 1) : s)}
+    </>
+  );
 }
 
 /** Distinct structural tags present across a deal's flagged holders, in display order. */

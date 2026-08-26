@@ -1,6 +1,7 @@
 import { createContext, useContext, type ReactNode } from "react";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { CircleDashed } from "lucide-react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, Legend } from "recharts";
 import type { UpcomingIPO } from "@/lib/upcoming-types";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
@@ -9,7 +10,7 @@ import { StatStrip } from "@/components/stat-strip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
-import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort, Emph } from "@/views/upcoming/shared";
 import { trackUserAction } from "@/lib/analytics";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
@@ -22,12 +23,53 @@ const axisBn = (v: number) => {
   return "0";
 };
 
+/** Flattened text of a hast node — used to spot the closing "Bottom line:" paragraph. */
+function mdText(n: unknown): string {
+  const node = n as { value?: string; children?: unknown[] } | undefined;
+  if (!node) return "";
+  if (typeof node.value === "string") return node.value;
+  return (node.children ?? []).map(mdText).join("");
+}
+
+/** The verdict is authored prose: a lead sentence, an optional evidence list, and a closing
+ *  "Bottom line:" ruled off from the argument. Plain-text verdicts fall through as one paragraph. */
+const VERDICT_MD: Components = {
+  p: ({ node, children }) => (
+    <p className={`text-[16px] leading-relaxed text-foreground/90${/^bottom line:/i.test(mdText(node).trim()) ? " mt-2 border-t border-border pt-2" : ""}`}>
+      {children}
+    </p>
+  ),
+  ul: ({ children }) => <ul className="mt-2 list-disc space-y-1.5 pl-5 marker:text-muted-foreground">{children}</ul>,
+  li: ({ children }) => <li className="text-[15.5px] leading-snug text-muted-foreground">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+};
+
 const DetailTickerContext = createContext<string | null>(null);
 
 export default function Detail({
-  ipo, all, onBack, onSelect,
-}: { ipo: UpcomingIPO; all: UpcomingIPO[]; onBack: () => void; onSelect: (t: string) => void }) {
+  ipo, all, onBack, onSelect, listedTickers,
+}: { ipo: UpcomingIPO; all: UpcomingIPO[]; onBack: () => void; onSelect: (t: string) => void; listedTickers?: Set<string> }) {
   const f = ipo.financials;
+  // Two switcher groups: live deals first, already-listed forensics behind a divider.
+  const isListed = (t: string) => listedTickers?.has(t) ?? false;
+  const liveDeals = all.filter((o) => !isListed(o.ticker));
+  const doneDeals = all.filter((o) => isListed(o.ticker));
+  const chip = (o: UpcomingIPO, muted: boolean) => (
+    <button
+      key={o.ticker}
+      onClick={() => onSelect(o.ticker)}
+      aria-current={o.ticker === ipo.ticker ? "true" : undefined}
+      className={`rounded-[2px] border px-2 py-1 font-mono text-[14.5px] font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
+        o.ticker === ipo.ticker
+          ? "border-primary/50 bg-primary/15 text-primary"
+          : muted
+            ? "border-dashed border-border text-muted-foreground hover:bg-accent hover:text-foreground"
+            : "border-border bg-secondary text-muted-foreground hover:bg-accent hover:text-foreground"
+      }`}
+    >
+      {o.ticker}
+    </button>
+  );
   const kpis = [
     { label: "Offer price", value: priceRange(ipo.offering.priceLow, ipo.offering.priceHigh), sub: `par ${idrPrice(ipo.offering.par)}` },
     { label: "Gross raise", value: idrRange(ipo.offering.grossLow, ipo.offering.grossHigh), sub: ipo.issueType ?? "" },
@@ -49,21 +91,20 @@ export default function Detail({
           >
             ← Compare
           </button>
-          <div className="ml-1 flex flex-wrap gap-1.5">
-            {all.map((o) => (
-              <button
-                key={o.ticker}
-                onClick={() => onSelect(o.ticker)}
-                aria-current={o.ticker === ipo.ticker ? "true" : undefined}
-                className={`rounded-[2px] border px-2 py-1 font-mono text-[14.5px] font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
-                  o.ticker === ipo.ticker
-                    ? "border-primary/50 bg-primary/15 text-primary"
-                    : "border-border bg-secondary text-muted-foreground hover:bg-accent hover:text-foreground"
-                }`}
-              >
-                {o.ticker}
-              </button>
-            ))}
+          <div className="ml-1 flex flex-wrap items-center gap-1.5">
+            {liveDeals.length > 0 && (
+              <>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">UPCOMING</span>
+                {liveDeals.map((o) => chip(o, false))}
+              </>
+            )}
+            {doneDeals.length > 0 && (
+              <>
+                <span className="mx-1 h-4 w-px shrink-0 bg-border" aria-hidden />
+                <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">LISTED</span>
+                {doneDeals.map((o) => chip(o, true))}
+              </>
+            )}
           </div>
         </div>
 
@@ -88,9 +129,9 @@ export default function Detail({
               </div>
             </div>
             {ipo.valuation.verdict && (
-              <div className="rounded-[2px] border border-border bg-secondary/40 px-3 py-2.5 text-[15.5px] leading-relaxed text-foreground">
-                <span className="mr-1.5 font-mono text-[12.5px] font-semibold uppercase tracking-wider text-primary">Verdict</span>
-                {ipo.valuation.verdict}
+              <div className="rounded-[2px] border border-border bg-secondary/40 px-3 py-2.5">
+                <div className="mb-1 font-mono text-[12.5px] font-semibold uppercase tracking-wider text-primary">Verdict</div>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={VERDICT_MD}>{ipo.valuation.verdict}</ReactMarkdown>
               </div>
             )}
           </CardContent>
@@ -207,7 +248,7 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
                   <div className={`h-full rounded-[1px] ${scoreTone(a.score)}`} style={{ width: `${a.score ?? 0}%` }} />
                 </div>
                 <span className="w-8 shrink-0 text-right font-mono text-[15px] font-medium tabnum text-foreground">{a.score == null ? "—" : Math.round(a.score)}</span>
-                <span className="w-9 shrink-0 text-right font-mono text-[12px] tabnum text-muted-foreground/60">{Math.round(a.weight * 100)}%</span>
+                <span className="w-9 shrink-0 text-right font-mono text-[12px] tabnum text-muted-foreground">{Math.round(a.weight * 100)}%</span>
               </div>
             ))}
           </div>
@@ -369,35 +410,39 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
         </div>
       )}
       {ipo.ownership && (
-        <div className="space-y-2 border-t border-border px-4 py-3">
-          <div className="flex items-center gap-2">
+        <div className="space-y-2.5 border-t border-border px-4 py-3">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">Ownership exposure</span>
             {(() => { const e = exposureMeta(ipo.ownership.level); return <Badge variant={e.variant}>{e.label}</Badge>; })()}
           </div>
-          <p className="text-[14.5px] leading-relaxed text-muted-foreground">{ipo.ownership.summary}</p>
+          <p className="text-[15.5px] leading-relaxed text-foreground/85"><Emph text={ipo.ownership.summary} /></p>
           {ipo.ownership.flags.length > 0 && (
-            <ul className="space-y-1">
+            <ul className="grid gap-x-6 gap-y-1.5 lg:grid-cols-2">
               {ipo.ownership.flags.map((fl, i) => (
-                <li key={i} className="flex gap-2 text-[14px] leading-snug text-muted-foreground">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" aria-hidden />{fl}
+                <li key={i} className="flex gap-2 text-[14.5px] leading-snug text-muted-foreground">
+                  <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-muted-foreground" aria-hidden />
+                  <span className="min-w-0"><Emph text={fl} /></span>
                 </li>
               ))}
             </ul>
           )}
           {ipo.ownership.caveats.length > 0 && (
-            <div className="rounded-[2px] border border-dashed border-border bg-secondary/20 px-3 py-2.5">
-              <div className="mb-1.5 flex items-center gap-2">
+            <details className="rounded-[2px] border border-dashed border-border bg-secondary/20 px-3 py-2.5">
+              <summary className="flex cursor-pointer list-none flex-wrap items-center gap-2 [&::-webkit-details-marker]:hidden">
                 <Badge variant="outline" className="px-1 py-0 text-[11.5px] font-medium uppercase tracking-wide">Unverified</Badge>
-                <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">under review · not findings of wrongdoing</span>
-              </div>
-              <ul className="space-y-1">
+                <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">
+                  Under review · {ipo.ownership.caveats.length} items · not findings of wrongdoing
+                </span>
+              </summary>
+              <ul className="mt-2 space-y-1.5">
                 {ipo.ownership.caveats.map((cv, i) => (
                   <li key={i} className="flex gap-2 text-[14px] leading-snug text-muted-foreground">
-                    <span className="shrink-0 text-muted-foreground/60" aria-hidden>?</span>{cv}
+                    <CircleDashed className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+                    <span className="min-w-0"><Emph text={cv} /></span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           )}
           <p className="font-mono text-[12px] leading-relaxed text-muted-foreground/70">
             Structural facts from public-source research; items marked Unverified are unproven (dated allegations or
@@ -587,60 +632,112 @@ function ValuationPanel({ ipo }: { ipo: UpcomingIPO }) {
   );
 }
 
+/** Severity / strength buckets in reading order — worst (and best) first. */
+const SEV_ORDER = ["High", "Med-High", "Med", "Low-Med", "Low"];
+const STRENGTH_ORDER = ["Strong", "Moderate", "Minor"];
+
+/** Bucket items by their grade label, in the given order, with anything ungraded last. */
+function bucket<T>(items: T[], gradeOf: (x: T) => string | null, order: string[]) {
+  const norm = (s: string | null) => (s ?? "").trim().toLowerCase();
+  const known = new Set(order.map((o) => o.toLowerCase()));
+  const groups = order
+    .map((label) => ({ label, items: items.filter((x) => norm(gradeOf(x)) === label.toLowerCase()) }))
+    .filter((g) => g.items.length > 0);
+  const rest = items.filter((x) => !known.has(norm(gradeOf(x))));
+  if (rest.length > 0) groups.push({ label: "Unrated", items: rest });
+  return groups;
+}
+
+/** One severity/strength group: badge + count header, then its items behind a tinted square. */
+function FlagGroup({ label, count, variant, children }: {
+  label: string; count: number; variant: "neg" | "pos" | "secondary" | "outline"; children: ReactNode;
+}) {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center gap-2">
+        <Badge variant={variant} className="shrink-0">{label}</Badge>
+        <span className="font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">{count} {count === 1 ? "item" : "items"}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function FlagItem({ tint, text }: { tint: string; text: string }) {
+  return (
+    <li className="flex gap-2.5 text-[15px] leading-snug text-muted-foreground">
+      <span className={`mt-[7px] h-[6px] w-[6px] shrink-0 ${tint}`} aria-hidden />
+      <span className="min-w-0"><Emph text={text} /></span>
+    </li>
+  );
+}
+
+/** Red flags, grouped by severity so the High cluster reads as one block rather than a flat wall. */
 function RedFlags({ ipo }: { ipo: UpcomingIPO }) {
+  const groups = bucket(ipo.redFlags, (rf) => rf.severity, SEV_ORDER);
+  const tintOf = (label: string) => (/^(high|med-high)$/i.test(label) ? "bg-neg" : "bg-muted-foreground");
   return (
     <Panel title="Red flags" note={`${ipo.redFlags.length} flagged`}>
-      <ul className="space-y-2 p-4">
-        {ipo.redFlags.map((rf, i) => (
-          <li key={i} className="flex gap-2.5 text-[15px] leading-snug">
-            {rf.severity ? <Badge variant={sevVariant(rf.severity)} className="mt-0.5 shrink-0">{rf.severity}</Badge>
-              : <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-neg/70" aria-hidden />}
-            <span className="text-muted-foreground">{rf.text}</span>
-          </li>
+      <div className="space-y-4 p-4">
+        {groups.map((g) => (
+          <FlagGroup key={g.label} label={g.label} count={g.items.length} variant={sevVariant(g.label)}>
+            <ul className="space-y-1.5">
+              {g.items.map((rf, i) => <FlagItem key={i} tint={tintOf(g.label)} text={rf.text} />)}
+            </ul>
+          </FlagGroup>
         ))}
-      </ul>
+      </div>
     </Panel>
   );
 }
 
-/** Green flags — positives, graded and laid out as the mirror of RedFlags. */
+/** Green flags — positives, grouped by strength as the mirror of RedFlags. */
 function GreenFlags({ ipo }: { ipo: UpcomingIPO }) {
   const g = ipo.counterweights ?? [];
   if (g.length === 0) return null;
+  const groups = bucket(g, (c) => c.strength, STRENGTH_ORDER);
+  const tintOf = (label: string) => (/^(strong|moderate)$/i.test(label) ? "bg-pos" : "bg-muted-foreground");
   return (
     <Panel title="Green flags" note={`${g.length} positives`}>
-      <ul className="space-y-2 p-4">
-        {g.map((c, i) => (
-          <li key={i} className="flex gap-2.5 text-[15px] leading-snug">
-            <Badge variant={strengthVariant(c.strength)} className="mt-0.5 shrink-0">{c.strength}</Badge>
-            <span className="text-muted-foreground">{c.text}</span>
-          </li>
+      <div className="space-y-4 p-4">
+        {groups.map((grp) => (
+          <FlagGroup key={grp.label} label={grp.label} count={grp.items.length} variant={strengthVariant(grp.label)}>
+            <ul className="space-y-1.5">
+              {grp.items.map((c, i) => <FlagItem key={i} tint={tintOf(grp.label)} text={c.text} />)}
+            </ul>
+          </FlagGroup>
         ))}
-      </ul>
+      </div>
     </Panel>
   );
 }
 
 function Qualitative({ ipo }: { ipo: UpcomingIPO }) {
+  const hasContext = !!(ipo.primaryRisk || ipo.industryTailwind);
+  if (!hasContext && ipo.openQuestions.length === 0 && !ipo.esa.exists) return null;
   return (
-    <Panel title="Context & open questions">
+    <Panel title="Questions before you subscribe" note={`${ipo.openQuestions.length} questions`}>
       <div className="space-y-3 p-4">
-        {(ipo.primaryRisk || ipo.industryTailwind) && (
-          <Section label="Context">
-            {ipo.primaryRisk && <div className="text-[15px] leading-snug text-muted-foreground"><span className="text-neg/90">Primary risk:</span> {ipo.primaryRisk}</div>}
-            {ipo.industryTailwind && <div className="mt-1 text-[15px] leading-snug text-muted-foreground"><span className="text-pos/90">Tailwind:</span> {ipo.industryTailwind}</div>}
-          </Section>
+        {hasContext && (
+          <div className="space-y-1.5">
+            {ipo.primaryRisk && (
+              <p className="text-[15px] leading-relaxed text-muted-foreground">
+                <span className="font-semibold text-neg/90">Primary risk. </span><Emph text={ipo.primaryRisk} />
+              </p>
+            )}
+            {ipo.industryTailwind && (
+              <p className="text-[15px] leading-relaxed text-muted-foreground">
+                <span className="font-semibold text-pos/90">Tailwind. </span><Emph text={ipo.industryTailwind} />
+              </p>
+            )}
+          </div>
         )}
         {ipo.openQuestions.length > 0 && (
-          <Section label="Open questions (diligence)">
-            <ul className="space-y-1">
-              {ipo.openQuestions.map((q, i) => (
-                <li key={i} className="flex gap-2 text-[15px] leading-snug text-muted-foreground">
-                  <span className="shrink-0 text-muted-foreground/60">?</span>{q}
-                </li>
-              ))}
-            </ul>
-          </Section>
+          <ol className="list-decimal space-y-2 pl-6 marker:font-mono marker:text-muted-foreground">
+            {ipo.openQuestions.map((q, i) => (
+              <li key={i} className="text-[15px] leading-snug text-muted-foreground"><Emph text={q} /></li>
+            ))}
+          </ol>
         )}
         {ipo.esa.exists && (
           <Section label="ESA / ESOP"><div className="text-[15px] leading-snug text-muted-foreground">{ipo.esa.summary}</div></Section>

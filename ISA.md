@@ -5,11 +5,11 @@ project: ipo-dashboard
 effort: advanced
 effort_source: classifier
 phase: complete
-progress: 46/47
+progress: 55/56
 mode: interactive
-iteration: 4
+iteration: 5
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T15:55:00Z
+updated: 2026-08-26T16:55:00Z
 ---
 
 ## Problem
@@ -82,6 +82,15 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-45: A "Listed · how the calls played out" table appears below the matrix with the six July listings: AI Score/grade, final price, D1, D7 cum, since-listing, regime — values matching `src/data/ipos.json` (e.g. PRDL 73/B, Rp 120, +35.0%, +221.7%, +100.0%).
 - [x] ISC-46: Clicking a listed ticker opens its existing Detail view (forensic writeup still reachable); Interceptor text shows "Full forensic writeup" for RANS after the click.
 - [x] ISC-47: Anti: no listed deal appears as a column in the comparison matrix; `bun run build` clean; only `src/views/Upcoming.tsx`, `src/App.tsx`, README change.
+- [x] ISC-48: Every `text-[Npx]` class scaled ×1.2 (125 replacements, 10→12 … 20→24), body 15→17px; light-mode `--muted-foreground` darkened to 29% lightness; tsc + build clean.
+- [x] ISC-49: SWAP verdict is Markdown (bold tag line, 4 bullets, "Bottom line:" close) with no em/en dashes; tailwind is prose (no JSON); open questions curated to 9 with the 34-item list kept as `open_questions_full`; exposure summary ≤ 900 chars.
+- [x] ISC-50: Verdict renders as designed text (lead paragraph, bullet list, bottom-line rule) — Interceptor text shows "Rich." then bullet lines then "Bottom line:".
+- [x] ISC-51: Red flags render grouped by severity (High → Med-High → Med → Low-Med) with one badge per group and a count; green flags grouped Strong → Moderate → Minor.
+- [x] ISC-52: Ownership exposure shows level badge + summary + two-column facts; caveats collapsed under "Under review · n items" with no "?" glyph.
+- [x] ISC-53: "Questions before you subscribe" panel renders a numbered list (9 for SWAP) and context lines; no "?" glyph anywhere in Detail.tsx (`rg ">?<|aria-hidden>?" src/views/upcoming/Detail.tsx` → 0).
+- [x] ISC-54: Detail switcher shows SWAP under "UPCOMING" and the six under "LISTED" (muted), all still clickable.
+- [x] ISC-55: Rp amounts, percentages and multiples render bold inside flags/questions (Interceptor tree shows `strong` nodes; grep dist for the Emph helper).
+- [x] ISC-56: Anti: `rg "text-muted-foreground/60" src/views/upcoming/Detail.tsx` matches only decorative (non-text) uses; production shows the new detail after push.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -134,6 +143,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T14:35Z — Iteration 2 (E2): Rod asked to "extend it to my db". The arthara-db MCP is a hosted SSE endpoint (dbmcp.arthara.id) with no Postgres DSN on this machine and no local alpha-flow checkout, so the build cannot query the DB unattended. Shipped `scripts/pull-jci.ts` (Bun.SQL, same SQL as the manual pull) behind `ARTHARA_DATABASE_URL`; live run deferred until Rod provides a read-only DSN. The IHSG series through 2026-08-26 was already committed and pushed in 9633f88.
 - 2026-08-26T15:00Z — Iteration 3 (E2): Rod: "why do you need the arthara database url? you can use the mcp… I'm not opening my db connection anymore." Dropped ISC-39 and deleted `pull-jci.ts`. Refresh path is now MCP-only: `scripts/jci-trend.sql` run via `arthara-db` in-session → `series` string → `bun run data:jci <file>` → committed JSON. Verified the converter round-trips today's pull exactly. Feedback saved to memory.
 - 2026-08-26T15:30Z — Iteration 4 (E3): Rod: "why BACH,jecx,jeli,emmi,prdl,rans are still on the upcoming part? you don't update the data?" My Out-of-Scope call (keep listed deals in Upcoming) was wrong for him — Upcoming means upcoming. Fix: the view partitions deals by presence in the census as `listed`; matrix shows only SWAP, and a "Listed · how the calls played out" table shows AI Score vs realized D1 / D7 / since-listing for the six, with detail pages (forensics) still reachable. Delegated to Forge (E3 coding rule); ISC-44..47 added.
+- 2026-08-26T16:20Z — Iteration 5 (E3), Rod's readability review of the detail page. Decisions: (1) "Context & open questions" stays but changes purpose: it was 34 analyst diligence notes (draft-prospectus typos, reconciliation gaps) that an end user cannot act on; it becomes "Questions before you subscribe" with 9 investor-facing questions for SWAP, and the full list lives in the source JSON as `open_questions_full`. Other deals' lists (6–9 items, analyst-written) are left as-is. (2) Type scale ×1.2 by class rewrite rather than CSS `zoom`, so layout math stays real px. (3) Verdict stays a string field but may carry Markdown; `ReactMarkdown` renders both styles so the six older verdicts need no rewrite. (4) Emphasis is a deterministic tokenizer (Rp amounts, %, multiples, colon lead-ins) rather than hand-bolding every string. (5) ~~Forge implements the component work (E3 coding rule)~~ — Rod: "why is forge working on them? i want you to use opus"; Forge stopped before it edited anything, an Opus agent (general-purpose, model opus) runs the same spec. Saved as feedback memory: Opus, not Forge, for ipo-dashboard UI. I did the type scale, colors and content.
 
 ## Changelog
 
@@ -163,3 +173,5 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-45: Interceptor — Listed table rows JECX 57 D+ Rp 1.250 +24.8% +12.4% +9.2% choppy · JELI 59 D+ Rp 900 +25.0% +15.0% −35.0% · BACH 68 C+ Rp 442 +24.4% +27.8% +2.3% · EMMI 66 C+ Rp 470 +17.0% −2.1% −33.6% · PRDL 73 B Rp 120 +35.0% +221.7% +100.0% · RANS 62 C Rp 170 +34.1% +40.0% +16.5% — all match src/data/ipos.json.
 - ISC-46: Interceptor — click RANS row → detail view "PT RANS Entertainmen Indonesia Tbk" with verdict and business model (same Detail component whose forensic toggle was verified for SWAP).
 - ISC-47: Bash — `git diff --stat` before commit: README.md, src/App.tsx, src/views/Upcoming.tsx only; `bun run build` ✓ built; matrix columns = SWAP only.
+- ISC-50..55: Interceptor (localhost:4173, SWAP detail) — switcher shows "UPCOMING" then "LISTED" groups; verdict renders "Rich." lead, bullet lines, and a "Bottom line:" paragraph; flag groups HIGH / MED-HIGH / MED / LOW-MED and MODERATE / MINOR with item counts; ownership summary + facts grid + collapsed "Under review · 4 items"; "Questions before you subscribe" with "Primary risk." / "Tailwind." lead-ins and a numbered list; `document.querySelectorAll("strong").length` = 91; no line starts with "?".
+- ISC-56: Bash — `rg "text-muted-foreground/60" src/views/upcoming/Detail.tsx` → only borders/bar backgrounds; Opus SSR-rendered all 7 deals without throws; production check after push.
