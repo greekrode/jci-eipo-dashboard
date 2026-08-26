@@ -4,12 +4,12 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: execute
-progress: 38/42
+phase: complete
+progress: 41/42
 mode: interactive
 iteration: 2
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T14:40:00Z
+updated: 2026-08-26T14:50:00Z
 ---
 
 ## Problem
