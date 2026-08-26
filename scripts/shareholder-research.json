@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "asOf": "2026-06-23",
+    "asOf": "2026-08-26",
     "purpose": "Per-deal shareholder background research for the Upcoming-IPO section: flags conglomerate ties, PEP (Politically Exposed Person) status, listed-company affiliations and foreign-strategic holders.",
     "method": "Web research per named shareholder (Indonesian financial press, IDX/e-IPO disclosures, company sites, prospectus). Namesake-cautious: shared surnames (e.g. Widjaja, Hartono, Supra) are NOT treated as links without direct evidence. BACH is derived from its prospectus forensic; the other five from dated web sources cited inline.",
     "disclaimer": "Not financial advice. Research compiled from public sources and may contain namesake or attribution errors. The 'caveats' on some deals are UNVERIFIED or unproven items (dated allegations, possible namesakes, media-reported noise) surfaced for transparency; they are explicitly not findings of wrongdoing and should be confirmed against the final prospectus before relying on them.",
@@ -564,6 +564,101 @@
           "Prajogo Pangestu / Barito group (TPIA) holds a small ~1.48% minority in listed parent PRDA (plus ~4.6% via Henan Putihrai funds) acquired just before the IPO; non-controlling and one level removed from PRDL, but flagged by media as quiet accumulation"
         ],
         "caveats": []
+      }
+    },
+    {
+      "ticker": "SWAP",
+      "company": "PT Swayasa Prakarsa Tbk",
+      "shareholders": [
+        {
+          "name": "PT Gama Multi Usaha Mandiri (GMUM)",
+          "stakePost": 67.72,
+          "tags": [
+            "holding-co",
+            "state-linked",
+            "university"
+          ],
+          "finding": "Universitas Gadjah Mada's holding and investment arm (Gama Multi Group), founded 24 June 2000 and 98.63% owned by UGM with the remaining 1.37% held by Yayasan UGM (prospectus, GMUM RUPSLB deed 2 Sep 2025). Its portfolio spans hospitality (University Club, Wisma Kagama), IT (PT Gamatechno Indonesia, PT Global Data Inspirasi), tourism (PT Gama Wisata), medical devices (PT Aino Indonesia, PT Wahana Gama Hashimoto), innovation (PT Gama Inovasi Berdikari), campus services and radio (PT Radio Swara Gadjah Mada). Run by Direktur Utama Ibnu Gunawan (ex-CIMB Niaga; also a SWAP Commissioner) with Wihana Kirana Jaya as Commissioner. GMUM co-founded SWAP with a Rp198m cash subscription on 26 Jan 2012 and has since been its lender and profit-share partner: a Rp20bn 9.10% loan (on-lent from GMUM's own BNI facility) to accelerate GeNose C19 in Jan 2021, extended to Dec 2030 with Rp8.04bn principal outstanding at July 2026, of which Rp2bn is repaid from IPO proceeds; GeNose consortium profits were split 30% GMUM / 70% SWAP and GeNose fund-management fees 70% GMUM / 30% SWAP. GMUM, UGM, RSGM and Bondan Ardiningtyas are all under an eight-month POJK 25/2017 lock-up.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/SWAP/SWAP.txt (prospectus: pp. 15, 21-22, 284-285 shareholder disclosures; GeNose profit-share and GMUM loan notes)",
+            "https://ditpui.ugm.ac.id/pt-gmum-gama-multi-usaha-mandiri/",
+            "https://www.gamamulti.com/home",
+            "https://ekbis.harianjogja.com/read/2019/12/31/502/1028210/dirut-pt-gama-multi-usaha-mandiri-banyak-belajar-dan-mendengarkan-tim",
+            "https://market.bisnis.com/read/20260823/192/1998392/unit-bisnis-ugm-swayasa-prakarsa-swap-ipo-harga-rp130-rp140"
+          ]
+        },
+        {
+          "name": "Universitas Gadjah Mada (UGM) — designated controller, represented by Rector Prof. dr. Ova Emilia",
+          "stakePost": 1.88,
+          "tags": [
+            "state-linked",
+            "university",
+            "pep"
+          ],
+          "finding": "Holds 1.88% directly and ~66.8% indirectly through GMUM, giving the university roughly 68.7% economic control post-IPO. The prospectus (Akta No. 04, 14 May 2026) names UGM as controller and ultimate beneficial owner and, because UGM is a Perguruan Tinggi Negeri Badan Hukum (state legal-entity university under PP 67/2013, supervised by the Ministry of Higher Education, Science and Technology) rather than a natural person, designates the sitting Rector, Prof. dr. Ova Emilia, M.Med.Ed., Sp.OG(K), Ph.D., as the party exercising that control under Perpres 13/2018 and POJK 3/2021; UGM has undertaken not to relinquish control for 12 months from the effective date (letter of 12 Aug 2026). PEP call: we tag 'pep' because the Rector of a PTN-BH is a senior public official by the usual definition: she heads a state institution, is a civil-servant professor, files an LHKPN wealth declaration with the KPK as a state official (Rp29.26bn declared 30 Mar 2022 while Dean of FK-KMK), and was elected by the Majelis Wali Amanat (20 May 2022, 21 of 25 votes) in a process where the Minister holds a 35% vote and the then MWA chair was State Secretary Pratikno. Her term runs 2022-2027, so the person 'controlling' SWAP will change by statute within a year of listing. This is institutional rather than partisan exposure: no political-party office, ministerial post or SOE board seat was found for her, and control is exercised ex officio, not personally. Ova Emilia (b. 1964) is an obstetrician and Professor of Medical Education, UGM's second female rector, Dean of FK-KMK 2016-2022.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/SWAP/SWAP.txt (prospectus: pp. 7, 21, 284 controller/UBO designation and 12-month control undertaking)",
+            "https://ugm.ac.id/id/berita/22521-ova-emilia-terpilih-sebagai-rektor-ugm-periode-2022-2027/",
+            "https://ugm.ac.id/en/news/22549-prof-ova-emilia-named-new-rector-of-universitas-gadjah-mada/",
+            "https://katadata.co.id/berita/nasional/635ab9b658e5d/melirik-profil-rektor-ugm-ova-emilia-beserta-harta-kekayaannya",
+            "https://www.kompas.com/tren/read/2022/05/21/125300465/profil-ova-emilia-rektor-ugm-terpilih-periode-2022-2027?page=all",
+            "https://nasional.kompas.com/read/2016/10/29/12420031/ini.alasan.menteri.punya.hak.suara.35.persen.dalam.pemilihan.rektor?page=all",
+            "https://hukor.ugm.ac.id/2018/02/07/ugm-sebagai-perguruan-tinggi-negeri-badan-hukum-yang-mandiri/"
+          ]
+        },
+        {
+          "name": "PT Radio Swaragama (PT Radio Swara Gadjah Mada, RSGM)",
+          "stakePost": 0.05,
+          "tags": [
+            "holding-co",
+            "university"
+          ],
+          "finding": "Operator of Swaragama 101.7 FM, the UGM-ecosystem commercial radio station in Yogyakarta, incorporated 27 Feb 1999 and headquartered at Bulaksumur H-5 (the same address as GMUM). It was SWAP's co-founding shareholder (1% for Rp2m on 26 Jan 2012) and its stake has since been diluted to a token 0.05%. It is a GMUM affiliate rather than a wholly-owned subsidiary: per the 27 Apr 2024 RUPSLB deed, GMUM holds 35%, PT Tugu Lor Kapital 40%, two UGM-linked cooperatives (KSU Dosen UGM 3%, Koperasi Usaha Wisesa Karya 4%) and four individuals (Mohammad Amirullah 6%, Anang Kurniawan Hanudji 6%, Ariyanto Hanantoseno 5%, Mohamad Afrizal Hernandar 1%) hold the rest. Management (DU Martadinata; Komut Alfatika Aunuriella Dini) has no overlap with the SWAP board. No listed-company, conglomerate or political tie found.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/SWAP/SWAP.txt (prospectus: pp. 284-285 RSGM incorporation, cap table and board; founding cap table)",
+            "https://swaragamafm.com/sejarah/",
+            "https://www.gamamulti.com/halaman-17-business-unit--swaragama",
+            "https://kagama.co/2020/01/29/menilik-sejarah-pemancar-radio-dan-swaragama-fm-di-ugm-berawal-dari-gedung-perpustakaan/2/"
+          ]
+        },
+        {
+          "name": "Bondan Ardiningtyas",
+          "stakePost": 0.05,
+          "tags": [
+            "individual",
+            "university"
+          ],
+          "finding": "Direktur Utama (since 2025) and the only individual on the register; a career UGM insider rather than a founder-owner. Dr. apt. Bondan Ardiningtyas, M.Sc. (b. 1971) is a lecturer in the Department of Pharmaceutics, Faculty of Pharmacy UGM (S1 Farmasi/Apoteker 1997, M.Sc. 2010, Doctorate 2017, all UGM), managed UGM's Rumah Sehat & Apotek 2000-2014 and has held SWAP director roles continuously since 2014 (Operations Director, sole Director, Direktur Utama). The prospectus also lists her as a named inventor on at least two UGM-owned technologies that SWAP licenses at 5% royalty, so she sits on both sides of the IP flow (licensee management and inventor). No political office, listed-company seat or conglomerate link found; identity verified via the UGM academic-staff directory and the company e-mail in the prospectus (no namesake ambiguity).",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/SWAP/SWAP.txt (prospectus: pp. 287-288 director CV; licence schedules naming inventors; management-shareholder table p. 284)",
+            "https://acadstaff.ugm.ac.id/bondanard",
+            "https://farmasi.ugm.ac.id/department-of-pharmaceutics/",
+            "https://cfns.ugm.ac.id/2022/09/09/kunjungan-tim-pspg-dan-pui-pt-probiotik-ke-pt-swayasa-prakarsa/"
+          ]
+        }
+      ],
+      "dealExposure": {
+        "level": "mixed",
+        "summary": "SWAP is a state-university-controlled issuer, a shape unlike the family and conglomerate deals in this file: UGM, a PTN-BH state university, owns ~68.7% post-IPO through its holding arm GMUM plus a direct stake, and the prospectus designates the sitting Rector as the controlling party ex officio. Control is therefore mission-driven (research commercialisation, Tri Dharma) rather than profit-driven, and it turns over by statute with the rectorship (Ova Emilia's term ends 2027, elected by a trustee board in which the Minister holds 35% of the vote), so minorities are exposed to a change of controlling individual within a year of listing without any change of ownership. The related-party web runs through the controller in every direction: SWAP licenses its core products from UGM at a 5% royalty (with its own CEO among the named inventors), rents its medical-device plant in UGM Science Technopark under a lease UGM can reclaim for 'strategic' needs, borrowed Rp20bn from GMUM (on-lent from BNI at 9.10%, Rp8.04bn still outstanding, extended to 2030) with GeNose profit-sharing to GMUM, and borrowed Rp10bn at 3% from Yayasan UGM to buy land, with Rp12bn (27% of proceeds) of the IPO going to repay GMUM and YUGM. We rate it 'mixed' rather than 'pep-linked' because the Rector's PEP status is institutional and non-partisan, and rather than 'clean' because state-linked control plus this density of controller-side IP, land and loan exposure is material. No conglomerate or listed-company shareholder; the only listed-company ties are board-level (Komut Didi Achjari is an independent commissioner of MBMA, independent commissioner Parsudi is ex-BPKP and works at HITS).",
+        "flags": [
+          "Controller is a state university (UGM, PTN-BH under the Ministry of Higher Education) holding ~68.7% via PT Gama Multi Usaha Mandiri (67.72%) plus 1.88% directly; the sitting Rector is the designated controlling party ex officio",
+          "Controlling individual changes by statute: Rector Ova Emilia's 2022-2027 term ends within a year of listing; UGM's no-change-of-control undertaking runs only 12 months",
+          "Core products are licensed from the controller (UGM) at 5% royalty on net sales, and the Direktur Utama is a named inventor on some licensed IP",
+          "Production facility is leased from UGM Science Technopark with a clause letting UGM reclaim the building for strategic needs on three months' notice",
+          "Rp12bn of IPO proceeds (~27%) repay controller-side lenders: Rp10bn to Yayasan UGM (3% land-purchase loan of Feb 2026) and Rp2bn to GMUM (9.10% loan on-lent from BNI, Rp8.04bn outstanding, extended to 2030)",
+          "GeNose C19 legacy: GMUM took 30% of consortium profits and 70% of fund-management fees, and remaining GeNose inventory is disclosed as currently unsellable",
+          "No family, conglomerate or listed-company shareholder; float is 30.30% and only 1 of 3 commissioners is independent"
+        ],
+        "caveats": [
+          "PT Tugu Lor Kapital, the 40% largest shareholder of co-founder PT Radio Swaragama, could not be identified beyond a Yogyakarta company registration; RSGM's own 0.05% stake is immaterial, so this is noted for completeness only.",
+          "UGM's business-development directorate (Direktorat Pengembangan Usaha dan Inkubasi), which the prospectus names as supervisor of SWAP's UGM licences, had its former director Hargo Utomo and a subdirectorate head convicted in March 2026 over a fictitious Rp6.7bn cocoa procurement at PT Pagilaran, a separate UGM plantation company; SWAP Komut Didi Achjari was an independent commissioner of PT Pagilaran 2018-2023. Neither SWAP nor GMUM is implicated; noted as controller-ecosystem governance context, not a finding against the issuer.",
+          "GeNose C19 accuracy was publicly disputed by epidemiologists in mid-2021 (calls to suspend its use for travel screening); the product retained its distribution licence, but the episode explains the unsellable inventory and is a reputational overhang rather than a regulatory sanction.",
+          "The 'pep' tag on the UGM/Rector entry reflects senior-public-official status of a state-institution head (LHKPN filer, ministerially influenced appointment), not any party-political or ministerial office; users applying a narrower political-office definition may treat it as PEP-adjacent."
+        ]
       }
     }
   ]

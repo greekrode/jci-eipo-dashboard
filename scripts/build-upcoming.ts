@@ -16,7 +16,7 @@ const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
 const RESEARCH = resolve(ROOT, "scripts", "shareholder-research.json"); // shareholder background research (committed)
 const UWR = resolve(ROOT, "scripts", "underwriter-research.json"); // underwriter IPO track-record research (committed)
-const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS"];
+const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS", "SWAP"];
 
 // Tags we surface in the public UI: verifiable ownership-structure facts only.
 const STRUCTURAL_TAGS = new Set(["conglomerate", "pep", "pep-family", "affiliated-listed", "foreign-strategic"]);
@@ -388,7 +388,7 @@ writeFileSync(resolve(OUT, "upcoming-ipos.json"), JSON.stringify(out, null, 0));
 const check = (cond: boolean, msg: string) => { if (!cond) throw new Error("ASSERT FAILED: " + msg); };
 const T = Object.fromEntries(out.map((o) => [o.ticker, o]));
 check(out.length === TICKERS.length, `all ${TICKERS.length} IPOs built`);
-check(out.every((o) => o.listingISO?.startsWith("2026-07")), "all list in Jul 2026");
+check(out.every((o) => /^2026-(07|09)/.test(String(o.listingISO))), "all list in Jul or Sep 2026");
 check(out.every((o) => isNum(o.financials.revenue[2]) && o.financials.revenue[2]! > 0), "all have 2025 revenue > 0");
 check(out.every((o) => o.metrics.der[2] != null && o.metrics.der[2]! > 0 && o.metrics.der[2]! < 10), "all DER in (0,10)");
 // known-value cross-checks vs source (catch unit scaling errors)

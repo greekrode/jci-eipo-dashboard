@@ -55,7 +55,7 @@
       {
         "name": "PT Global Telekomunikasi Prima",
         "shares": 2083059300,
-        "pct": 51.0,
+        "pct": 51,
         "role": "Controller (post-option)"
       },
       {
@@ -584,6 +584,130 @@
       {
         "text": "Clean legal record; BNI debt (personally guaranteed) repaid at IPO",
         "strength": "Minor"
+      }
+    ]
+  },
+  "SWAP": {
+    "controllerLines": [
+      "Universitas Gadjah Mada controls 69.60% post-IPO — 67.72% via PT Gama Multi Usaha Mandiri (98.63% UGM / 1.37% Yayasan UGM) plus 1.88% held directly; the sitting Rector, Prof. dr. Ova Emilia, is the prospectus-designated controlling party",
+      "Public 30.30% · PT Radio Swaragama 0.05% · CEO Bondan Ardiningtyas 0.05% (no ESA, no warrants)",
+      "UGM's control undertaking runs only 12 months from the OJK effective date; the Rector's term ends in 2027, so the controller is an office, not a person"
+    ],
+    "lockupShort": "8-month POJK 25/2017 lock on all four pre-IPO holders (69.70% of post-IPO shares) · UGM 12-month control commitment",
+    "businessModel": {
+      "summary": "UGM research-commercialisation manufacturer at the UGM Science Technopark, Sleman. Heprogama medical devices (INA-SHUNT hydrocephalus shunt, GAMA-CHA bone graft, Ceraspon haemostatic sponge, Venindo ventilators, RZ-VAC) drive 80% of revenue; Gamafood F&B and a tiny herbal line make up the rest. FY2025 revenue Rp7.1bn fell 30% as Ventilator V-01 demand faded.",
+      "revenueBreakdown": [
+        {
+          "label": "Heprogama — medical devices",
+          "pct": 80.3,
+          "year": 2025,
+          "rpBn": 5.721
+        },
+        {
+          "label": "Gamafood — F&B",
+          "pct": 18.9,
+          "year": 2025,
+          "rpBn": 1.343
+        },
+        {
+          "label": "Gama Herbal Indonesia",
+          "pct": 0.8,
+          "year": 2025,
+          "rpBn": 0.057
+        }
+      ],
+      "breakdownBasis": "by business unit (FY2025)",
+      "model": "Own-brand manufacturing of UGM research outputs under UGM patent/industrial-design/trademark licences (5% royalty on sales; INA-SHUNT pays the inventor 15% + 15% R&D). Sold through pharma distributors (Phapros) and direct to hospitals/clinics; UGM itself was a 36% customer in FY2025 at near pass-through margin.",
+      "keyCustomersOrChannel": "Phapros 47.8% + Anugerah Prima Medika 19.0% of FY2025 revenue (top-2 = 88.8% in FY2024); Universitas Gadjah Mada 36.2% as a related-party buyer",
+      "moatOrEdge": "Licensed UGM IP and research pipeline; 13+ Kemenkes AKD device licences; CPAKB, CDAKB, ISO 13485, CPOTB, ISO 22000 and halal certification; first halal-certified bone graft (GAMA-CHA)",
+      "sourcePages": "Prospectus PAGE 313–322 (business units, table PAGE 322), FS notes 19 & 23 (PAGE 423, 426), licences PAGE 64–75 and 106–109"
+    },
+    "counterweights": [
+      {
+        "text": "Genuine research pedigree: licensed UGM patents/designs, INA-SHUNT, GAMA-CHA (first halal bone graft), locally made ventilators; multiple MoH/Kemenperin/AABI awards and 20 own trademarks (PAGE 57, 58, 289-292, 315-316)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Full regulatory stack for a company this size: CPAKB, CDAKB, ISO 13485:2016, CPOTB Full Aspek, ISO 22000, halal; 13+ Kemenkes AKD device licences (PAGE 64, 65, 69-75, 313, 326)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Clean legal record: no litigation, disputes or somasi; unmodified audit opinion; labour compliance (BPJS, UMP, LKS Bipartit) (PAGE 313, 364-365)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Balance sheet: no bank debt; liabilities are affiliate loans (Rp8.3bn GMUM at 9.1% to 2030, Rp10bn YUGM at 3%), with Rp12bn to be repaid from IPO; equity Rp17.3bn (PAGE 24, 25, 29, 21, 22)",
+        "strength": "Minor"
+      },
+      {
+        "text": "Policy tailwind: government import-substitution/localisation push for medical devices and 8% domestic market CAGR; company has already exhibited at Medical Fair Thailand (PAGE 325, 326)",
+        "strength": "Minor"
+      },
+      {
+        "text": "Distribution agreements in place with Phapros (state pharma group) and ~20 other distributors/hospitals; own CDAKB distribution unit IMEDEV (PAGE 178-260, 321)",
+        "strength": "Minor"
+      },
+      {
+        "text": "Independent commissioner and audit-committee chair Parsudi has BPKP/audit background; audit-committee member Richard Adikarta has listed-company experience (PAGE 297, 301)",
+        "strength": "Minor"
+      }
+    ],
+    "redFlags": [
+      {
+        "text": "Profit quality: FY2025 and FY2024 net profit (Rp1.42bn / Rp3.46bn) exist only because of Rp5.33bn / Rp6.70bn reversals of GeNose inventory impairment booked as other income; gross profit (Rp3.27bn) is below opex (Rp5.45bn) so the core business is loss-making. 2M-2026 net loss Rp571m. (PAGE 29, 425, 408)",
+        "severity": "High"
+      },
+      {
+        "text": "Balance sheet dominated by legacy GeNose stock: gross raw-material inventory Rp38.0bn (Heprogama Rp37.6bn) vs annual revenue Rp7.1bn; net inventory Rp19.6bn = 62% of total assets even after a Rp21.5bn allowance; inventory is uninsured. (PAGE 407, 408)",
+        "severity": "High"
+      },
+      {
+        "text": "Receivables: Rp11.9bn gross of which Rp11.29bn >90 days (GeNose sales to Farmalab, Rajawali Nusindo, Indofarma-in-bankruptcy); 94% provided, so any upside is speculative. (PAGE 406, 363-364)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Customer concentration contradicts prospectus text: Phapros 47.8% and Anugerah Prima Medika 19.0% of FY2025 revenue (88.8% top-2 in FY2024), while the prospectus claims 'no customer significantly dominates'. (PAGE 322, 423)",
+        "severity": "High"
+      },
+      {
+        "text": "Undisclosed-in-narrative related-party revenue: UGM accounted for 36.2% of FY2025 revenue and 53.6% of COGS (near pass-through), not shown in the 'pelanggan utama' table. (PAGE 426)",
+        "severity": "High"
+      },
+      {
+        "text": "Governance concentration: UGM controls 99.93% pre-IPO via GMUM/direct/RSGM (~69.7% post-IPO at 30.3% float); Komut is a serving UGM Dean and Komisaris is GMUM's President Director; only one independent commissioner, no independent director; audit committee formed 28 May 2026 with no meetings yet. (PAGE 59, 293, 295-298, 302)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Operational dependence on the controller: factory buildings and some machinery are UGM property under a 5-year lease that UGM can terminate for 'strategic needs' on 3 months' notice; core IP is UGM/inventor-owned and licensed at 5%/15% royalties. (PAGE 172, 314, 109, 160-161)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Proceeds to affiliates: Rp12bn of ~Rp40bn net use of proceeds (30%) repays UGM-group lenders — Rp10bn to Yayasan UGM (loan taken only Feb 2026 to buy land) and Rp2bn to GMUM (GeNose-era loan not due until 2030). (PAGE 20, 21, 22)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Land for the Rp10.7bn new building is still titled to a third party, 65% of it is protected sawah under a conversion moratorium, and PBG is pending; construction not before Q2 2027. (PAGE 19, 20, 365, 366)",
+        "severity": "Med"
+      },
+      {
+        "text": "Tiny scale and shrinking: 57 staff, revenue -30% to Rp7.1bn in FY2025 on lower Venindo sales; herbal unit sells only Rp57m/yr. (PAGE 35, 310, 322)",
+        "severity": "Med"
+      },
+      {
+        "text": "Valuation: at Rp130-140 the company itself computes PER 228-246x, PBV 8.0-8.6x, PS 21-23x vs peer averages 10.6x / 1.4x / 0.34x. (PAGE 328, 329)",
+        "severity": "High"
+      },
+      {
+        "text": "Licensing/permit gaps: no PKKPR for the production site (RTRW revision), pending SIPA water permit with criminal exposure, several BPOM MD/TR licences in renewal. (PAGE 361-363)",
+        "severity": "Med"
+      },
+      {
+        "text": "Supplier payable concentration: Rp2.50bn of Rp2.51bn trade payables owed to one supplier (YPTI, ventilator hardware). (PAGE 24)",
+        "severity": "Low-Med"
+      },
+      {
+        "text": "Legacy GeNose liability: Rp3.27bn 'utang lain-lain' to Indofarma Global Medika to be settled in RZ-VAC units (product returns). (PAGE 24)",
+        "severity": "Low-Med"
       }
     ]
   }

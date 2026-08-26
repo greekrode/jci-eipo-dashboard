@@ -15,6 +15,7 @@ import Upcoming from "./views/Upcoming";
 import { trackEvent, trackUserAction } from "./lib/analytics";
 
 const ipos = iposData as unknown as IPO[];
+const listedCount = ipos.filter((i) => i.listed).length; // header badge was hardcoded 246/237/9; derive from data
 const upcoming = upcomingData as unknown as UpcomingIPO[];
 const TAB_IDS = ["overview", "choppy", "underwriters", "sectors", "explorer", "upcoming"];
 
@@ -101,11 +102,11 @@ export default function App() {
         </div>
         <div className="flex items-center gap-3">
           <div className="tabnum font-mono text-[12px] text-muted-foreground sm:text-[13.5px]">
-            <span className="font-semibold text-foreground">246</span> DEALS
+            <span className="font-semibold text-foreground">{ipos.length}</span> DEALS
             <span className="px-1.5 text-muted-foreground">/</span>
-            <span className="font-semibold text-foreground">237</span> LISTED
+            <span className="font-semibold text-foreground">{listedCount}</span> LISTED
             <span className="px-1.5 text-muted-foreground">/</span>
-            <span className="font-semibold text-foreground">9</span> N/L
+            <span className="font-semibold text-foreground">{ipos.length - listedCount}</span> N/L
           </div>
           <button
             onClick={toggleTheme}

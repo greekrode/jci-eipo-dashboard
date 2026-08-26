@@ -49,6 +49,8 @@ bun run preview   # serve the production build
 `src/data/brokers.json` (broker code → name). The master sheet is read as either `e-IPO Data` or
 `IPO History` (whichever the workbook exposes).
 
+- **`scripts/listed-overrides.json`** — committed overlay of listed outcomes for deals missing from the spreadsheet export, upserted by ticker.
+- **`scripts/jci-trend.json`** — committed JCI close + MA200 series used for regime classification when the workbook has no "JCI Trend" sheet.
 - **Final price** is the final IPO offer price (post book-building).
 - **D1–D7** are *daily* returns; the per-IPO cumulative series is compounded from them.
 - **Median** is the headline statistic (returns are right-skewed); sample size `n` is shown on every cut.
@@ -94,6 +96,16 @@ Two committed inputs enrich the normalized base (both merged by the build script
 To add a deal: drop its ZIP in the project root, `unzip` it into `_sources/upcoming/<TICKER>/`, add the
 ticker to `TICKERS` in the script, optionally add a supplement entry and a `scripts/forensic/<TICKER>.md`,
 and run `bun run data:upcoming`.
+
+Without a ZIP (SWAP was done this way): put the Prospektus Awal PDF at `_sources/upcoming/<TICKER>/<TICKER>.pdf`,
+extract page-marked text with `pdftotext -layout` (split on form feeds into `===== PAGE N =====` blocks), and write
+`<TICKER>_IPO_Analysis.json` + `.md` in the `IPO_Analysis` schema (`financials_rp` in full Rupiah, every block carrying
+`_pages` citations and a `fact_check_notes` list). Then add the supplement entry, forensic writeup, a
+`scripts/shareholder-research.json` deal, and — for a new underwriter — `_sources/_uw/<firm>.json` plus the
+`firms`/`deals` entries in `scripts/underwriter-research.json`.
+
+When deals list, add their outcomes to `scripts/listed-overrides.json` (spreadsheet header names as keys; returns as
+decimals) and run `bun run data` — the rows are upserted by ticker into the census.
 
 ## Structure
 

@@ -1,12 +1,14 @@
 // Data pipeline: e-IPO Data.xlsx -> src/data/ipos.json + src/data/brokers.json
 // Run with: bun run scripts/build-data.ts
 import * as XLSX from "xlsx";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dir, "..");
 const SRC = resolve(ROOT, "e-IPO Data.xlsx");
 const OUT = resolve(ROOT, "src", "data");
+const LISTED_OVERRIDES = resolve(ROOT, "scripts", "listed-overrides.json");
+const JCI_FALLBACK = resolve(ROOT, "scripts", "jci-trend.json");
 
 const COLS = [
   "status", "ticker", "company", "sector", "subsector", "board", "finalPrice",
@@ -14,6 +16,17 @@ const COLS = [
   "sharesOffered", "pctTotal", "participantAdmin", "underwriters",
   "bbOpen", "bbClose", "bbLow", "bbHigh", "offerOpen", "offerClose", "closingDate",
   "distDate", "listingDate", "warrantRatio", "exercisePrice",
+] as const;
+
+const OVERLAY_HEADERS = [
+  "IPO Status", "Ticker Code", "Company Name", "Sector", "Subsector", "Listing Board",
+  "Final Price (Rp)", "Return D1", "Return D2", "Return D3", "Return D4", "Return D5",
+  "Return D6", "Return D7", "Return from Listing Date", "Line of Business", "Address", "Website",
+  "Number of shares offered", "% of Total Shares", "Participant Admin", "Underwriter(s)",
+  "Book Building Opening", "Book Building Closing", "Lowest Book Building Price (Rp)",
+  "Highest Book Building Price (Rp)", "Opening of Offering Period", "Closing of Offering Period",
+  "Closing Date", "Distribution Date", "Listing Date", "Warrant per share ratio",
+  "Exercise Price (Warrant) (Rp)",
 ] as const;
 
 // Taxonomy fixes: stray singletons that are typos of the canonical sector names.
@@ -44,6 +57,61 @@ if (!masterSheet) throw new Error('No master sheet ("e-IPO Data" or "IPO History
 const aoa = XLSX.utils.sheet_to_json<unknown[]>(masterSheet, { header: 1, raw: true, defval: null });
 const rows = aoa.slice(1).filter((r) => r && r.some((c) => c !== null));
 
+const headerTextToIndex = new Map<string, number>();
+for (const [index, header] of (aoa[0] ?? []).entries()) {
+  // Non-text and out-of-range headers intentionally use the positional fallback below.
+  if (typeof header === "string" && index < COLS.length) headerTextToIndex.set(header, index);
+}
+const overlayColumnIndex = new Map(
+  OVERLAY_HEADERS.map((header, fallbackIndex) => [header, headerTextToIndex.get(header) ?? fallbackIndex])
+);
+const tickerIndex = COLS.indexOf("ticker");
+let appendedOverlayRows = 0;
+let overlayTickers: string[] | null = null;
+// Absence is expected when no committed corrections are needed.
+if (existsSync(LISTED_OVERRIDES)) {
+  let parsedOverlay: unknown;
+  try {
+    parsedOverlay = JSON.parse(readFileSync(LISTED_OVERRIDES, "utf8"));
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to read or parse scripts/listed-overrides.json: ${detail}`);
+  }
+  if (typeof parsedOverlay !== "object" || parsedOverlay === null || !("rows" in parsedOverlay) || !Array.isArray(parsedOverlay.rows)) {
+    throw new Error('Invalid scripts/listed-overrides.json: expected an object with a "rows" array.');
+  }
+
+  overlayTickers = [];
+  let replacedOverlayRows = 0;
+  for (const [rowIndex, value] of parsedOverlay.rows.entries()) {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      throw new Error(`Invalid scripts/listed-overrides.json row ${rowIndex + 1}: expected an object.`);
+    }
+    const overlayRow = value as Record<string, unknown>;
+    const positionalRow: unknown[] = Array(COLS.length).fill(null);
+    for (const header of OVERLAY_HEADERS) {
+      positionalRow[overlayColumnIndex.get(header)!] = overlayRow[header] ?? null;
+    }
+
+    const ticker = String(positionalRow[tickerIndex] ?? "").trim().toUpperCase();
+    if (!ticker) {
+      throw new Error(`Invalid scripts/listed-overrides.json row ${rowIndex + 1}: "Ticker Code" is required.`);
+    }
+    overlayTickers.push(ticker);
+    const existingIndex = rows.findIndex(
+      (row) => String(row[tickerIndex] ?? "").trim().toUpperCase() === ticker
+    );
+    if (existingIndex >= 0) {
+      rows[existingIndex] = positionalRow;
+      replacedOverlayRows++;
+    } else {
+      rows.push(positionalRow);
+      appendedOverlayRows++;
+    }
+  }
+  console.log(`Overlay: ${replacedOverlayRows} replaced, ${appendedOverlayRows} appended (from scripts/listed-overrides.json).`);
+}
+
 // --- Market regime: JCI close vs its own 200-day MA, as of each IPO's listing date. ---
 // The "JCI Trend" sheet carries Date / Close / MA200. A listing is "choppy" when the
 // index closed below its MA200 on (or just before) the listing date, else "performing".
@@ -61,6 +129,42 @@ if (jciSheet) {
     if (t !== null && close !== null && ma200 !== null) jci.push({ t, close, ma200 });
   }
   jci.sort((a, b) => a.t - b.t);
+  console.log(`JCI source: workbook "JCI Trend" sheet (${jci.length} points).`);
+} else if (existsSync(JCI_FALLBACK)) {
+  let parsedJci: unknown;
+  try {
+    parsedJci = JSON.parse(readFileSync(JCI_FALLBACK, "utf8"));
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to read or parse scripts/jci-trend.json: ${detail}`);
+  }
+  let jciRows: unknown[];
+  if (Array.isArray(parsedJci)) {
+    jciRows = parsedJci;
+  } else if (typeof parsedJci === "object" && parsedJci !== null && "rows" in parsedJci && Array.isArray(parsedJci.rows)) {
+    jciRows = parsedJci.rows;
+  } else {
+    throw new Error("Invalid scripts/jci-trend.json: expected an array or an object with a \"rows\" array.");
+  }
+  for (const [rowIndex, value] of jciRows.entries()) {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) {
+      throw new Error(`Invalid scripts/jci-trend.json row ${rowIndex + 1}: expected an object.`);
+    }
+    const point = value as Record<string, unknown>;
+    const dateMatch = typeof point.date === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(point.date) : null;
+    if (!dateMatch || typeof point.close !== "number" || !Number.isFinite(point.close) || typeof point.ma200 !== "number" || !Number.isFinite(point.ma200)) {
+      throw new Error(`Invalid scripts/jci-trend.json row ${rowIndex + 1}: expected date, close, and ma200 values.`);
+    }
+    const t = Date.UTC(Number(dateMatch[1]), Number(dateMatch[2]) - 1, Number(dateMatch[3]));
+    if (new Date(t).toISOString().slice(0, 10) !== point.date) {
+      throw new Error(`Invalid scripts/jci-trend.json row ${rowIndex + 1}: date is not a valid calendar day.`);
+    }
+    jci.push({ t, close: point.close, ma200: point.ma200 });
+  }
+  jci.sort((a, b) => a.t - b.t);
+  console.log(`JCI source: scripts/jci-trend.json (${jci.length} points).`);
+} else {
+  console.log('JCI source: none (no workbook "JCI Trend" sheet or scripts/jci-trend.json).');
 }
 type Regime = "choppy" | "performing";
 const regimeAt = (iso: string | null): { regime: Regime | null; gap: number | null } => {
@@ -166,7 +270,16 @@ console.log(`Wrote ${ipos.length} IPOs (${listed} listed) and ${Object.keys(code
 console.log(`Regime: ${choppy} choppy + ${performing} performing = ${choppy + performing} classified (of ${listed} listed).`);
 // Sanity asserts (ISC-1, ISC-3)
 const leadOk = ipos.every((i) => !i.leadCode || codeName[i.leadCode] !== undefined);
-console.log(`ISC-1 count==246: ${ipos.length === 246}  |  ISC-3 every lead resolvable: ${leadOk}`);
+const expectedCount = 246 + appendedOverlayRows;
+console.log(`ISC-1 count==${expectedCount}: ${ipos.length === expectedCount}  |  ISC-3 every lead resolvable: ${leadOk}`);
+// Without an overlay there are no corrected tickers to check.
+if (overlayTickers !== null) {
+  const failedOverlayTickers = overlayTickers.filter((ticker) => {
+    const ipo = ipos.find((candidate) => candidate.ticker.toUpperCase() === ticker);
+    return !ipo || !ipo.listed || ipo.daily.length !== 7 || ipo.daily.some((dailyReturn) => dailyReturn === null);
+  });
+  console.log(`Overlay tickers listed with complete D1-D7: ${failedOverlayTickers.length === 0}${failedOverlayTickers.length ? ` (failed: ${failedOverlayTickers.join(", ")})` : ""}`);
+}
 
 // ISC-4: computed regime must match the workbook's own Choppy/Perform ticker split (when present).
 const sheetTickers = (name: string) =>
