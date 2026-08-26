@@ -86,7 +86,7 @@ export default function Overview({ ipos }: { ipos: IPO[] }) {
         <CardHeader>
           <CardTitle>Day-1 return distribution</CardTitle>
           <CardDescription>
-            237 listings · teal marks the auto-reject (ARA) ceiling · best {k.bestPop?.ticker} {pct(k.bestPop?.value ?? null)}
+            {ipos.filter((i) => i.listed).length} listings · teal marks the auto-reject (ARA) ceiling · best {k.bestPop?.ticker} {pct(k.bestPop?.value ?? null)}
           </CardDescription>
         </CardHeader>
         <CardContent>

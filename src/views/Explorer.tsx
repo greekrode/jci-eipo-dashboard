@@ -262,7 +262,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
       <Card>
         <CardHeader>
           <CardTitle>IPO explorer</CardTitle>
-          <CardDescription>all 246 deals · D1–D7 cumulative · filter or group by underwriter · hover a code for the broker name</CardDescription>
+          <CardDescription>all {ipos.length} deals · D1–D7 cumulative · filter or group by underwriter · hover a code for the broker name</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="flex flex-wrap items-center gap-2.5 border-b border-border px-4 py-3.5">

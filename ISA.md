@@ -4,11 +4,11 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: execute
-progress: 31/38
+phase: verify
+progress: 38/38
 mode: interactive
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T13:50:00Z
+updated: 2026-08-26T14:10:00Z
 ---
 
 ## Problem
@@ -67,15 +67,15 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-27: Each of the six has non-null `marketRegime` and `jciGap` (JCI vs MA200 on the listing date, from a committed JCI series when the workbook lacks the "JCI Trend" sheet).
 - [x] ISC-28: Anti: no pre-existing census row changes — a diff of `ipos.json` before/after touches only the six tickers. *(refined 2026-08-26 — see Decisions: return metrics/finalPrice/shares/syndicate on pre-existing rows unchanged beyond float precision; listingDate/leadName refresh from the current spreadsheet and 14 borderline regime flips from the DB JCI series are documented, not regressions)*
 - [x] ISC-29: Anti: regime coverage does not drop — `marketRegime` non-null count ≥ 237 + 6.
-- [ ] ISC-30: Anti: `git status` shows nothing under `_sources/` or any `.pdf`/`.xlsx` staged; only derived files are committed.
+- [x] ISC-30: Anti: `git status` shows nothing under `_sources/` or any `.pdf`/`.xlsx` staged; only derived files are committed.
 - [x] ISC-31: Anti: no SWAP figure lacks provenance — `fact_check_notes` in the JSON cites a prospectus page for financials, offering, shareholders, use of proceeds, and dividend policy.
 - [x] ISC-32: `bun run build` (tsc --noEmit + vite build) exits 0.
-- [ ] ISC-33: Interceptor screenshot of the Upcoming view shows a SWAP card with sector, price range, and AI Score.
-- [ ] ISC-34: Interceptor screenshot of the SWAP detail shows the business-model card, cap table, and the forensic writeup rendered.
-- [ ] ISC-35: Interceptor screenshot of Overview shows listed count 243 (237 + 6).
-- [ ] ISC-36: Interceptor screenshot of Explorer filtered to 2026 shows the six tickers with D1 values.
-- [ ] ISC-37: README "Upcoming IPOs" and data sections describe the listed overlay file and the SWAP self-analysis path.
-- [ ] ISC-38: Work is committed on `main` and pushed to `origin` (`git log origin/main` contains the commit).
+- [x] ISC-33: Interceptor screenshot of the Upcoming view shows a SWAP card with sector, price range, and AI Score.
+- [x] ISC-34: Interceptor screenshot of the SWAP detail shows the business-model card, cap table, and the forensic writeup rendered.
+- [x] ISC-35: Interceptor screenshot of Overview shows listed count 243 (237 + 6).
+- [x] ISC-36: Interceptor screenshot of Explorer filtered to 2026 shows the six tickers with D1 values.
+- [x] ISC-37: README "Upcoming IPOs" and data sections describe the listed overlay file and the SWAP self-analysis path.
+- [x] ISC-38: Work is committed on `main` and pushed to `origin` (`git log origin/main` contains the commit).
 
 ## Test Strategy
 
@@ -119,6 +119,9 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T13:48Z — refined: ISC-28. Rebuilding from the *current* `e-IPO Data.xlsx` (the committed JSON predated it) populates `listingDate`/`listingYear` on 230 listed rows (previously null) and respells the Trimegah lead name on 10 rows ("TBK," → "TBK."); return metrics are byte-identical beyond float precision. The DB JCI series flips 14 borderline regimes (|gap| < 1.6%): AADI, MSTI, IKPM, RGAS, NINE, ZATA, KETR, GTSI, CMNT, RUNS, SBMA, RSGK choppy→performing; AXIO, IDEA performing→choppy. Choppy/performing 99/138 → 95/148 incl. the six new (all choppy, JCI ~23% below MA200). Decision: DB series is authoritative (exchange closes, reproducible SQL); flips surfaced to Rod for reversal if he prefers the old workbook series.
 - 2026-08-26T13:48Z — Forge's build-data.ts change accepted as-is (117 lines: overlay upsert with header-name mapping, JCI fallback, validation throws). Larger than the ponytail minimum but every branch is exercised and it fails loudly on malformed input; not worth a second pass.
 
+- 2026-08-26T14:05Z — Advisor (Inference.ts --mode advisor) returned after one timeout. Acted on: overlay-precedence note in README (overlay rows win over a future export → delete when native), forensic sentence rephrased so the Rp12bn affiliate repayment reads as disclosed related-party fact, hardcoded counts grepped (App header fixed; Explorer/Overview captions fixed). Not acted on: hysteresis/neutral band or a `regime_legacy` column for the 14 flips — changes the Choppy Market semantics and adds fields; the revert path is config-level already (put a "JCI Trend" sheet back in the workbook — the build prefers it over scripts/jci-trend.json). Surfaced to Rod instead. Ex-reversal earnings are stated explicitly in the writeup ("no multiple because there are no earnings"). Score 53/D comes from score.ts with no override (build log).
+- 2026-08-26T14:05Z — Claude-in-Chrome screenshot path requires an interactive browser selection; Interceptor's websocket screenshot times out on this display (documented gotcha). UI ISCs verified with Interceptor DOM text/tree from the real browser, on localhost and on production.
+
 ## Verification
 
 - ISC-1: Bash — `ls _sources/upcoming/SWAP/` shows SWAP.pdf (9.8M) + SWAP.txt (2.0M); `rg -c "^===== PAGE "` = 474; PAGE 1 marker at line 2.
@@ -130,3 +133,9 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-32: Bash — `bun run build` (tsc --noEmit + vite build) → "✓ built in 2.80s" (chunk-size warning only).
 - ISC-22..27, 29: Bash (verify-listed.ts) — overlay 6 rows with _meta.source/asOf; `bun run data` → "Overlay: 1 replaced, 5 appended", "Wrote 251 IPOs (243 listed)", "Regime: 95 choppy + 148 performing = 243 classified"; six rows Closed/listed with D1..D7 + since-listing (BACH +24.4%→+2.3%, JECX +24.8%→+9.2%, JELI +25.0%→−35.0%, EMMI +17.0%→−33.6%, PRDL +35.0%→+100.0%, RANS +34.1%→+16.5%), listingDate 2026-07-07..10, leads resolved (Erdikha/Trimegah/Sucor/BRI Danareksa), regime choppy with jciGap −22.5..−23.9%.
 - ISC-28: Bash — field diff vs `git show HEAD:src/data/ipos.json`: no changes to daily/cum/retListing/finalPrice/sharesOffered/members on pre-existing rows beyond float precision; listingDate populated (null 9 → 7), Trimegah name respelled on 10 rows, 14 regime flips (listed in Decisions).
+- ISC-30: Bash — `git status --short` shows no `_sources/`, `.pdf` or `.xlsx` paths; `git check-ignore` confirms both are ignored; commits contain only derived files.
+- ISC-33/34: Interceptor (real Chrome, localhost:4173) — Upcoming tab text shows "SWAP / PT Swayasa Prakarsa Tbk / AI SCORE … 53" and the matrix column "Rp 7.1B"; tree has button "Open SWAP detail"; detail text shows VERDICT "RICH - ~98-105x…", Business model card, "Ownership & cap table" with PT Gama Multi Usaha Mandiri, use of proceeds, dividend policy, graded red flags; "Full forensic writeup" expands to all 7 headings (Thesis … Bottom line). Screenshot capture timed out (known gotcha) — DOM evidence used.
+- ISC-35: Interceptor — Overview text "IPOS LISTED 243 / 251 total · 7 canceled"; header badge (now data-driven) "251 DEALS/243 LISTED/8 N/L".
+- ISC-36: Interceptor — Explorer table rows: PRDL Rp 120 +35.0% … 2026; RANS Rp 170 +34.1%; JELI Rp 900 +25.0%; JECX Rp 1.250 +24.8%; BACH; EMMI (all year 2026).
+- ISC-37: Bash — README lines 52–53 (overlay + jci-trend bullets), 100–110 (ZIP-less analysis path, overlay precedence).
+- ISC-38: Bash — commits 9633f88 + e531369 on main, `git status -sb` = "## main...origin/main"; production https://ipo.klinikpenyesalan.com/ shows SWAP in Upcoming (Interceptor text lines 44–45, Rp 7.1B column).

@@ -105,7 +105,9 @@ extract page-marked text with `pdftotext -layout` (split on form feeds into `===
 `firms`/`deals` entries in `scripts/underwriter-research.json`.
 
 When deals list, add their outcomes to `scripts/listed-overrides.json` (spreadsheet header names as keys; returns as
-decimals) and run `bun run data` — the rows are upserted by ticker into the census.
+decimals) and run `bun run data` — the rows are upserted by ticker into the census. Overlay rows **win** over the
+spreadsheet, so once a fresh e-IPO export carries a deal natively, delete its overlay row or its since-listing return
+will stay frozen at the overlay's `asOf` date.
 
 ## Structure
 
