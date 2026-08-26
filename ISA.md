@@ -78,7 +78,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-37: README "Upcoming IPOs" and data sections describe the listed overlay file and the SWAP self-analysis path.
 - [x] ISC-38: Work is committed on `main` and pushed to `origin` (`git log origin/main` contains the commit).
 - [ ] ISC-39: [DROPPED — see Decisions 2026-08-26T15:00Z: Rod will not open a DB connection; the DSN script was deleted]
-- [x] ISC-43: `scripts/jci-trend.sql` (the MCP query) + `scripts/jci-from-series.ts` exist; `bun run data:jci <series-file>` on today's MCP output reproduces `jci-trend.json` rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148).
+- [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
 - [x] ISC-42: Anti: no connection string or secret is committed (grep of the diff for `postgres://`).

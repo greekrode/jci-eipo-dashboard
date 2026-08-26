@@ -8,8 +8,7 @@
     "data:upcoming": "bun run scripts/build-upcoming.ts",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --port 4173",
-    "data:jci": "bun run scripts/jci-from-series.ts"
+    "preview": "vite preview --port 4173"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",

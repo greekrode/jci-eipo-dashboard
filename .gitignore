@@ -14,6 +14,3 @@ _sources/
 
 # Interceptor verification screenshots
 interceptor-screenshot-*.png
-# local DB credentials for scripts/pull-jci.ts
-.env
-.env.*

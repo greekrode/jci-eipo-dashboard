@@ -50,7 +50,7 @@ bun run preview   # serve the production build
 `IPO History` (whichever the workbook exposes).
 
 - **`scripts/listed-overrides.json`** — committed overlay of listed outcomes for deals missing from the spreadsheet export, upserted by ticker.
-- **`scripts/jci-trend.json`** — committed JCI close + MA200 series used for regime classification when the workbook has no "JCI Trend" sheet. Refresh: run `scripts/jci-trend.sql` through the alpha-flow DB MCP (no direct DB connection — the MCP is the only access path), save the returned `series` string to a file, `bun run data:jci <file>`, then `bun run data`.
+- **`scripts/jci-trend.json`** — committed JCI close + MA200 series used for regime classification when the workbook has no "JCI Trend" sheet. Refresh: run `scripts/jci-trend.sql` through the alpha-flow DB MCP (no direct DB connection — the MCP is the only access path); it returns the finished JSON text — save it as `scripts/jci-trend.json` and run `bun run data`.
 - **Final price** is the final IPO offer price (post book-building).
 - **D1–D7** are *daily* returns; the per-IPO cumulative series is compounded from them.
 - **Median** is the headline statistic (returns are right-skewed); sample size `n` is shown on every cut.
