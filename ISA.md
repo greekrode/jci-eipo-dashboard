@@ -4,12 +4,12 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: execute
-progress: 69/71
+phase: complete
+progress: 70/71
 mode: interactive
 iteration: 8
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T19:05:00Z
+updated: 2026-08-26T19:15:00Z
 ---
 
 ## Problem
@@ -105,7 +105,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-68: Keyboard: Escape closes, Enter on search toggles the first match, arrows move highlight; trigger has aria-haspopup/aria-expanded, list has role=listbox aria-multiselectable.
 - [x] ISC-69: Responsive: at 390px width the triggers are full-width and the open panel stays inside the viewport (no horizontal scroll); at 1440px the bar sits on one or two lines. Verified with headless-Chrome screenshots viewed by me.
 - [x] ISC-70: Visual: screenshots at 1440 and 390 look consistent with the flat 2px-radius theme (mono uppercase labels, primary accent), light and dark.
-- [ ] ISC-71: Anti: only Explorer.tsx + the new component change; grouping select and Listed-only checkbox untouched; tsc + build clean; production /explorer serves the new filter bar.
+- [x] ISC-71: Anti: only Explorer.tsx + the new component change; grouping select and Listed-only checkbox untouched; tsc + build clean; production /explorer serves the new filter bar.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -199,3 +199,4 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-65: Bash — production (654e999): `curl https://ipo.klinikpenyesalan.com/upcoming/SWAP` → "<title>SWAP IPO — PT Swayasa Prakarsa Tbk · AI Score 53/D | …" without JS; sitemap.xml → 13 <url>; /explorer has its own title; /upcoming/SWAP/ → 308 to the clean URL. Fallback rewrite to /index.html was inert under cleanUrls (/some-random-path → 404); changed destination to "/" (verified after redeploy — see follow-up line).
 - 2026-08-26T18:05Z — Vercel: rewrite destination "/index.html" is a no-op when cleanUrls is on (the file itself 308s to "/"); destination "/" is the working SPA fallback. Hard 404s on unknown paths would also have been acceptable for SEO, but the app router already handles unknown tickers (→ /upcoming), so the fallback is kept.
 - ISC-66..70: Opus interaction transcript on :4185 (open, type "health", select, "2 sectors", Clear all → 243, underwriters "trimegah" → 21 deals · median D1 +25.0%, keyboard ↓↓Enter/Space, aria attributes) + my headless-Chrome screenshots (real Chrome, 1440×900 and 390×844, light+dark, states closed/open-sector/selected/open-uw, 16 PNGs): no horizontal overflow in any, panel inside viewport on mobile, theme-consistent; polish applied after review: single-line action row, count badge removed.
+- ISC-71: Bash — only Explorer.tsx + multi-select.tsx in the commit (37c8a8a); tsc + build clean; production /explorer serves two `aria-haspopup="listbox"` triggers (poll after deploy).
