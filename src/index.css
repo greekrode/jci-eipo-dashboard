@@ -21,7 +21,7 @@
   --secondary: 42 20% 90%;
   --secondary-foreground: 210 15% 18%;
   --muted: 42 20% 90%;
-  --muted-foreground: 208 11% 37%;  /* dim  #566069 · AA on cream */
+  --muted-foreground: 208 13% 29%;  /* dim  #40494f · darker for legibility on cream (was 37%) */
   --accent: 42 18% 88%;
   --accent-foreground: 210 15% 14%;
   --border: 42 10% 73%;             /* warm structural line */
@@ -62,7 +62,7 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -78,11 +78,11 @@
 /* Recharts: mono ticks, square structural grid */
 .recharts-cartesian-axis-tick text {
   fill: hsl(var(--muted-foreground));
-  font-size: 12px;
+  font-size: 14px;
 }
 .recharts-cartesian-grid line { stroke: hsl(var(--border)); }
 .recharts-tooltip-wrapper { outline: none; }
-.recharts-default-legend { font-size: 11px !important; }
+.recharts-default-legend { font-size: 13px !important; }
 /* recharts can set an inline legend-wrapper width wider than the chart (esp. with a
    negative left margin), which overflows the page on narrow viewports. Cap it. */
 .recharts-legend-wrapper { max-width: 100%; }
@@ -129,7 +129,7 @@ html { scroll-behavior: smooth; }
 
 /* Rendered analyst markdown (Upcoming-IPO detail narrative). No typography plugin —
    scope element styles to .md so the verbatim writeup reads cleanly in the dark theme. */
-.md { font-size: 13.5px; line-height: 1.65; color: hsl(var(--muted-foreground)); }
+.md { font-size: 16px; line-height: 1.65; color: hsl(var(--muted-foreground)); }
 .md > :first-child { margin-top: 0; }
 .md > div > h2:first-child { margin-top: 0; } /* section heads align at top of each column */
 .md h1, .md h2, .md h3, .md h4 { color: hsl(var(--foreground)); font-weight: 600; line-height: 1.3; margin: 1.4em 0 0.5em; }

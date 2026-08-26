@@ -53,7 +53,7 @@ function Tip({
 }: { active?: boolean; payload?: TPayload[]; label?: string | number; fmt: (v: number | null) => string }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[14px] shadow-lg">
       <div className="mb-1 font-semibold text-foreground">{label}</div>
       {payload.map((p, i) => (
         <div key={i} className="flex justify-between gap-4 text-muted-foreground">
@@ -186,7 +186,7 @@ function ScatterTip({
   if (!active || !payload?.length || !payload[0].payload) return null;
   const d = payload[0].payload;
   return (
-    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[14px] shadow-lg">
       <div className="mb-1 font-semibold text-foreground">{d.code}</div>
       <div className="flex justify-between gap-4 text-muted-foreground">
         <span>Deals led</span>
@@ -261,7 +261,7 @@ function DistTip({ active, payload, label }: { active?: boolean; payload?: Array
   if (!active || !payload?.length) return null;
   const b = payload[0]?.payload;
   return (
-    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[14px] shadow-lg">
       <div className="mb-1 font-semibold text-foreground">D7 {label}</div>
       {payload.map((p, i) => (
         <div key={i} className="flex justify-between gap-4 text-muted-foreground">
@@ -304,11 +304,11 @@ function ChoppyScatterTip({ active, payload }: { active?: boolean; payload?: Arr
   if (!active || !payload?.length || !payload[0].payload) return null;
   const d = payload[0].payload;
   return (
-    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[11.5px] shadow-lg">
+    <div className="rounded-md border border-border bg-popover px-2.5 py-2 text-[14px] shadow-lg">
       <div className="mb-1 flex items-center gap-1.5 font-semibold text-foreground">
         <span className="inline-block h-2 w-2 rounded-full" style={{ background: CHOPPY_BUCKETS[d7Bucket(d.d7)] }} />
         {d.ticker}
-        <span className="font-mono text-[10.5px] font-normal text-muted-foreground">{d.listingDate ?? "n/a"}</span>
+        <span className="font-mono text-[12.5px] font-normal text-muted-foreground">{d.listingDate ?? "n/a"}</span>
       </div>
       <div className="flex justify-between gap-4 text-muted-foreground"><span>{d.sector}</span></div>
       <div className="flex justify-between gap-4 text-muted-foreground"><span>D7 return</span><span className="tabnum font-semibold text-foreground">{pctVal(d.d7)}</span></div>

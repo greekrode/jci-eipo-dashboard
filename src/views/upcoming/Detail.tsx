@@ -45,7 +45,7 @@ export default function Detail({
         <div className="sticky top-0 z-20 -mx-3 flex flex-wrap items-center gap-2 border-b border-transparent bg-background/90 px-3 py-2 backdrop-blur sm:-mx-6 sm:px-6">
           <button
             onClick={onBack}
-            className="rounded-[2px] border border-border bg-secondary px-2.5 py-1 font-mono text-[12px] uppercase tracking-wider text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+            className="rounded-[2px] border border-border bg-secondary px-2.5 py-1 font-mono text-[14.5px] uppercase tracking-wider text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             ← Compare
           </button>
@@ -55,7 +55,7 @@ export default function Detail({
                 key={o.ticker}
                 onClick={() => onSelect(o.ticker)}
                 aria-current={o.ticker === ipo.ticker ? "true" : undefined}
-                className={`rounded-[2px] border px-2 py-1 font-mono text-[12px] font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
+                className={`rounded-[2px] border px-2 py-1 font-mono text-[14.5px] font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
                   o.ticker === ipo.ticker
                     ? "border-primary/50 bg-primary/15 text-primary"
                     : "border-border bg-secondary text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -74,22 +74,22 @@ export default function Detail({
               <div>
                 <div className="flex items-center gap-2.5">
                   <span className="h-4 w-4" style={{ background: sectorColor(ipo.sectorGroup) }} aria-hidden />
-                  <h2 className="text-[22px] font-semibold tracking-tight text-foreground">{ipo.ticker}</h2>
+                  <h2 className="text-[26.5px] font-semibold tracking-tight text-foreground">{ipo.ticker}</h2>
                   <Badge variant="outline">{ipo.sectorGroup}</Badge>
                   {lockBadge(ipo.lockup.strength)}
                 </div>
-                <div className="mt-1 text-[14px] text-foreground">{ipo.legalName}{ipo.brand && ipo.brand !== ipo.legalName ? ` · ${ipo.brand}` : ""}</div>
-                <div className="mt-0.5 font-mono text-[12px] text-muted-foreground">{ipo.sector}</div>
+                <div className="mt-1 text-[17px] text-foreground">{ipo.legalName}{ipo.brand && ipo.brand !== ipo.legalName ? ` · ${ipo.brand}` : ""}</div>
+                <div className="mt-0.5 font-mono text-[14.5px] text-muted-foreground">{ipo.sector}</div>
               </div>
-              <div className="text-left font-mono text-[12px] text-muted-foreground sm:text-right">
+              <div className="text-left font-mono text-[14.5px] text-muted-foreground sm:text-right">
                 <div><span className="text-muted-foreground">Lists</span> <span className="text-foreground">{fmtDate(ipo.listingISO, false)}</span></div>
                 <div className="mt-0.5 max-w-[260px]"><span className="text-muted-foreground">Lead</span> {ipo.underwriter ?? "—"}</div>
                 {ipo.underwriterJoint && <div className="max-w-[260px]"><span className="text-muted-foreground">Joint</span> {ipo.underwriterJoint}</div>}
               </div>
             </div>
             {ipo.valuation.verdict && (
-              <div className="rounded-[2px] border border-border bg-secondary/40 px-3 py-2.5 text-[13px] leading-relaxed text-foreground">
-                <span className="mr-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-wider text-primary">Verdict</span>
+              <div className="rounded-[2px] border border-border bg-secondary/40 px-3 py-2.5 text-[15.5px] leading-relaxed text-foreground">
+                <span className="mr-1.5 font-mono text-[12.5px] font-semibold uppercase tracking-wider text-primary">Verdict</span>
                 {ipo.valuation.verdict}
               </div>
             )}
@@ -123,10 +123,10 @@ export default function Detail({
               className="flex cursor-pointer list-none items-center justify-between border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden"
             >
               <span className="flex items-baseline gap-2">
-                <span className="self-center font-mono text-[9px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
-                <span className="text-[15px] font-semibold tracking-tight text-foreground">Full forensic writeup</span>
+                <span className="self-center font-mono text-[11px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
+                <span className="text-[18px] font-semibold tracking-tight text-foreground">Full forensic writeup</span>
               </span>
-              <span className="font-mono text-[11.5px] uppercase tracking-wider text-muted-foreground">click to expand</span>
+              <span className="font-mono text-[14px] uppercase tracking-wider text-muted-foreground">click to expand</span>
             </summary>
             <CardContent>
               {/* full-width card → columns sized to a readable ~65ch measure (1 col on mobile,
@@ -164,10 +164,10 @@ function Panel({ title, note, children, defaultOpen = true }: { title: string; n
           className="flex cursor-pointer list-none items-baseline justify-between gap-3 border-b border-border px-4 py-3 transition-colors hover:bg-muted/30 focus-visible:bg-muted/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden"
         >
           <span className="flex items-baseline gap-2">
-            <span className="self-center font-mono text-[9px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
+            <span className="self-center font-mono text-[11px] text-muted-foreground transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
             <CardTitle>{title}</CardTitle>
           </span>
-          {note && <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-wider text-muted-foreground">{note}</span>}
+          {note && <span className="min-w-0 truncate font-mono text-[13px] uppercase tracking-wider text-muted-foreground">{note}</span>}
         </summary>
         <CardContent className="p-0">{children}</CardContent>
       </details>
@@ -188,26 +188,26 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
         <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
           {/* headline number + grade */}
           <div className="flex shrink-0 items-center gap-4 sm:flex-col sm:items-start sm:justify-center sm:gap-1.5 sm:border-r sm:border-border sm:pr-6">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">AI Score</span>
+            <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">AI Score</span>
             <div className="flex items-baseline gap-1">
-              <span className="tabnum text-[46px] font-semibold leading-none tracking-tight text-foreground">{s.overall}</span>
-              <span className="font-mono text-[13px] text-muted-foreground">/100</span>
+              <span className="tabnum text-[55px] font-semibold leading-none tracking-tight text-foreground">{s.overall}</span>
+              <span className="font-mono text-[15.5px] text-muted-foreground">/100</span>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={gradeVariant(s.grade)} className="px-1.5 py-0.5 text-[12px]">{s.grade}</Badge>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">{s.version}</span>
+              <Badge variant={gradeVariant(s.grade)} className="px-1.5 py-0.5 text-[14.5px]">{s.grade}</Badge>
+              <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground/70">{s.version}</span>
             </div>
           </div>
           {/* axis bars */}
           <div className="min-w-0 flex-1 space-y-2 self-center">
             {s.axes.map((a) => (
               <div key={a.key} className="flex items-center gap-3">
-                <span className="w-[116px] shrink-0 truncate font-mono text-[10px] uppercase tracking-wide text-muted-foreground sm:w-[152px] sm:text-[10.5px]" title={a.label}>{a.label}</span>
+                <span className="w-[116px] shrink-0 truncate font-mono text-[12px] uppercase tracking-wide text-muted-foreground sm:w-[152px] sm:text-[12.5px]" title={a.label}>{a.label}</span>
                 <div className="h-2 min-w-0 flex-1 overflow-hidden rounded-[1px] bg-border/60">
                   <div className={`h-full rounded-[1px] ${scoreTone(a.score)}`} style={{ width: `${a.score ?? 0}%` }} />
                 </div>
-                <span className="w-8 shrink-0 text-right font-mono text-[12.5px] font-medium tabnum text-foreground">{a.score == null ? "—" : Math.round(a.score)}</span>
-                <span className="w-9 shrink-0 text-right font-mono text-[10px] tabnum text-muted-foreground/60">{Math.round(a.weight * 100)}%</span>
+                <span className="w-8 shrink-0 text-right font-mono text-[15px] font-medium tabnum text-foreground">{a.score == null ? "—" : Math.round(a.score)}</span>
+                <span className="w-9 shrink-0 text-right font-mono text-[12px] tabnum text-muted-foreground/60">{Math.round(a.weight * 100)}%</span>
               </div>
             ))}
           </div>
@@ -216,18 +216,18 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
         {/* underwriter callout — sponsor track record */}
         <div className="rounded-[2px] border border-border bg-secondary/30 px-3 py-2.5">
           <div className="mb-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Underwriter</span>
-            <span className="text-[12.5px] text-foreground">{firmShort(uw.leadName)}</span>
-            <Badge variant={uwGradeVariant(uw.leadGrade)} className="px-1 py-0 text-[9.5px]">{uw.leadGrade}</Badge>
+            <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">Underwriter</span>
+            <span className="text-[15px] text-foreground">{firmShort(uw.leadName)}</span>
+            <Badge variant={uwGradeVariant(uw.leadGrade)} className="px-1 py-0 text-[11.5px]">{uw.leadGrade}</Badge>
             {uw.jointName && (
               <>
-                <span className="text-[11.5px] text-muted-foreground">+ {firmShort(uw.jointName)}</span>
-                <Badge variant={uwGradeVariant(uw.jointGrade ?? "")} className="px-1 py-0 text-[9.5px]">{uw.jointGrade}</Badge>
+                <span className="text-[14px] text-muted-foreground">+ {firmShort(uw.jointName)}</span>
+                <Badge variant={uwGradeVariant(uw.jointGrade ?? "")} className="px-1 py-0 text-[11.5px]">{uw.jointGrade}</Badge>
               </>
             )}
-            {uw.tier && <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">· {uw.tier}</span>}
+            {uw.tier && <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground/70">· {uw.tier}</span>}
           </div>
-          {uw.summary && <p className="text-[11.5px] leading-relaxed text-muted-foreground">{uw.summary}</p>}
+          {uw.summary && <p className="text-[14px] leading-relaxed text-muted-foreground">{uw.summary}</p>}
         </div>
 
         {/* see why — per-axis inputs */}
@@ -237,25 +237,25 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
               const detail = e.currentTarget.parentElement as HTMLDetailsElement | null;
               trackUserAction("Upcoming Detail Section Toggled", { ticker: ipo.ticker, section: "Score inputs", open: !detail?.open });
             }}
-            className="flex cursor-pointer list-none items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none [&::-webkit-details-marker]:hidden"
+            className="flex cursor-pointer list-none items-center gap-2 font-mono text-[13px] uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none [&::-webkit-details-marker]:hidden"
           >
-            <span className="text-[9px] transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
+            <span className="text-[11px] transition-transform duration-150 group-open:rotate-90" aria-hidden>▶</span>
             How each axis scores
           </summary>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {s.axes.map((a) => (
               <div key={a.key} className="rounded-[2px] border border-border/60 p-2.5">
                 <div className="mb-1.5 flex items-center justify-between border-b border-border/50 pb-1.5">
-                  <span className="font-mono text-[10.5px] uppercase tracking-wider text-foreground">{a.label}</span>
-                  <span className="font-mono text-[11px] tabnum text-muted-foreground">{a.score ?? "—"} · {Math.round(a.weight * 100)}%</span>
+                  <span className="font-mono text-[12.5px] uppercase tracking-wider text-foreground">{a.label}</span>
+                  <span className="font-mono text-[13px] tabnum text-muted-foreground">{a.score ?? "—"} · {Math.round(a.weight * 100)}%</span>
                 </div>
                 <ul className="space-y-1">
                   {a.inputs.map((inp, i) => (
-                    <li key={i} className="flex items-baseline justify-between gap-2 text-[11.5px]">
+                    <li key={i} className="flex items-baseline justify-between gap-2 text-[14px]">
                       <span className="min-w-0 truncate text-muted-foreground" title={inp.label}>{inp.label}</span>
                       <span className="flex max-w-[58%] shrink-0 items-baseline gap-2">
                         <span className="min-w-0 truncate text-right font-mono tabnum text-foreground/90" title={inp.value}>{inp.value}</span>
-                        <span className={`w-5 shrink-0 text-right font-mono text-[10px] tabnum ${inp.score == null ? "text-muted-foreground/40" : "text-muted-foreground"}`}>{inp.score == null ? "n/d" : Math.round(inp.score)}</span>
+                        <span className={`w-5 shrink-0 text-right font-mono text-[12px] tabnum ${inp.score == null ? "text-muted-foreground/40" : "text-muted-foreground"}`}>{inp.score == null ? "n/d" : Math.round(inp.score)}</span>
                       </span>
                     </li>
                   ))}
@@ -263,7 +263,7 @@ function ScorePanel({ ipo }: { ipo: UpcomingIPO }) {
               </div>
             ))}
           </div>
-          <p className="mt-2.5 font-mono text-[10px] leading-relaxed text-muted-foreground/70">
+          <p className="mt-2.5 font-mono text-[12px] leading-relaxed text-muted-foreground/70">
             Each axis is a 0–100 blend of the inputs shown; the headline is their weighted mean (Fundamentals 30 · Valuation 22 · Balance sheet 16 · Governance &amp; sponsor 32). Margins, ROE and valuation multiples are scored half on absolute bands, half against sector / cohort peers; earnings quality discounts one-off / non-operating profit. Deterministic and auditable — educational only, not a recommendation. See disclaimer.
           </p>
         </details>
@@ -312,7 +312,7 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
       <div className="space-y-2.5 p-4">
         {states.map((st) => (
           <div key={st.label}>
-            <div className="mb-1 font-mono text-[10.5px] uppercase tracking-wider text-muted-foreground">{st.label}</div>
+            <div className="mb-1 font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">{st.label}</div>
             <div className="flex h-6 w-full overflow-hidden rounded-[2px] border border-border">
               {order.map((k) => {
                 const p = pctIn(st.list, k);
@@ -324,9 +324,9 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
         ))}
       </div>
       <div className="overflow-x-auto border-t border-border">
-      <table className="w-full font-mono text-[12px] tabnum">
+      <table className="w-full font-mono text-[14.5px] tabnum">
         <thead>
-          <tr className="border-b border-border text-[10.5px] uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border text-[12.5px] uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-1.5 text-left font-medium">Holder</th>
             {states.map((st) => <th key={st.label} className="px-2 py-1.5 text-right font-medium">{st.col}</th>)}
             <th className="px-4 py-1.5 text-right font-medium">Shares</th>
@@ -363,7 +363,7 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
       </table>
       </div>
       {(ipo.ubo || ipo.controllerPost) && (
-        <div className="space-y-0.5 border-t border-border px-4 py-2 font-mono text-[11px] leading-relaxed text-muted-foreground">
+        <div className="space-y-0.5 border-t border-border px-4 py-2 font-mono text-[13px] leading-relaxed text-muted-foreground">
           {ipo.controllerPost && <div><span className="text-muted-foreground">Controller</span> <span className="text-foreground">{ipo.controllerPost}</span></div>}
           {ipo.ubo && <div><span className="text-muted-foreground">UBO</span> <span className="text-foreground">{ipo.ubo}</span></div>}
         </div>
@@ -371,14 +371,14 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
       {ipo.ownership && (
         <div className="space-y-2 border-t border-border px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted-foreground">Ownership exposure</span>
+            <span className="font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">Ownership exposure</span>
             {(() => { const e = exposureMeta(ipo.ownership.level); return <Badge variant={e.variant}>{e.label}</Badge>; })()}
           </div>
-          <p className="text-[12px] leading-relaxed text-muted-foreground">{ipo.ownership.summary}</p>
+          <p className="text-[14.5px] leading-relaxed text-muted-foreground">{ipo.ownership.summary}</p>
           {ipo.ownership.flags.length > 0 && (
             <ul className="space-y-1">
               {ipo.ownership.flags.map((fl, i) => (
-                <li key={i} className="flex gap-2 text-[11.5px] leading-snug text-muted-foreground">
+                <li key={i} className="flex gap-2 text-[14px] leading-snug text-muted-foreground">
                   <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" aria-hidden />{fl}
                 </li>
               ))}
@@ -387,19 +387,19 @@ function Ownership({ ipo }: { ipo: UpcomingIPO }) {
           {ipo.ownership.caveats.length > 0 && (
             <div className="rounded-[2px] border border-dashed border-border bg-secondary/20 px-3 py-2.5">
               <div className="mb-1.5 flex items-center gap-2">
-                <Badge variant="outline" className="px-1 py-0 text-[9.5px] font-medium uppercase tracking-wide">Unverified</Badge>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">under review · not findings of wrongdoing</span>
+                <Badge variant="outline" className="px-1 py-0 text-[11.5px] font-medium uppercase tracking-wide">Unverified</Badge>
+                <span className="font-mono text-[12px] uppercase tracking-wider text-muted-foreground">under review · not findings of wrongdoing</span>
               </div>
               <ul className="space-y-1">
                 {ipo.ownership.caveats.map((cv, i) => (
-                  <li key={i} className="flex gap-2 text-[11.5px] leading-snug text-muted-foreground">
+                  <li key={i} className="flex gap-2 text-[14px] leading-snug text-muted-foreground">
                     <span className="shrink-0 text-muted-foreground/60" aria-hidden>?</span>{cv}
                   </li>
                 ))}
               </ul>
             </div>
           )}
-          <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/70">
+          <p className="font-mono text-[12px] leading-relaxed text-muted-foreground/70">
             Structural facts from public-source research; items marked Unverified are unproven (dated allegations or
             possible namesakes) and may be wrong. Not findings of wrongdoing; see disclaimer.
           </p>
@@ -417,16 +417,16 @@ function BusinessModel({ ipo }: { ipo: UpcomingIPO }) {
   return (
     <Panel title="Business model" note={bm.sourcePages ?? undefined}>
       <div className="space-y-3 p-4">
-        <p className="text-[12.5px] leading-relaxed text-foreground">{bm.summary}</p>
+        <p className="text-[15px] leading-relaxed text-foreground">{bm.summary}</p>
         {seg.length > 0 && (
           <div>
-            <div className="mb-1 font-mono text-[10.5px] uppercase tracking-wider text-muted-foreground">Revenue mix · FY2025 · {bm.breakdownBasis}</div>
+            <div className="mb-1 font-mono text-[12.5px] uppercase tracking-wider text-muted-foreground">Revenue mix · FY2025 · {bm.breakdownBasis}</div>
             <div className="flex h-6 w-full overflow-hidden rounded-[2px] border border-border">
               {seg.map((s, i) => (
                 <div key={i} style={{ width: `${s.pct}%`, background: SEG_PALETTE[i % SEG_PALETTE.length] }} title={`${s.label}: ${fx(s.pct)}%`} />
               ))}
             </div>
-            <table className="mt-2 w-full font-mono text-[12px] tabnum">
+            <table className="mt-2 w-full font-mono text-[14.5px] tabnum">
               <tbody>
                 {seg.map((s, i) => (
                   <tr key={i} className="border-b border-border/40 last:border-0">
@@ -444,14 +444,14 @@ function BusinessModel({ ipo }: { ipo: UpcomingIPO }) {
             </table>
           </div>
         )}
-        <p className="text-[12.5px] leading-relaxed text-muted-foreground">{bm.model}</p>
+        <p className="text-[15px] leading-relaxed text-muted-foreground">{bm.model}</p>
         {(bm.keyCustomersOrChannel || bm.moatOrEdge) && (
           <div className="space-y-1.5 border-t border-border pt-2.5">
             {bm.keyCustomersOrChannel && (
-              <div className="text-[12px] leading-snug text-muted-foreground"><span className="font-medium text-foreground">Customers / channel: </span>{bm.keyCustomersOrChannel}</div>
+              <div className="text-[14.5px] leading-snug text-muted-foreground"><span className="font-medium text-foreground">Customers / channel: </span>{bm.keyCustomersOrChannel}</div>
             )}
             {bm.moatOrEdge && (
-              <div className="text-[12px] leading-snug text-muted-foreground"><span className="font-medium text-foreground">Edge: </span>{bm.moatOrEdge}</div>
+              <div className="text-[14.5px] leading-snug text-muted-foreground"><span className="font-medium text-foreground">Edge: </span>{bm.moatOrEdge}</div>
             )}
           </div>
         )}
@@ -465,21 +465,21 @@ function Proceeds({ ipo }: { ipo: UpcomingIPO }) {
   return (
     <Panel title="Use of proceeds" note={ipo.debtAlloc.basis !== "n/d" ? `→ debt ${ipo.debtAlloc.pct != null ? pctN(ipo.debtAlloc.pct) : `${fx(ipo.debtAlloc.low)}–${fx(ipo.debtAlloc.high)}%`}` : undefined}>
       <div className="space-y-2.5 p-4">
-        {ipo.useOfProceeds.length === 0 && <div className="font-mono text-[12px] text-muted-foreground">Not itemized in structured data — see writeup.</div>}
+        {ipo.useOfProceeds.length === 0 && <div className="font-mono text-[14.5px] text-muted-foreground">Not itemized in structured data — see writeup.</div>}
         {ipo.useOfProceeds.map((u, i) => {
           const pct = u.pct ?? (u.amountRp && total ? (u.amountRp / total) * 100 : null);
           return (
             <div key={i}>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="flex items-center gap-1.5 text-[12.5px] text-foreground">
+                <span className="flex items-center gap-1.5 text-[15px] text-foreground">
                   <Badge variant={proceedsTone(u.type)}>{(u.type ?? "use").replace(/_/g, " ")}</Badge>
                   {u.affiliated && <Badge variant="outline">affiliated</Badge>}
                 </span>
-                <span className="shrink-0 font-mono text-[12px] tabnum text-muted-foreground">
+                <span className="shrink-0 font-mono text-[14.5px] tabnum text-muted-foreground">
                   {pct != null ? pctN(pct) : ""}{u.amountRp ? ` · ${idr(u.amountRp)}` : ""}
                 </span>
               </div>
-              <div className="mt-1 text-[12px] leading-snug text-muted-foreground">{u.purpose}</div>
+              <div className="mt-1 text-[14.5px] leading-snug text-muted-foreground">{u.purpose}</div>
               {pct != null && (
                 <div className="mt-1 h-1.5 w-full bg-secondary">
                   <div className="h-full bg-primary/70" style={{ width: `${Math.min(100, pct)}%` }} />
@@ -489,7 +489,7 @@ function Proceeds({ ipo }: { ipo: UpcomingIPO }) {
           );
         })}
         {ipo.debtAlloc.facility && (
-          <div className="border-t border-border pt-2 font-mono text-[11px] text-muted-foreground">Facility: {ipo.debtAlloc.facility}</div>
+          <div className="border-t border-border pt-2 font-mono text-[13px] text-muted-foreground">Facility: {ipo.debtAlloc.facility}</div>
         )}
       </div>
     </Panel>
@@ -533,9 +533,9 @@ function Financials({ ipo }: { ipo: UpcomingIPO }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <table className="w-full border-t border-border font-mono text-[12.5px] tabnum">
+      <table className="w-full border-t border-border font-mono text-[15px] tabnum">
         <thead>
-          <tr className="border-b border-border text-[11px] uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border text-[13px] uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-2 text-left font-medium">Metric</th>
             {f.years.map((y) => <th key={y} className="px-3 py-2 text-right font-medium">{y}</th>)}
           </tr>
@@ -543,7 +543,7 @@ function Financials({ ipo }: { ipo: UpcomingIPO }) {
         <tbody>
           {rows.map((r) => (
             <tr key={r.label} className="border-b border-border/50 last:border-0">
-              <td className={`py-1.5 text-left ${r.sub ? "pl-7 text-[11.5px] text-muted-foreground" : "px-4 text-muted-foreground"}`}>{r.label}</td>
+              <td className={`py-1.5 text-left ${r.sub ? "pl-7 text-[14px] text-muted-foreground" : "px-4 text-muted-foreground"}`}>{r.label}</td>
               {r.vals.map((v, i) => (
                 <td key={i} className={`px-3 py-1.5 text-right ${r.sub ? "text-muted-foreground" : "text-foreground"}`}>{r.fmt(v)}</td>
               ))}
@@ -578,8 +578,8 @@ function ValuationPanel({ ipo }: { ipo: UpcomingIPO }) {
       <dl className="divide-y divide-border">
         {kv.map(([k, val]) => (
           <div key={k} className="flex items-start justify-between gap-3 px-4 py-2">
-            <dt className="font-mono text-[11.5px] uppercase tracking-wider text-muted-foreground">{k}</dt>
-            <dd className="max-w-[60%] text-right font-mono text-[12.5px] tabnum text-foreground">{val}</dd>
+            <dt className="font-mono text-[14px] uppercase tracking-wider text-muted-foreground">{k}</dt>
+            <dd className="max-w-[60%] text-right font-mono text-[15px] tabnum text-foreground">{val}</dd>
           </div>
         ))}
       </dl>
@@ -592,7 +592,7 @@ function RedFlags({ ipo }: { ipo: UpcomingIPO }) {
     <Panel title="Red flags" note={`${ipo.redFlags.length} flagged`}>
       <ul className="space-y-2 p-4">
         {ipo.redFlags.map((rf, i) => (
-          <li key={i} className="flex gap-2.5 text-[12.5px] leading-snug">
+          <li key={i} className="flex gap-2.5 text-[15px] leading-snug">
             {rf.severity ? <Badge variant={sevVariant(rf.severity)} className="mt-0.5 shrink-0">{rf.severity}</Badge>
               : <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-neg/70" aria-hidden />}
             <span className="text-muted-foreground">{rf.text}</span>
@@ -611,7 +611,7 @@ function GreenFlags({ ipo }: { ipo: UpcomingIPO }) {
     <Panel title="Green flags" note={`${g.length} positives`}>
       <ul className="space-y-2 p-4">
         {g.map((c, i) => (
-          <li key={i} className="flex gap-2.5 text-[12.5px] leading-snug">
+          <li key={i} className="flex gap-2.5 text-[15px] leading-snug">
             <Badge variant={strengthVariant(c.strength)} className="mt-0.5 shrink-0">{c.strength}</Badge>
             <span className="text-muted-foreground">{c.text}</span>
           </li>
@@ -627,15 +627,15 @@ function Qualitative({ ipo }: { ipo: UpcomingIPO }) {
       <div className="space-y-3 p-4">
         {(ipo.primaryRisk || ipo.industryTailwind) && (
           <Section label="Context">
-            {ipo.primaryRisk && <div className="text-[12.5px] leading-snug text-muted-foreground"><span className="text-neg/90">Primary risk:</span> {ipo.primaryRisk}</div>}
-            {ipo.industryTailwind && <div className="mt-1 text-[12.5px] leading-snug text-muted-foreground"><span className="text-pos/90">Tailwind:</span> {ipo.industryTailwind}</div>}
+            {ipo.primaryRisk && <div className="text-[15px] leading-snug text-muted-foreground"><span className="text-neg/90">Primary risk:</span> {ipo.primaryRisk}</div>}
+            {ipo.industryTailwind && <div className="mt-1 text-[15px] leading-snug text-muted-foreground"><span className="text-pos/90">Tailwind:</span> {ipo.industryTailwind}</div>}
           </Section>
         )}
         {ipo.openQuestions.length > 0 && (
           <Section label="Open questions (diligence)">
             <ul className="space-y-1">
               {ipo.openQuestions.map((q, i) => (
-                <li key={i} className="flex gap-2 text-[12.5px] leading-snug text-muted-foreground">
+                <li key={i} className="flex gap-2 text-[15px] leading-snug text-muted-foreground">
                   <span className="shrink-0 text-muted-foreground/60">?</span>{q}
                 </li>
               ))}
@@ -643,7 +643,7 @@ function Qualitative({ ipo }: { ipo: UpcomingIPO }) {
           </Section>
         )}
         {ipo.esa.exists && (
-          <Section label="ESA / ESOP"><div className="text-[12.5px] leading-snug text-muted-foreground">{ipo.esa.summary}</div></Section>
+          <Section label="ESA / ESOP"><div className="text-[15px] leading-snug text-muted-foreground">{ipo.esa.summary}</div></Section>
         )}
       </div>
     </Panel>
@@ -653,7 +653,7 @@ function Qualitative({ ipo }: { ipo: UpcomingIPO }) {
 function Section({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <div className="mb-1 font-mono text-[11px] uppercase tracking-wider text-muted-foreground/80">{label}</div>
+      <div className="mb-1 font-mono text-[13px] uppercase tracking-wider text-muted-foreground/80">{label}</div>
       {children}
     </div>
   );
@@ -662,7 +662,7 @@ function Section({ label, children }: { label: string; children: ReactNode }) {
 function MiniTip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-border bg-secondary px-2.5 py-2 text-[11.5px] shadow-lg">
+    <div className="rounded-md border border-border bg-secondary px-2.5 py-2 text-[14px] shadow-lg">
       <div className="mb-1 font-semibold text-foreground">{label}</div>
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex justify-between gap-4 text-muted-foreground">

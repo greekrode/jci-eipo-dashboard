@@ -83,7 +83,7 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
           </CardHeader>
           <CardContent>
             <RegimeFadeChart data={fade} />
-            <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[16px] leading-relaxed text-muted-foreground">
               In choppy tape the median deal pops <span className="font-medium text-foreground">{pct(d1C)}</span> on D1 and sits at{" "}
               <span className="font-medium text-foreground">{pct(d7C)}</span> by D7, versus{" "}
               <span className="font-medium text-foreground">{pct(d7P)}</span> for listings into a rising market —{" "}
@@ -133,7 +133,7 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
           <ChoppyScatter data={scatter} median={d7C} />
           <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
             {buckets.map((b) => (
-              <span key={b.key} className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-muted-foreground">
+              <span key={b.key} className="inline-flex items-center gap-1.5 font-mono text-[14px] text-muted-foreground">
                 <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: b.color }} />
                 {b.label} <span className="text-foreground">{b.count}</span>
               </span>
@@ -150,7 +150,7 @@ export default function ChoppyMarket({ ipos }: { ipos: IPO[] }) {
           </CardHeader>
           <CardContent>
             <RegimeDistChart data={dist} />
-            <p className="mt-2 text-[13.5px] leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-[16px] leading-relaxed text-muted-foreground">
               Choppy markets are more polarized: <span className="font-medium text-foreground">{pctAbs(choppyLossBig)}</span> of deals
               fell 25%+ by D7 (vs <span className="font-medium text-foreground">{pctAbs(performLossBig)}</span> in a rising market) and{" "}
               <span className="font-medium text-foreground">{pctAbs(choppyDouble)}</span> more than doubled (vs{" "}

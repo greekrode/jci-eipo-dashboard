@@ -94,7 +94,7 @@ export function Disclaimer() {
   return (
     <div className="flex flex-col gap-2 rounded-[2px] border border-border bg-secondary/30 px-4 py-3 sm:flex-row sm:items-start sm:gap-3">
       <Badge variant="outline" className="w-fit shrink-0 border-foreground/30 text-foreground">NFA · DYOR</Badge>
-      <p className="text-[11.5px] leading-relaxed text-muted-foreground">
+      <p className="text-[14px] leading-relaxed text-muted-foreground">
         Independent forensic analysis of <span className="text-foreground">preliminary</span> prospectuses (Prospektus Awal),
         for educational purposes only. <span className="text-foreground">Not financial advice</span> and not a recommendation
         to subscribe, buy, or sell. Figures are drawn from draft documents and may change in the final prospectus; opinions
@@ -136,7 +136,7 @@ function tagVariant(tag: string): Tone {
 /** Small chip for one structural ownership tag. */
 export function TagChip({ tag }: { tag: string }) {
   return (
-    <Badge variant={tagVariant(tag)} className="px-1 py-0 text-[9.5px] font-medium uppercase tracking-wide">
+    <Badge variant={tagVariant(tag)} className="px-1 py-0 text-[11.5px] font-medium uppercase tracking-wide">
       {TAG_LABEL[tag] ?? tag}
     </Badge>
   );

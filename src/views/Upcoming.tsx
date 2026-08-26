@@ -131,7 +131,7 @@ const METRICS: Metric[] = [
             <Strong on={best}>
               {i.debtAlloc.pct != null ? pctN(i.debtAlloc.pct) : rangeCell(i.debtAlloc.low, i.debtAlloc.high, (x) => fx(x, 1), "%")}
             </Strong>
-            <span className="ml-1 text-[10px] text-muted-foreground underline decoration-dotted">ⓘ</span>
+            <span className="ml-1 text-[12px] text-muted-foreground underline decoration-dotted">ⓘ</span>
           </span>
         </TooltipTrigger>
         <TooltipContent className="max-w-[260px]">
@@ -190,7 +190,7 @@ const METRICS: Metric[] = [
             <div className="flex flex-wrap gap-1">{tags.map((t) => <TagChip key={t} tag={t} />)}</div>
           )}
           {(i.ownership.caveats?.length ?? 0) > 0 && (
-            <div className="font-mono text-[10px] leading-tight text-muted-foreground/70">
+            <div className="font-mono text-[12px] leading-tight text-muted-foreground/70">
               {i.ownership.caveats.length} under review
             </div>
           )}
@@ -204,7 +204,7 @@ const METRICS: Metric[] = [
       const lines = i.controllerLines ?? (i.controllerPost ? [i.controllerPost] : []);
       if (lines.length === 0) return <span className="text-muted-foreground">—</span>;
       return (
-        <ul className="space-y-1 text-[11.5px] leading-snug text-muted-foreground">
+        <ul className="space-y-1 text-[14px] leading-snug text-muted-foreground">
           {lines.map((l, idx) => (
             <li key={idx} className="flex gap-1.5">
               <span className="mt-[5px] h-1 w-1 shrink-0 rounded-full bg-primary/60" aria-hidden />
@@ -221,7 +221,7 @@ const METRICS: Metric[] = [
     cell: (i) => (
       <div className="space-y-1.5">
         <div>{lockBadge(i.lockup.strength)}</div>
-        <div className="text-[11.5px] leading-snug text-muted-foreground">{i.lockup.short ?? i.lockup.summary}</div>
+        <div className="text-[14px] leading-snug text-muted-foreground">{i.lockup.short ?? i.lockup.summary}</div>
       </div>
     ),
   },
@@ -232,7 +232,7 @@ const METRICS: Metric[] = [
       return (
         <span className="inline-flex items-center gap-1.5">
           <Badge variant={best ? "outline" : "neg"}>{i.redFlags.length}</Badge>
-          {high > 0 && <span className="font-mono text-[10.5px] text-neg/80">{high} high</span>}
+          {high > 0 && <span className="font-mono text-[12.5px] text-neg/80">{high} high</span>}
         </span>
       );
     },
@@ -245,7 +245,7 @@ const METRICS: Metric[] = [
       return (
         <span className="inline-flex items-center gap-1.5">
           <Badge variant="pos">{g.length}</Badge>
-          {strong > 0 && <span className="font-mono text-[10.5px] text-pos/80">{strong} strong</span>}
+          {strong > 0 && <span className="font-mono text-[12.5px] text-pos/80">{strong} strong</span>}
         </span>
       );
     },
@@ -319,7 +319,7 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
         </CardHeader>
         <CardContent className="p-0">
           {upcoming.length === 0 ? (
-            <p className="px-4 py-6 text-[13.5px] text-muted-foreground">No deals in bookbuilding right now — see Listed below.</p>
+            <p className="px-4 py-6 text-[16px] text-muted-foreground">No deals in bookbuilding right now — see Listed below.</p>
           ) : (
             <Table containerClassName="max-h-[78vh]">
               <TableHeader className="[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-card">
@@ -338,11 +338,11 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
                       className="cursor-pointer text-center align-bottom hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
                     >
                       <div className="flex flex-col items-center gap-0.5 py-1">
-                        <span className="text-[15px] font-semibold text-foreground">{i.ticker}</span>
-                        <span className="line-clamp-2 max-w-[160px] text-[11px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
+                        <span className="text-[18px] font-semibold text-foreground">{i.ticker}</span>
+                        <span className="line-clamp-2 max-w-[160px] text-[13px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
                           {i.legalName}
                         </span>
-                        <span className="mt-0.5 text-[10px] font-normal normal-case tracking-normal text-primary">view ▸</span>
+                        <span className="mt-0.5 text-[12px] font-normal normal-case tracking-normal text-primary">view ▸</span>
                       </div>
                     </TableHead>
                   ))}
@@ -400,7 +400,7 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
                           {i.ticker}
                         </TableCell>
                         <TableCell className="max-w-[220px] text-left">
-                          <span className="line-clamp-2 text-[11px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
+                          <span className="line-clamp-2 text-[13px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
                             {i.legalName}
                           </span>
                         </TableCell>
@@ -417,7 +417,7 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
                         <TableCell className={signClass(d1)}>{pct(d1)}</TableCell>
                         <TableCell className={signClass(d7)}>{pct(d7)}</TableCell>
                         <TableCell className={signClass(c.retListing)}>{pct(c.retListing)}</TableCell>
-                        <TableCell className="text-left text-[10.5px] text-muted-foreground">{c.marketRegime ?? "—"}</TableCell>
+                        <TableCell className="text-left text-[12.5px] text-muted-foreground">{c.marketRegime ?? "—"}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -436,7 +436,7 @@ function GroupBlock({ group, ipos, best }: { group: string; ipos: UpcomingIPO[];
   return (
     <>
       <TableRow className="bg-secondary/70 hover:bg-secondary/70">
-        <TableCell colSpan={ipos.length + 1} className="py-1.5 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        <TableCell colSpan={ipos.length + 1} className="py-1.5 text-left text-[13px] font-semibold uppercase tracking-wider text-muted-foreground">
           {group}
         </TableCell>
       </TableRow>

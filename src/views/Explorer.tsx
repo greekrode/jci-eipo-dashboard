@@ -30,7 +30,7 @@ type GroupBy = "none" | "lead" | "underwriter" | "sector" | "year";
 
 const COL_COUNT = 11;
 const selectCls =
-  "h-9 rounded-[2px] border border-input bg-secondary px-2 text-[14px] text-foreground focus-visible:border-primary focus-visible:outline-none";
+  "h-9 rounded-[2px] border border-input bg-secondary px-2 text-[17px] text-foreground focus-visible:border-primary focus-visible:outline-none";
 
 export default function Explorer({ ipos }: { ipos: IPO[] }) {
   const lastSearchEvent = useRef("");
@@ -295,11 +295,11 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
               <option value="sector">Group by sector</option>
               <option value="year">Group by year</option>
             </select>
-            <label className="flex cursor-pointer items-center gap-1.5 text-[12.5px] uppercase tracking-wider text-muted-foreground">
+            <label className="flex cursor-pointer items-center gap-1.5 text-[15px] uppercase tracking-wider text-muted-foreground">
               <input type="checkbox" checked={listedOnly} onChange={(e) => setListedFilter(e.target.checked)} className="accent-primary" />
               Listed only
             </label>
-            <span className="tabnum ml-auto text-[12.5px] text-muted-foreground">
+            <span className="tabnum ml-auto text-[15px] text-muted-foreground">
               {rows.length} deals
               {uw !== "all" && medD1 !== null && (
                 <>
@@ -340,10 +340,10 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
           </Table>
 
           <div className="border-t border-border px-4 py-3.5">
-            <div className="mb-2 text-[11.5px] uppercase tracking-wider text-muted-foreground">
+            <div className="mb-2 text-[14px] uppercase tracking-wider text-muted-foreground">
               Underwriter codes ({legend.length})
             </div>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-1.5 text-[12.5px] sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-2 gap-x-5 gap-y-1.5 text-[15px] sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {legend.map(([code, name]) => (
                 <div key={code} className="truncate">
                   <span className="text-foreground">{code}</span> <span className="text-muted-foreground">{name}</span>

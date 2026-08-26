@@ -97,11 +97,11 @@ export default function App() {
               className="h-7 w-7 rounded-[3px] border border-border sm:h-8 sm:w-8"
             />
           </a>
-          <h1 className="text-[16px] font-semibold tracking-tight text-foreground sm:text-[20px]">IDX e-IPO Analytics</h1>
-          <span className="hidden font-mono text-[12px] uppercase tracking-wider text-muted-foreground sm:inline">IDX · 2021&ndash;2026</span>
+          <h1 className="text-[19px] font-semibold tracking-tight text-foreground sm:text-[24px]">IDX e-IPO Analytics</h1>
+          <span className="hidden font-mono text-[14.5px] uppercase tracking-wider text-muted-foreground sm:inline">IDX · 2021&ndash;2026</span>
         </div>
         <div className="flex items-center gap-3">
-          <div className="tabnum font-mono text-[12px] text-muted-foreground sm:text-[13.5px]">
+          <div className="tabnum font-mono text-[14.5px] text-muted-foreground sm:text-[16px]">
             <span className="font-semibold text-foreground">{ipos.length}</span> DEALS
             <span className="px-1.5 text-muted-foreground">/</span>
             <span className="font-semibold text-foreground">{listedCount}</span> LISTED
@@ -136,7 +136,7 @@ export default function App() {
         <TabsContent value="upcoming"><Upcoming ipos={upcoming} census={ipos} /></TabsContent>
       </Tabs>
 
-      <footer className="mt-8 space-y-4 border-t border-border pt-4 text-[12.5px] leading-relaxed text-muted-foreground">
+      <footer className="mt-8 space-y-4 border-t border-border pt-4 text-[15px] leading-relaxed text-muted-foreground">
         <p>
           <span className="font-medium text-foreground">Definitions.</span> Final price is the final IPO offer price (post
           book-building). D1–D7 are daily returns; cumulative compounds them. Returns are right-skewed, so median leads and

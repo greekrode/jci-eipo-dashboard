@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       // mobile: standalone bordered chips that wrap (all tabs visible); sm+: connected pill segments
-      "inline-flex shrink-0 items-center whitespace-nowrap rounded-[2px] border border-border bg-card px-3 py-2 font-mono text-[12px] font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary data-[state=active]:border-primary/50 data-[state=active]:bg-secondary data-[state=active]:text-foreground data-[state=active]:shadow-[inset_0_-2px_0_hsl(var(--primary))] sm:rounded-none sm:border-0 sm:border-r sm:border-border sm:bg-transparent sm:px-5 sm:py-2.5 sm:text-[13px] sm:last:border-r-0",
+      "inline-flex shrink-0 items-center whitespace-nowrap rounded-[2px] border border-border bg-card px-3 py-2 font-mono text-[14.5px] font-medium uppercase tracking-wider text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary data-[state=active]:border-primary/50 data-[state=active]:bg-secondary data-[state=active]:text-foreground data-[state=active]:shadow-[inset_0_-2px_0_hsl(var(--primary))] sm:rounded-none sm:border-0 sm:border-r sm:border-border sm:bg-transparent sm:px-5 sm:py-2.5 sm:text-[15.5px] sm:last:border-r-0",
       className
     )}
     {...props}
