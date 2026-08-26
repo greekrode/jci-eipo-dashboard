@@ -1,7 +1,7 @@
 # IDX e-IPO Analytics
 
 A single-page analytics dashboard over a near-complete census of Indonesian (IDX) IPOs,
-**2021–2026 (246 deals, 237 listed)**. It turns the raw e-IPO spreadsheet into legible signal:
+**2021–2026 (251 deals, 243 listed)**. It turns the raw e-IPO spreadsheet into legible signal:
 day-1 → day-7 return behavior, underwriter performance (lead and non-lead), and sector / time trends.
 
 **Stack:** React + TypeScript + Vite · Tailwind CSS + shadcn-style components (Radix) · Recharts.
@@ -30,7 +30,8 @@ Dark, semi-brutalist theme; Inter throughout with tabular figures.
   A transposed comparison matrix (offering, float, valuation, leverage, FY-performance, ownership/risk)
   with directional ● highlights, drilling into a per-deal detail: cap table (pre → post + economic blocs),
   use of proceeds, 3-year financials, valuation & leverage, red flags, counterweights, and the full
-  verbatim analyst writeup. See **Data** below.
+  verbatim analyst writeup. Deals move automatically to **Listed · how the calls played out** (AI Score
+  vs realized D1 / D7 / since-listing) once the census marks them listed. See **Data** below.
 
 ## Run
 

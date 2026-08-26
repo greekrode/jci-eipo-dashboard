@@ -1,10 +1,11 @@
 import { useMemo, useState, type ReactNode } from "react";
+import type { IPO } from "@/lib/types";
 import type { UpcomingIPO } from "@/lib/upcoming-types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { idr, idrBn, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
+import { idr, idrBn, idrPrice, pct, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
 import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip, gradeVariant, uwGradeVariant } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
@@ -253,7 +254,7 @@ const METRICS: Metric[] = [
 
 const GROUPS = [...new Set(METRICS.map((m) => m.group))];
 
-export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
+export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census: IPO[] }) {
   const [selected, setSelected] = useState<string | null>(null);
   const select = (t: string | null, source: string) => {
     setSelected(t);
@@ -271,16 +272,34 @@ export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const { upcoming, listed, listedByTicker } = useMemo(() => {
+    const listedByTicker = new Map(census.filter((c) => c.listed).map((c) => [c.ticker, c]));
+    const upcoming = ipos.filter((i) => !listedByTicker.has(i.ticker));
+    const listed = ipos.filter((i) => listedByTicker.has(i.ticker)).sort((a, b) => {
+      const aDate = listedByTicker.get(a.ticker)?.listingDate ?? null;
+      const bDate = listedByTicker.get(b.ticker)?.listingDate ?? null;
+      if (aDate === null && bDate !== null) return 1;
+      if (aDate !== null && bDate === null) return -1;
+      if (aDate !== bDate) return (aDate ?? "").localeCompare(bDate ?? "");
+      return a.ticker.localeCompare(b.ticker);
+    });
+    return { upcoming, listed, listedByTicker };
+  }, [ipos, census]);
+
   // Per-row optimal value for the directional highlight.
   const bestByLabel = useMemo(() => {
     const m = new Map<string, number | null>();
+    // A best-of-group marker has no meaning without at least two deals.
+    if (upcoming.length < 2) return m;
     for (const met of METRICS) {
       if (!met.dir || !met.rank) continue;
-      const vals = ipos.map(met.rank).filter((x): x is number => x != null);
+      const vals = upcoming.map(met.rank).filter((x): x is number => x != null);
       m.set(met.label, vals.length ? (met.dir === "low" ? Math.min(...vals) : Math.max(...vals)) : null);
     }
     return m;
-  }, [ipos]);
+  }, [upcoming]);
+
+  const range = listingRange(upcoming);
 
   if (selected) {
     const ipo = ipos.find((i) => i.ticker === selected);
@@ -295,45 +314,118 @@ export default function Upcoming({ ipos }: { ipos: UpcomingIPO[] }) {
         <CardHeader>
           <CardTitle>Upcoming IPOs · side by side</CardTitle>
           <CardDescription>
-            {ipos.length} IDX deals listing Jul 2026 · click a ticker to drill in · ● = lowest leverage / cheapest / strongest growth per row (directional, not a buy signal)
+            {upcoming.length} IDX {upcoming.length === 1 ? "deal" : "deals"}{range ? ` listing ${range}` : ""} · click a ticker to drill in{upcoming.length >= 2 ? " · ● = lowest leverage / cheapest / strongest growth per row (directional, not a buy signal)" : ""}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <Table containerClassName="max-h-[78vh]">
-            <TableHeader className="[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-card">
-              <TableRow>
-                <TableHead className="sticky left-0 top-0 z-20 min-w-[150px] border-r border-border bg-card text-left">Metric</TableHead>
-                {ipos.map((i) => (
-                  <TableHead
-                    key={i.ticker}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Open ${i.ticker} detail`}
-                    onClick={() => select(i.ticker, "comparison_table")}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "comparison_table_keyboard"); }
-                    }}
-                    className="cursor-pointer text-center align-bottom hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-                  >
-                    <div className="flex flex-col items-center gap-0.5 py-1">
-                      <span className="text-[15px] font-semibold text-foreground">{i.ticker}</span>
-                      <span className="line-clamp-2 max-w-[160px] text-[11px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
-                        {i.legalName}
-                      </span>
-                      <span className="mt-0.5 text-[10px] font-normal normal-case tracking-normal text-primary">view ▸</span>
-                    </div>
-                  </TableHead>
+          {upcoming.length === 0 ? (
+            <p className="px-4 py-6 text-[13.5px] text-muted-foreground">No deals in bookbuilding right now — see Listed below.</p>
+          ) : (
+            <Table containerClassName="max-h-[78vh]">
+              <TableHeader className="[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-card">
+                <TableRow>
+                  <TableHead className="sticky left-0 top-0 z-20 min-w-[150px] border-r border-border bg-card text-left">Metric</TableHead>
+                  {upcoming.map((i) => (
+                    <TableHead
+                      key={i.ticker}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${i.ticker} detail`}
+                      onClick={() => select(i.ticker, "comparison_table")}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "comparison_table_keyboard"); }
+                      }}
+                      className="cursor-pointer text-center align-bottom hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+                    >
+                      <div className="flex flex-col items-center gap-0.5 py-1">
+                        <span className="text-[15px] font-semibold text-foreground">{i.ticker}</span>
+                        <span className="line-clamp-2 max-w-[160px] text-[11px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
+                          {i.legalName}
+                        </span>
+                        <span className="mt-0.5 text-[10px] font-normal normal-case tracking-normal text-primary">view ▸</span>
+                      </div>
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {GROUPS.map((g) => (
+                  <GroupBlock key={g} group={g} ipos={upcoming} best={bestByLabel} />
                 ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {GROUPS.map((g) => (
-                <GroupBlock key={g} group={g} ipos={ipos} best={bestByLabel} />
-              ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
         </Card>
+        {listed.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Listed · how the calls played out</CardTitle>
+              <CardDescription>AI Score at prospectus stage vs realized returns · click a ticker for the original forensic</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Ticker</TableHead>
+                    <TableHead className="text-left">Company</TableHead>
+                    <TableHead>Listed</TableHead>
+                    <TableHead>AI Score</TableHead>
+                    <TableHead>Final price</TableHead>
+                    <TableHead>D1</TableHead>
+                    <TableHead>D7 cum</TableHead>
+                    <TableHead>Since listing</TableHead>
+                    <TableHead className="text-left">Regime</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {listed.map((i) => {
+                    const c = listedByTicker.get(i.ticker);
+                    if (!c) return null;
+                    const d1 = c.daily[0] ?? null;
+                    const d7 = c.cum[6] ?? null;
+                    const s = i.score;
+                    return (
+                      <TableRow key={i.ticker}>
+                        <TableCell
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Open ${i.ticker} detail`}
+                          onClick={() => select(i.ticker, "listed_table")}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "listed_table"); }
+                          }}
+                          className="cursor-pointer font-medium text-foreground hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+                        >
+                          {i.ticker}
+                        </TableCell>
+                        <TableCell className="max-w-[220px] text-left">
+                          <span className="line-clamp-2 text-[11px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
+                            {i.legalName}
+                          </span>
+                        </TableCell>
+                        <TableCell>{fmtDate(c.listingDate)}</TableCell>
+                        <TableCell>
+                          {s ? (
+                            <span className="inline-flex items-center gap-1.5">
+                              {s.overall}
+                              <Badge variant={gradeVariant(s.grade)}>{s.grade}</Badge>
+                            </span>
+                          ) : <span className="text-muted-foreground">—</span>}
+                        </TableCell>
+                        <TableCell>{idrPrice(c.finalPrice)}</TableCell>
+                        <TableCell className={signClass(d1)}>{pct(d1)}</TableCell>
+                        <TableCell className={signClass(d7)}>{pct(d7)}</TableCell>
+                        <TableCell className={signClass(c.retListing)}>{pct(c.retListing)}</TableCell>
+                        <TableCell className="text-left text-[10.5px] text-muted-foreground">{c.marketRegime ?? "—"}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </TooltipProvider>
   );
@@ -393,3 +485,24 @@ function Strong({ on, className = "", children }: { on?: boolean; className?: st
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const shortUW = (s: string | null) =>
   !s ? "—" : s.replace(/^PT\s+/, "").replace(/\s+\(.*$/, "").replace(/\s+Sekuritas.*/i, " Sekuritas").replace(/\s+Tbk.*/, "");
+
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** Compact month span for the upcoming-deal header. */
+function listingRange(ipos: UpcomingIPO[]): string | null {
+  const dates = ipos.map((i) => i.listingISO).filter((iso): iso is string => iso !== null).sort();
+  const first = dates[0];
+  const last = dates[dates.length - 1];
+  if (!first || !last) return null;
+  const firstParts = first.match(/^(\d{4})-(\d{2})-/);
+  const lastParts = last.match(/^(\d{4})-(\d{2})-/);
+  if (!firstParts || !lastParts) return null;
+  const firstMonth = MON[Number(firstParts[2]) - 1];
+  const lastMonth = MON[Number(lastParts[2]) - 1];
+  if (!firstMonth || !lastMonth) return null;
+  const firstYear = firstParts[1];
+  const lastYear = lastParts[1];
+  if (firstYear === lastYear && firstMonth === lastMonth) return `${firstMonth} ${firstYear}`;
+  if (firstYear === lastYear) return `${firstMonth}–${lastMonth} ${firstYear}`;
+  return `${firstMonth} ${firstYear}–${lastMonth} ${lastYear}`;
+}

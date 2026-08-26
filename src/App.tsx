@@ -133,7 +133,7 @@ export default function App() {
         <TabsContent value="underwriters"><Underwriters ipos={ipos} /></TabsContent>
         <TabsContent value="sectors"><SectorsTime ipos={ipos} /></TabsContent>
         <TabsContent value="explorer"><Explorer ipos={ipos} /></TabsContent>
-        <TabsContent value="upcoming"><Upcoming ipos={upcoming} /></TabsContent>
+        <TabsContent value="upcoming"><Upcoming ipos={upcoming} census={ipos} /></TabsContent>
       </Tabs>
 
       <footer className="mt-8 space-y-4 border-t border-border pt-4 text-[12.5px] leading-relaxed text-muted-foreground">
