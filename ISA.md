@@ -4,12 +4,12 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: execute
-progress: 63/65
+phase: verify
+progress: 64/65
 mode: interactive
 iteration: 7
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T17:50:00Z
+updated: 2026-08-26T18:05:00Z
 ---
 
 ## Problem
@@ -99,7 +99,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-62: `document.title` and canonical update on client-side navigation (Interceptor eval after clicking Explorer tab).
 - [x] ISC-63: `vercel.json` fallback rewrite serves the SPA for unknown paths while prerendered files win; `vite base` is `/`.
 - [x] ISC-64: Anti: no new runtime dependency in package.json; analytics events still fire on navigation (grep trackUserAction in router/App).
-- [ ] ISC-65: Production: `curl -s https://ipo.klinikpenyesalan.com/upcoming/SWAP` returns the SWAP title without JS; sitemap served with 13 URLs.
+- [x] ISC-65: Production: `curl -s https://ipo.klinikpenyesalan.com/upcoming/SWAP` returns the SWAP title without JS; sitemap served with 13 URLs.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -189,3 +189,5 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-57..60: Bash — `bun run build` → "prerendered 13 routes → dist/ · sitemap.xml (13 urls)"; dist/index.html, dist/explorer/index.html, dist/upcoming/SWAP/index.html carry three different <title>s; RANS canonical = https://ipo.klinikpenyesalan.com/upcoming/RANS; og:title present; "Questions before you subscribe" prerendered in the SWAP file; public/sitemap.xml removed; tabs render as `<Link href=…>` anchors (App.tsx:138).
 - ISC-61/62: Interceptor on `vite preview :4181` — /upcoming/SWAP/ loads prerendered content and hydrates (#root has 1 child, verdict text present), `document.title` = "SWAP IPO — PT Swayasa Prakarsa Tbk · AI Score 53/D | …"; clicking the Explorer tab → title "Explorer — every IDX IPO 2021–2026 | …", pathname /explorer, canonical …/explorer, no reload. Opus additionally verified zero console errors on hydration and back/forward history.
 - ISC-63/64: Bash — vite base "/" (vite.config.ts:8); vercel.json has cleanUrls + fallback rewrite + buildCommand "bun run build" (Vercel’s Vite preset would otherwise skip the prerender); package.json diff shows no dependency changes; trackUserAction still referenced in App.tsx (7×).
+- ISC-65: Bash — production (654e999): `curl https://ipo.klinikpenyesalan.com/upcoming/SWAP` → "<title>SWAP IPO — PT Swayasa Prakarsa Tbk · AI Score 53/D | …" without JS; sitemap.xml → 13 <url>; /explorer has its own title; /upcoming/SWAP/ → 308 to the clean URL. Fallback rewrite to /index.html was inert under cleanUrls (/some-random-path → 404); changed destination to "/" (verified after redeploy — see follow-up line).
+- 2026-08-26T18:05Z — Vercel: rewrite destination "/index.html" is a no-op when cleanUrls is on (the file itself 308s to "/"); destination "/" is the working SPA fallback. Hard 404s on unknown paths would also have been acceptable for SEO, but the app router already handles unknown tickers (→ /upcoming), so the fallback is kept.
