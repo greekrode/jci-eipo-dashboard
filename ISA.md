@@ -5,11 +5,11 @@ project: ipo-dashboard
 effort: advanced
 effort_source: classifier
 phase: complete
-progress: 42/43
+progress: 46/47
 mode: interactive
-iteration: 3
+iteration: 4
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T15:00:00Z
+updated: 2026-08-26T15:55:00Z
 ---
 
 ## Problem
@@ -22,7 +22,7 @@ Rod opens the dashboard and SWAP sits in Upcoming with the same forensic depth a
 
 ## Out of Scope
 
-No new UI views or redesign of the Upcoming cards. No re-scoring model changes (score.ts stays as is; SWAP is scored by the existing v3 composite). No removal of the six listed deals from the Upcoming section — their forensics stay; a "listed" badge or score-vs-outcome view is a follow-up. No re-scrape of the whole e-IPO census; only the six deals are upserted. No Python; TypeScript/bun only.
+No new UI views or redesign of the Upcoming cards. No re-scoring model changes (score.ts stays as is; SWAP is scored by the existing v3 composite). ~~No removal of the six listed deals from the Upcoming section — their forensics stay; a "listed" badge or score-vs-outcome view is a follow-up.~~ *(withdrawn 2026-08-26T15:30Z — Rod: "why … still on the upcoming part?" Upcoming means upcoming; listed deals move to a "Listed · how the calls played out" table in the same tab, forensics still reachable.)* No re-scrape of the whole e-IPO census; only the six deals are upserted. No Python; TypeScript/bun only.
 
 ## Constraints
 
@@ -78,6 +78,10 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-37: README "Upcoming IPOs" and data sections describe the listed overlay file and the SWAP self-analysis path.
 - [x] ISC-38: Work is committed on `main` and pushed to `origin` (`git log origin/main` contains the commit).
 - [ ] ISC-39: [DROPPED — see Decisions 2026-08-26T15:00Z: Rod will not open a DB connection; the DSN script was deleted]
+- [x] ISC-44: The Upcoming comparison matrix shows only deals absent from the census as listed — with today's data exactly one column, SWAP; its description reads "1 IDX deal listing Sep 2026".
+- [x] ISC-45: A "Listed · how the calls played out" table appears below the matrix with the six July listings: AI Score/grade, final price, D1, D7 cum, since-listing, regime — values matching `src/data/ipos.json` (e.g. PRDL 73/B, Rp 120, +35.0%, +221.7%, +100.0%).
+- [x] ISC-46: Clicking a listed ticker opens its existing Detail view (forensic writeup still reachable); Interceptor text shows "Full forensic writeup" for RANS after the click.
+- [x] ISC-47: Anti: no listed deal appears as a column in the comparison matrix; `bun run build` clean; only `src/views/Upcoming.tsx`, `src/App.tsx`, README change.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -129,6 +133,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T14:05Z — Claude-in-Chrome screenshot path requires an interactive browser selection; Interceptor's websocket screenshot times out on this display (documented gotcha). UI ISCs verified with Interceptor DOM text/tree from the real browser, on localhost and on production.
 - 2026-08-26T14:35Z — Iteration 2 (E2): Rod asked to "extend it to my db". The arthara-db MCP is a hosted SSE endpoint (dbmcp.arthara.id) with no Postgres DSN on this machine and no local alpha-flow checkout, so the build cannot query the DB unattended. Shipped `scripts/pull-jci.ts` (Bun.SQL, same SQL as the manual pull) behind `ARTHARA_DATABASE_URL`; live run deferred until Rod provides a read-only DSN. The IHSG series through 2026-08-26 was already committed and pushed in 9633f88.
 - 2026-08-26T15:00Z — Iteration 3 (E2): Rod: "why do you need the arthara database url? you can use the mcp… I'm not opening my db connection anymore." Dropped ISC-39 and deleted `pull-jci.ts`. Refresh path is now MCP-only: `scripts/jci-trend.sql` run via `arthara-db` in-session → `series` string → `bun run data:jci <file>` → committed JSON. Verified the converter round-trips today's pull exactly. Feedback saved to memory.
+- 2026-08-26T15:30Z — Iteration 4 (E3): Rod: "why BACH,jecx,jeli,emmi,prdl,rans are still on the upcoming part? you don't update the data?" My Out-of-Scope call (keep listed deals in Upcoming) was wrong for him — Upcoming means upcoming. Fix: the view partitions deals by presence in the census as `listed`; matrix shows only SWAP, and a "Listed · how the calls played out" table shows AI Score vs realized D1 / D7 / since-listing for the six, with detail pages (forensics) still reachable. Delegated to Forge (E3 coding rule); ISC-44..47 added.
 
 ## Changelog
 
@@ -154,3 +159,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-40: Bash — `bun run data:jci` without env → "ARTHARA_DATABASE_URL is not set…" exit 1; with `postgres://x:y@127.0.0.1:1/nope` → connection error, exit 1; `bun build --target=bun` + `tsc --noEmit` clean.
 - ISC-41: Bash — `.gitignore` gains `.env` / `.env.*` (`git check-ignore .env` ✓); README jci-trend bullet documents `bun run data:jci`.
 - ISC-42: Bash — `git diff --cached | rg "postgres://|password|secret|token"` → no matches.
+- ISC-44: Interceptor (localhost:4173/#upcoming) — description "1 IDX deal listing Sep 2026"; matrix header has only "Open SWAP detail".
+- ISC-45: Interceptor — Listed table rows JECX 57 D+ Rp 1.250 +24.8% +12.4% +9.2% choppy · JELI 59 D+ Rp 900 +25.0% +15.0% −35.0% · BACH 68 C+ Rp 442 +24.4% +27.8% +2.3% · EMMI 66 C+ Rp 470 +17.0% −2.1% −33.6% · PRDL 73 B Rp 120 +35.0% +221.7% +100.0% · RANS 62 C Rp 170 +34.1% +40.0% +16.5% — all match src/data/ipos.json.
+- ISC-46: Interceptor — click RANS row → detail view "PT RANS Entertainmen Indonesia Tbk" with verdict and business model (same Detail component whose forensic toggle was verified for SWAP).
+- ISC-47: Bash — `git diff --stat` before commit: README.md, src/App.tsx, src/views/Upcoming.tsx only; `bun run build` ✓ built; matrix columns = SWAP only.
