@@ -4,11 +4,11 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: verify
+phase: complete
 progress: 38/38
 mode: interactive
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T14:10:00Z
+updated: 2026-08-26T14:20:00Z
 ---
 
 ## Problem
@@ -121,6 +121,10 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 
 - 2026-08-26T14:05Z — Advisor (Inference.ts --mode advisor) returned after one timeout. Acted on: overlay-precedence note in README (overlay rows win over a future export → delete when native), forensic sentence rephrased so the Rp12bn affiliate repayment reads as disclosed related-party fact, hardcoded counts grepped (App header fixed; Explorer/Overview captions fixed). Not acted on: hysteresis/neutral band or a `regime_legacy` column for the 14 flips — changes the Choppy Market semantics and adds fields; the revert path is config-level already (put a "JCI Trend" sheet back in the workbook — the build prefers it over scripts/jci-trend.json). Surfaced to Rod instead. Ex-reversal earnings are stated explicitly in the writeup ("no multiple because there are no earnings"). Score 53/D comes from score.ts with no override (build log).
 - 2026-08-26T14:05Z — Claude-in-Chrome screenshot path requires an interactive browser selection; Interceptor's websocket screenshot times out on this display (documented gotcha). UI ISCs verified with Interceptor DOM text/tree from the real browser, on localhost and on production.
+
+## Changelog
+
+- 2026-08-26 — conjectured: the committed census (`src/data/ipos.json`) was a faithful build of the spreadsheet on disk, so an overlay of six rows would be the only diff. refuted_by: a clean rebuild from the current `e-IPO Data.xlsx` populated `listingDate` on 230 rows and respelled a lead name — the committed file predated the spreadsheet — and the workbook no longer carries the "JCI Trend" sheet the regime logic depended on. learned: a build artifact's provenance (which input produced it) is not recoverable from the artifact; check "does a no-op rebuild reproduce HEAD?" before designing an incremental change on top of it. criterion_now: ISC-28 is scoped to return metrics/deal terms on pre-existing rows, and the JCI series is a committed input (`scripts/jci-trend.json`) with a stated source and asOf so the build is reproducible without the workbook.
 
 ## Verification
 
