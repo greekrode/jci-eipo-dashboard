@@ -5,11 +5,11 @@ project: ipo-dashboard
 effort: advanced
 effort_source: classifier
 phase: complete
-progress: 41/42
+progress: 42/43
 mode: interactive
-iteration: 2
+iteration: 3
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T14:50:00Z
+updated: 2026-08-26T15:00:00Z
 ---
 
 ## Problem
@@ -77,7 +77,8 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-36: Interceptor screenshot of Explorer filtered to 2026 shows the six tickers with D1 values.
 - [x] ISC-37: README "Upcoming IPOs" and data sections describe the listed overlay file and the SWAP self-analysis path.
 - [x] ISC-38: Work is committed on `main` and pushed to `origin` (`git log origin/main` contains the commit).
-- [DEFERRED-VERIFY] ISC-39: `scripts/pull-jci.ts` exists, reads `ARTHARA_DATABASE_URL`, runs the same IHSG/MA200 SQL used on 2026-08-26, and writes `scripts/jci-trend.json` in the `{_meta, rows}` shape. *(code verified: compiles, same SQL; live run needs Rod's read-only DSN — follow-up: run `bun run data:jci` once `.env` exists and confirm the JSON is byte-stable for rows ≤ 2026-08-26)*
+- [ ] ISC-39: [DROPPED — see Decisions 2026-08-26T15:00Z: Rod will not open a DB connection; the DSN script was deleted]
+- [x] ISC-43: `scripts/jci-trend.sql` (the MCP query) + `scripts/jci-from-series.ts` exist; `bun run data:jci <series-file>` on today's MCP output reproduces `jci-trend.json` rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148).
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
 - [x] ISC-42: Anti: no connection string or secret is committed (grep of the diff for `postgres://`).
@@ -127,6 +128,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T14:05Z — Advisor (Inference.ts --mode advisor) returned after one timeout. Acted on: overlay-precedence note in README (overlay rows win over a future export → delete when native), forensic sentence rephrased so the Rp12bn affiliate repayment reads as disclosed related-party fact, hardcoded counts grepped (App header fixed; Explorer/Overview captions fixed). Not acted on: hysteresis/neutral band or a `regime_legacy` column for the 14 flips — changes the Choppy Market semantics and adds fields; the revert path is config-level already (put a "JCI Trend" sheet back in the workbook — the build prefers it over scripts/jci-trend.json). Surfaced to Rod instead. Ex-reversal earnings are stated explicitly in the writeup ("no multiple because there are no earnings"). Score 53/D comes from score.ts with no override (build log).
 - 2026-08-26T14:05Z — Claude-in-Chrome screenshot path requires an interactive browser selection; Interceptor's websocket screenshot times out on this display (documented gotcha). UI ISCs verified with Interceptor DOM text/tree from the real browser, on localhost and on production.
 - 2026-08-26T14:35Z — Iteration 2 (E2): Rod asked to "extend it to my db". The arthara-db MCP is a hosted SSE endpoint (dbmcp.arthara.id) with no Postgres DSN on this machine and no local alpha-flow checkout, so the build cannot query the DB unattended. Shipped `scripts/pull-jci.ts` (Bun.SQL, same SQL as the manual pull) behind `ARTHARA_DATABASE_URL`; live run deferred until Rod provides a read-only DSN. The IHSG series through 2026-08-26 was already committed and pushed in 9633f88.
+- 2026-08-26T15:00Z — Iteration 3 (E2): Rod: "why do you need the arthara database url? you can use the mcp… I'm not opening my db connection anymore." Dropped ISC-39 and deleted `pull-jci.ts`. Refresh path is now MCP-only: `scripts/jci-trend.sql` run via `arthara-db` in-session → `series` string → `bun run data:jci <file>` → committed JSON. Verified the converter round-trips today's pull exactly. Feedback saved to memory.
 
 ## Changelog
 
