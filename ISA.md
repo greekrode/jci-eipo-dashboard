@@ -4,12 +4,12 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: verify
-progress: 64/65
+phase: execute
+progress: 69/71
 mode: interactive
-iteration: 7
+iteration: 8
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T18:05:00Z
+updated: 2026-08-26T19:05:00Z
 ---
 
 ## Problem
@@ -100,6 +100,12 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-63: `vercel.json` fallback rewrite serves the SPA for unknown paths while prerendered files win; `vite base` is `/`.
 - [x] ISC-64: Anti: no new runtime dependency in package.json; analytics events still fire on navigation (grep trackUserAction in router/App).
 - [x] ISC-65: Production: `curl -s https://ipo.klinikpenyesalan.com/upcoming/SWAP` returns the SWAP title without JS; sitemap served with 13 URLs.
+- [x] ISC-66: Explorer Sector and Underwriter filters are a hand-rolled searchable multi-select (`src/components/ui/multi-select.tsx`, no new dependency): typing filters the list, checkboxes toggle, trigger shows "2 sectors"-style summary, X clears, panel has Select all / Clear all.
+- [x] ISC-67: Filtering is OR within a filter and AND across filters (Healthcare + Consumer Non-Cyclicals shows both; underwriter matches lead or syndicate member); deals count and median-D1 readout update.
+- [x] ISC-68: Keyboard: Escape closes, Enter on search toggles the first match, arrows move highlight; trigger has aria-haspopup/aria-expanded, list has role=listbox aria-multiselectable.
+- [x] ISC-69: Responsive: at 390px width the triggers are full-width and the open panel stays inside the viewport (no horizontal scroll); at 1440px the bar sits on one or two lines. Verified with headless-Chrome screenshots viewed by me.
+- [x] ISC-70: Visual: screenshots at 1440 and 390 look consistent with the flat 2px-radius theme (mono uppercase labels, primary accent), light and dark.
+- [ ] ISC-71: Anti: only Explorer.tsx + the new component change; grouping select and Listed-only checkbox untouched; tsc + build clean; production /explorer serves the new filter bar.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -155,6 +161,7 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T16:20Z — Iteration 5 (E3), Rod's readability review of the detail page. Decisions: (1) "Context & open questions" stays but changes purpose: it was 34 analyst diligence notes (draft-prospectus typos, reconciliation gaps) that an end user cannot act on; it becomes "Questions before you subscribe" with 9 investor-facing questions for SWAP, and the full list lives in the source JSON as `open_questions_full`. Other deals' lists (6–9 items, analyst-written) are left as-is. (2) Type scale ×1.2 by class rewrite rather than CSS `zoom`, so layout math stays real px. (3) Verdict stays a string field but may carry Markdown; `ReactMarkdown` renders both styles so the six older verdicts need no rewrite. (4) Emphasis is a deterministic tokenizer (Rp amounts, %, multiples, colon lead-ins) rather than hand-bolding every string. (5) ~~Forge implements the component work (E3 coding rule)~~ — Rod: "why is forge working on them? i want you to use opus"; Forge stopped before it edited anything, an Opus agent (general-purpose, model opus) runs the same spec. Saved as feedback memory: Opus, not Forge, for ipo-dashboard UI. I did the type scale, colors and content.
 - 2026-08-26T17:10Z — Iteration 6 (E2): Rod: "Sukadana is actually AD (previously OSO). We need to combine them." Fixed at ingestion: `CODE_RENAMES` in build-data.ts maps AD → "SUKADANA PRIMA SEKURITAS (EX-OSO)", so brokers.json, every row leadName (OBAT 2025) and all views agree; research firm entry tagged brokerCode AD + formerly OSO. Chosen over a compute.ts NAME_OVERRIDES entry because that would have left ipos.json leadName saying OSO in the Explorer lead column.
 - 2026-08-26T17:20Z — Iteration 7 (E3): Rod: "make the page more SEO and navigation friendly … detail should be a new page with its own title and meta, same when switching tabs." Design: hand-rolled path router (no react-router — flat route table, ~60 lines), tabs/tickers as anchors, `headFor(path)` shared by client and prerender, Vite SSR build + `scripts/prerender.ts` writing one HTML per route + generated sitemap, `vercel.json` fallback rewrite, `base` "/" (relative base breaks nested routes). Opus implements (Rod: Opus, not Forge).
+- 2026-08-26T18:30Z — Iteration 8 (E2/E3): Rod redirected mid-turn: Explorer Sector + Underwriter selects → searchable multi-select with clear-all, verified visually and responsive. Hand-rolled (only Radix tabs/tooltip installed; no cmdk/popover) to avoid new deps. Opus builds; I do the visual pass with headless Chrome screenshots (Interceptor screenshot capture times out on this display) viewed directly, plus Interceptor DOM interaction checks. Also: ISC-65 fallback confirmed live (unknown path → 200 with the app shell; my poll script misreported due to a curl flag mangled by the shell hook).
 
 ## Changelog
 
@@ -191,3 +198,4 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-63/64: Bash — vite base "/" (vite.config.ts:8); vercel.json has cleanUrls + fallback rewrite + buildCommand "bun run build" (Vercel’s Vite preset would otherwise skip the prerender); package.json diff shows no dependency changes; trackUserAction still referenced in App.tsx (7×).
 - ISC-65: Bash — production (654e999): `curl https://ipo.klinikpenyesalan.com/upcoming/SWAP` → "<title>SWAP IPO — PT Swayasa Prakarsa Tbk · AI Score 53/D | …" without JS; sitemap.xml → 13 <url>; /explorer has its own title; /upcoming/SWAP/ → 308 to the clean URL. Fallback rewrite to /index.html was inert under cleanUrls (/some-random-path → 404); changed destination to "/" (verified after redeploy — see follow-up line).
 - 2026-08-26T18:05Z — Vercel: rewrite destination "/index.html" is a no-op when cleanUrls is on (the file itself 308s to "/"); destination "/" is the working SPA fallback. Hard 404s on unknown paths would also have been acceptable for SEO, but the app router already handles unknown tickers (→ /upcoming), so the fallback is kept.
+- ISC-66..70: Opus interaction transcript on :4185 (open, type "health", select, "2 sectors", Clear all → 243, underwriters "trimegah" → 21 deals · median D1 +25.0%, keyboard ↓↓Enter/Space, aria attributes) + my headless-Chrome screenshots (real Chrome, 1440×900 and 390×844, light+dark, states closed/open-sector/selected/open-uw, 16 PNGs): no horizontal overflow in any, panel inside viewport on mobile, theme-consistent; polish applied after review: single-line action row, count badge removed.

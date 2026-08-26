@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { pct, idrPrice, signClass } from "@/lib/format";
 import { median } from "@/lib/stats";
@@ -61,10 +62,15 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
     for (const r of base) { if (r.leadCode) codes.add(r.leadCode); for (const c of r.members) codes.add(c); }
     return [...codes].filter(Boolean).sort().map((c) => ({ code: c, name: names[c] ?? c }));
   }, [base, names]);
+  const sectorOptions = useMemo(() => sectors.map((s) => ({ value: s, label: s })), [sectors]);
+  const underwriterOptions = useMemo(
+    () => underwriters.map((u) => ({ value: u.code, label: u.name, hint: u.code })),
+    [underwriters]
+  );
 
   const [q, setQ] = useState("");
-  const [sec, setSec] = useState("all");
-  const [uw, setUw] = useState("all");
+  const [secs, setSecs] = useState<string[]>([]);
+  const [uws, setUws] = useState<string[]>([]);
   const [listedOnly, setListedOnly] = useState(true);
   const [groupBy, setGroupBy] = useState<GroupBy>("none");
   const [sort, setSort] = useState<{ key: Key; dir: 1 | -1 }>({ key: "d1", dir: -1 });
@@ -73,8 +79,9 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
     let r = base.filter(
       (x) =>
         (!listedOnly || x.listed) &&
-        (sec === "all" || x.sector === sec) &&
-        (uw === "all" || x.leadCode === uw || x.members.includes(uw)) // lead or syndicate member
+        (secs.length === 0 || secs.includes(x.sector)) &&
+        // lead or syndicate member matches any picked house
+        (uws.length === 0 || uws.includes(x.leadCode) || x.members.some((c) => uws.includes(c)))
     );
     const s = q.trim().toLowerCase();
     if (s) r = r.filter((x) => x.ticker.toLowerCase().includes(s) || x.company.toLowerCase().includes(s));
@@ -88,12 +95,12 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
       const bn = bv === null || bv === undefined ? -Infinity : (bv as number);
       return an < bn ? -sort.dir : an > bn ? sort.dir : 0;
     });
-  }, [base, q, sec, uw, listedOnly, sort]);
+  }, [base, q, secs, uws, listedOnly, sort]);
 
-  // median D1 of the visible set — handy when filtered to one underwriter (their listing-day track record)
+  // median D1 of the visible set — handy when filtered to a set of underwriters (their listing-day track record)
   const medD1 = useMemo(
-    () => (uw === "all" ? null : median(rows.map((r) => r.d1).filter((x): x is number => x !== null))),
-    [rows, uw]
+    () => (uws.length === 0 ? null : median(rows.map((r) => r.d1).filter((x): x is number => x !== null))),
+    [rows, uws]
   );
 
   const groups = useMemo(() => {
@@ -152,14 +159,23 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
     return () => window.clearTimeout(timer);
   }, [base, q, rows.length]);
 
-  const setSectorFilter = (value: string) => {
-    setSec(value);
-    trackUserAction("Explorer Filter Changed", { filter: "sector", value });
+  const trackMultiFilter = (filter: "sector" | "underwriter", next: string[]) => {
+    trackUserAction("Explorer Filter Changed", {
+      filter,
+      value: next.length === 0 ? "all" : next.join(","),
+      count: next.length,
+      cleared: next.length === 0,
+    });
   };
 
-  const setUnderwriterFilter = (value: string) => {
-    setUw(value);
-    trackUserAction("Explorer Filter Changed", { filter: "underwriter", value });
+  const setSectorFilter = (next: string[]) => {
+    setSecs(next);
+    trackMultiFilter("sector", next);
+  };
+
+  const setUnderwriterFilter = (next: string[]) => {
+    setUws(next);
+    trackMultiFilter("underwriter", next);
   };
 
   const setGroupFilter = (value: GroupBy) => {
@@ -270,24 +286,24 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
               placeholder="Search ticker or company"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              className="w-60"
+              className="w-full sm:w-60"
             />
-            <select value={sec} onChange={(e) => setSectorFilter(e.target.value)} className={selectCls}>
-              <option value="all">All sectors</option>
-              {sectors.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <select value={uw} onChange={(e) => setUnderwriterFilter(e.target.value)} className={`${selectCls} max-w-[230px]`} title="Filter by underwriter (lead or syndicate member)">
-              <option value="all">All underwriters</option>
-              {underwriters.map((u) => (
-                <option key={u.code} value={u.code}>
-                  {u.code} · {u.name}
-                </option>
-              ))}
-            </select>
+            <MultiSelect
+              options={sectorOptions}
+              value={secs}
+              onChange={setSectorFilter}
+              placeholder="All sectors"
+              noun="sector"
+              searchPlaceholder="Search sectors"
+            />
+            <MultiSelect
+              options={underwriterOptions}
+              value={uws}
+              onChange={setUnderwriterFilter}
+              placeholder="All underwriters"
+              noun="underwriter"
+              searchPlaceholder="Search code or name"
+            />
             <select value={groupBy} onChange={(e) => setGroupFilter(e.target.value as GroupBy)} className={selectCls}>
               <option value="none">No grouping</option>
               <option value="lead">Group by lead underwriter</option>
@@ -301,7 +317,7 @@ export default function Explorer({ ipos }: { ipos: IPO[] }) {
             </label>
             <span className="tabnum ml-auto text-[15px] text-muted-foreground">
               {rows.length} deals
-              {uw !== "all" && medD1 !== null && (
+              {uws.length > 0 && medD1 !== null && (
                 <>
                   {" · median D1 "}
                   <span className={signClass(medD1)}>{pct(medD1)}</span>
