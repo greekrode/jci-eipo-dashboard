@@ -62,7 +62,9 @@ bun run preview   # serve the production build
   cross-checks this split against the workbook's own `Choppy Market` / `Perform Market` tabs (assert ISC-4).
 - Underwriter names that the source can't resolve (member-only and foreign joint-venture codes such as
   C3 CIMB Niaga, C4 Citigroup, D4 Deutsche, S0 Morgan Stanley, Y0 BNP Paribas) are filled in
-  `NAME_OVERRIDES` in `src/lib/compute.ts`.
+  `NAME_OVERRIDES` in `src/lib/compute.ts`. Broker **renames** (same code, new name — e.g. AD: OSO Sekuritas →
+  Sukadana Prima Sekuritas, Feb 2026) go in `CODE_RENAMES` in `scripts/build-data.ts`, so historical deals
+  pool under the current name across every view.
 
 Source: [e-ipo.co.id](https://e-ipo.co.id).
 

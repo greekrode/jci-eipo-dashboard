@@ -187,6 +187,12 @@ for (const r of rows) {
     codeName[code.trim()] = rest.join(" - ").trim();
   }
 }
+// Broker renames: the exchange code is stable, the name changes. Apply the current name so
+// historical deals (e.g. OBAT, led as OSO) pool under the same house as new ones.
+const CODE_RENAMES: Record<string, string> = {
+  AD: "SUKADANA PRIMA SEKURITAS (EX-OSO)", // PT OSO Sekuritas Indonesia → PT Sukadana Prima Sekuritas, Feb 2026
+};
+Object.assign(codeName, CODE_RENAMES);
 
 const ipos = rows.map((r) => {
   const get = (k: (typeof COLS)[number]) => r[COLS.indexOf(k)] ?? null;

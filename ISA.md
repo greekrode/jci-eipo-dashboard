@@ -9,7 +9,7 @@ progress: 55/56
 mode: interactive
 iteration: 5
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T16:55:00Z
+updated: 2026-08-26T17:10:00Z
 ---
 
 ## Problem
@@ -175,3 +175,4 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-47: Bash — `git diff --stat` before commit: README.md, src/App.tsx, src/views/Upcoming.tsx only; `bun run build` ✓ built; matrix columns = SWAP only.
 - ISC-50..55: Interceptor (localhost:4173, SWAP detail) — switcher shows "UPCOMING" then "LISTED" groups; verdict renders "Rich." lead, bullet lines, and a "Bottom line:" paragraph; flag groups HIGH / MED-HIGH / MED / LOW-MED and MODERATE / MINOR with item counts; ownership summary + facts grid + collapsed "Under review · 4 items"; "Questions before you subscribe" with "Primary risk." / "Tailwind." lead-ins and a numbered list; `document.querySelectorAll("strong").length` = 91; no line starts with "?".
 - ISC-56: Bash — `rg "text-muted-foreground/60" src/views/upcoming/Detail.tsx` → only borders/bar backgrounds; Opus SSR-rendered all 7 deals without throws; production check after push.
+- 2026-08-26T17:10Z — Iteration 6 (E2): Rod: "Sukadana is actually AD (previously OSO). We need to combine them." Fixed at ingestion: `CODE_RENAMES` in build-data.ts maps AD → "SUKADANA PRIMA SEKURITAS (EX-OSO)", so brokers.json, every row leadName (OBAT 2025) and all views agree; research firm entry tagged brokerCode AD + formerly OSO. Chosen over a compute.ts NAME_OVERRIDES entry because that would have left ipos.json leadName saying OSO in the Explorer lead column.
