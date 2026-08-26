@@ -50,7 +50,7 @@ bun run preview   # serve the production build
 `IPO History` (whichever the workbook exposes).
 
 - **`scripts/listed-overrides.json`** — committed overlay of listed outcomes for deals missing from the spreadsheet export, upserted by ticker.
-- **`scripts/jci-trend.json`** — committed JCI close + MA200 series used for regime classification when the workbook has no "JCI Trend" sheet.
+- **`scripts/jci-trend.json`** — committed JCI close + MA200 series used for regime classification when the workbook has no "JCI Trend" sheet. Refresh it from the alpha-flow Postgres with `bun run data:jci` (needs `ARTHARA_DATABASE_URL` in a gitignored `.env`; read-only is enough), then `bun run data`.
 - **Final price** is the final IPO offer price (post book-building).
 - **D1–D7** are *daily* returns; the per-IPO cumulative series is compounded from them.
 - **Median** is the headline statistic (returns are right-skewed); sample size `n` is shown on every cut.
