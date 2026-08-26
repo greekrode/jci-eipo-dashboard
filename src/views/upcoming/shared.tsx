@@ -1,6 +1,28 @@
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
-import type { RedFlag } from "@/lib/upcoming-types";
+import type { RedFlag, UpcomingIPO } from "@/lib/upcoming-types";
+import { trackUserAction } from "@/lib/analytics";
+
+/** Ticker links are real anchors (`/upcoming/:TICKER`); this only records the click and scrolls up. */
+export function openDeal(ipo: UpcomingIPO, source: string) {
+  trackUserAction("Upcoming Stock Opened", {
+    ticker: ipo.ticker,
+    source,
+    sector: ipo.sectorGroup,
+    score: ipo.score?.overall ?? null,
+  });
+  scrollTop();
+}
+
+/** Back to the comparison matrix (`/upcoming`). */
+export function openCompare(source: string) {
+  trackUserAction("Upcoming Compare Opened", { source });
+  scrollTop();
+}
+
+function scrollTop() {
+  if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

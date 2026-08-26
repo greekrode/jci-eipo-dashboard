@@ -40,9 +40,40 @@ bun install
 bun run data           # regenerate src/data/ipos.json + brokers.json from "e-IPO Data.xlsx"
 bun run data:upcoming  # regenerate src/data/upcoming-ipos.json from _sources/upcoming/ (gitignored)
 bun run dev            # dev server (http://localhost:5173)
-bun run build     # typecheck + production build -> dist/
+bun run build          # typecheck + client build + SSR build + prerender -> dist/
+bun run prerender      # re-run just the prerender step over an existing dist/
 bun run preview   # serve the production build
 ```
+
+> `bun run preview` (vite's static server) only resolves a nested page with a trailing slash —
+> `/upcoming/SWAP/`. On Vercel `cleanUrls` serves the same file at `/upcoming/SWAP`.
+
+## Routes & SEO
+
+Every view has its own URL, and every URL is a real prerendered HTML page:
+
+| Route | Page |
+|-------|------|
+| `/` | Overview |
+| `/choppy-market` | Choppy Market |
+| `/underwriters` | Underwriters |
+| `/sectors-time` | Sectors & Time |
+| `/explorer` | Explorer |
+| `/upcoming` | Upcoming — comparison matrix + listed table |
+| `/upcoming/:TICKER` | One deal's forensic (upcoming or listed, e.g. `/upcoming/SWAP`) |
+
+Routing is hand-rolled in `src/lib/router.tsx` (pushState + popstate; tab triggers and ticker
+cells are real `<a href>`, so crawlers, middle-click and open-in-new-tab all work). Legacy hash
+URLs (`/#explorer`) rewrite themselves to the path equivalent on load. `src/lib/seo.ts` owns the
+route table and a pure `headFor(path, deals)` — used both by `useHead()` in the browser and by
+`scripts/prerender.ts` at build time, so every route ships its own `<title>`, description,
+canonical and OG tags in the served HTML, plus a generated `dist/sitemap.xml` listing all of
+them. Unknown paths fall back to the SPA via `vercel.json` (unknown tickers land on `/upcoming`).
+
+**Adding a route:** add an entry to `TAB_ROUTES` in `src/lib/seo.ts` (id, path, label, title,
+description) and a `<TabsContent value={id}>` in `src/App.tsx`. Deal pages need nothing — they
+are derived from `src/data/upcoming-ipos.json`, so a new deal is prerendered and added to the
+sitemap on the next build.
 
 ## Data
 
@@ -116,15 +147,19 @@ will stay frozen at the overlay's `asOf` date.
 
 ```
 scripts/build-data.ts        data pipeline (xlsx -> json)
+scripts/prerender.ts         static prerender (one HTML file per route) + sitemap.xml
 scripts/build-upcoming.ts    upcoming-IPO normalizer (_sources/upcoming + supplement + forensic -> json)
 scripts/upcoming-supplement.json   prospectus-PDF-derived business models + BACH cap tables (committed)
 scripts/forensic/<TICKER>.md curated forensic writeups, one per deal (committed)
 src/
   data/                      generated ipos.json + brokers.json + upcoming-ipos.json
   lib/                       types, upcoming-types, stats, formatters, colors, aggregation (compute.ts)
+  lib/router.tsx             pushState router (useRoute, navigate, Link)
+  lib/seo.ts                 route table + headFor() + useHead()
+  entry-server.tsx           SSR entry, build-time only (consumed by scripts/prerender.ts)
   components/ui/             shadcn-style primitives (card, table, tabs, badge, input, tooltip)
   components/                charts.tsx, stat-strip.tsx
   views/                     Overview, Underwriters, SectorsTime, Explorer, Upcoming
   views/upcoming/            Detail.tsx (business-model, ownership, financials… cards + forensic), shared.tsx
-  App.tsx                    shell + tabs
+  App.tsx                    shell + route-driven tabs
 ```

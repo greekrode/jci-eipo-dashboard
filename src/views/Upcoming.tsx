@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import type { IPO } from "@/lib/types";
 import type { UpcomingIPO } from "@/lib/upcoming-types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { idr, idrBn, idrPrice, pct, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
 import { sectorColor } from "@/lib/colors";
-import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip, gradeVariant, uwGradeVariant } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, severityCount, strengthCount, Disclaimer, exposureMeta, distinctTags, TagChip, gradeVariant, uwGradeVariant, openDeal } from "@/views/upcoming/shared";
 import Detail from "@/views/upcoming/Detail";
-import { trackUserAction } from "@/lib/analytics";
+import { Link, useRoute } from "@/lib/router";
+import { dealPath, resolveRoute } from "@/lib/seo";
 
 /** A metric row in the transposed comparison matrix. `dir` marks which extreme to highlight. */
 interface Metric {
@@ -255,22 +256,8 @@ const METRICS: Metric[] = [
 const GROUPS = [...new Set(METRICS.map((m) => m.group))];
 
 export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census: IPO[] }) {
-  const [selected, setSelected] = useState<string | null>(null);
-  const select = (t: string | null, source: string) => {
-    setSelected(t);
-    if (t) {
-      const ipo = ipos.find((i) => i.ticker === t);
-      trackUserAction("Upcoming Stock Opened", {
-        ticker: t,
-        source,
-        sector: ipo?.sectorGroup,
-        score: ipo?.score?.overall ?? null,
-      });
-    } else {
-      trackUserAction("Upcoming Compare Opened", { source });
-    }
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Which deal (if any) is open comes from the URL: /upcoming/:TICKER.
+  const selected = resolveRoute(useRoute(), ipos).ticker;
 
   const { upcoming, listed, listedByTicker } = useMemo(() => {
     const listedByTicker = new Map(census.filter((c) => c.listed).map((c) => [c.ticker, c]));
@@ -303,7 +290,7 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
 
   if (selected) {
     const ipo = ipos.find((i) => i.ticker === selected);
-    if (ipo) return <Detail ipo={ipo} all={ipos} listedTickers={new Set(listed.map((i) => i.ticker))} onBack={() => select(null, "detail_back")} onSelect={(ticker) => select(ticker, "detail_switcher")} />;
+    if (ipo) return <Detail ipo={ipo} all={ipos} listedTickers={new Set(listed.map((i) => i.ticker))} />;
   }
 
   return (
@@ -326,24 +313,19 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
                 <TableRow>
                   <TableHead className="sticky left-0 top-0 z-20 min-w-[150px] border-r border-border bg-card text-left">Metric</TableHead>
                   {upcoming.map((i) => (
-                    <TableHead
-                      key={i.ticker}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Open ${i.ticker} detail`}
-                      onClick={() => select(i.ticker, "comparison_table")}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "comparison_table_keyboard"); }
-                      }}
-                      className="cursor-pointer text-center align-bottom hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-                    >
-                      <div className="flex flex-col items-center gap-0.5 py-1">
+                    <TableHead key={i.ticker} className="p-0 text-center align-bottom hover:bg-muted/40">
+                      <Link
+                        href={dealPath(i.ticker)}
+                        aria-label={`Open ${i.ticker} detail`}
+                        onClick={() => openDeal(i, "comparison_table")}
+                        className="flex flex-col items-center gap-0.5 px-3 py-1.5 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+                      >
                         <span className="text-[18px] font-semibold text-foreground">{i.ticker}</span>
                         <span className="line-clamp-2 max-w-[160px] text-[13px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">
                           {i.legalName}
                         </span>
                         <span className="mt-0.5 text-[12px] font-normal normal-case tracking-normal text-primary">view ▸</span>
-                      </div>
+                      </Link>
                     </TableHead>
                   ))}
                 </TableRow>
@@ -387,17 +369,15 @@ export default function Upcoming({ ipos, census }: { ipos: UpcomingIPO[]; census
                     const s = i.score;
                     return (
                       <TableRow key={i.ticker}>
-                        <TableCell
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Open ${i.ticker} detail`}
-                          onClick={() => select(i.ticker, "listed_table")}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i.ticker, "listed_table"); }
-                          }}
-                          className="cursor-pointer font-medium text-foreground hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
-                        >
-                          {i.ticker}
+                        <TableCell className="p-0 font-medium text-foreground">
+                          <Link
+                            href={dealPath(i.ticker)}
+                            aria-label={`Open ${i.ticker} detail`}
+                            onClick={() => openDeal(i, "listed_table")}
+                            className="block px-3 py-2.5 text-left hover:bg-muted/40 focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
+                          >
+                            {i.ticker}
+                          </Link>
                         </TableCell>
                         <TableCell className="max-w-[220px] text-left">
                           <span className="line-clamp-2 text-[13px] font-normal leading-tight normal-case tracking-normal text-muted-foreground">

@@ -10,8 +10,10 @@ import { StatStrip } from "@/components/stat-strip";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { sectorColor } from "@/lib/colors";
 import { idr, idrBn, idrPrice, pctN, pctNSigned, intFmt, signClass } from "@/lib/format";
-import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort, Emph } from "@/views/upcoming/shared";
+import { fmtDate, priceRange, lockBadge, sevVariant, strengthVariant, proceedsTone, Disclaimer, TagChip, orderTags, exposureMeta, gradeVariant, scoreTone, uwGradeVariant, firmShort, Emph, openDeal, openCompare } from "@/views/upcoming/shared";
 import { trackUserAction } from "@/lib/analytics";
+import { Link } from "@/lib/router";
+import { dealPath } from "@/lib/seo";
 
 const fx = (x: number | null, d = 1) => (x == null ? "—" : x.toFixed(d));
 const normKey = (s: string) => s.toLowerCase().replace(/\(.*?\)/g, "").replace(/[^a-z0-9]/g, "").slice(0, 18);
@@ -47,18 +49,19 @@ const VERDICT_MD: Components = {
 const DetailTickerContext = createContext<string | null>(null);
 
 export default function Detail({
-  ipo, all, onBack, onSelect, listedTickers,
-}: { ipo: UpcomingIPO; all: UpcomingIPO[]; onBack: () => void; onSelect: (t: string) => void; listedTickers?: Set<string> }) {
+  ipo, all, listedTickers,
+}: { ipo: UpcomingIPO; all: UpcomingIPO[]; listedTickers?: Set<string> }) {
   const f = ipo.financials;
   // Two switcher groups: live deals first, already-listed forensics behind a divider.
   const isListed = (t: string) => listedTickers?.has(t) ?? false;
   const liveDeals = all.filter((o) => !isListed(o.ticker));
   const doneDeals = all.filter((o) => isListed(o.ticker));
   const chip = (o: UpcomingIPO, muted: boolean) => (
-    <button
+    <Link
       key={o.ticker}
-      onClick={() => onSelect(o.ticker)}
-      aria-current={o.ticker === ipo.ticker ? "true" : undefined}
+      href={dealPath(o.ticker)}
+      onClick={() => openDeal(o, "detail_switcher")}
+      aria-current={o.ticker === ipo.ticker ? "page" : undefined}
       className={`rounded-[2px] border px-2 py-1 font-mono text-[14.5px] font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary ${
         o.ticker === ipo.ticker
           ? "border-primary/50 bg-primary/15 text-primary"
@@ -68,7 +71,7 @@ export default function Detail({
       }`}
     >
       {o.ticker}
-    </button>
+    </Link>
   );
   const kpis = [
     { label: "Offer price", value: priceRange(ipo.offering.priceLow, ipo.offering.priceHigh), sub: `par ${idrPrice(ipo.offering.par)}` },
@@ -85,12 +88,13 @@ export default function Detail({
       <div key={ipo.ticker} className="anim-fade space-y-4">
         {/* nav — sticky so the ticker switcher / back stay reachable on long pages */}
         <div className="sticky top-0 z-20 -mx-3 flex flex-wrap items-center gap-2 border-b border-transparent bg-background/90 px-3 py-2 backdrop-blur sm:-mx-6 sm:px-6">
-          <button
-            onClick={onBack}
+          <Link
+            href="/upcoming"
+            onClick={() => openCompare("detail_back")}
             className="rounded-[2px] border border-border bg-secondary px-2.5 py-1 font-mono text-[14.5px] uppercase tracking-wider text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           >
             ← Compare
-          </button>
+          </Link>
           <div className="ml-1 flex flex-wrap items-center gap-1.5">
             {liveDeals.length > 0 && (
               <>

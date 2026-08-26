@@ -7,7 +7,8 @@
     "data": "bun run scripts/build-data.ts",
     "data:upcoming": "bun run scripts/build-upcoming.ts",
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist/server && bun run scripts/prerender.ts",
+    "prerender": "bun run scripts/prerender.ts",
     "preview": "vite preview --port 4173"
   },
   "dependencies": {

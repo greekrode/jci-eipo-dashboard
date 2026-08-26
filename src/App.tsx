@@ -13,14 +13,15 @@ import SectorsTime from "./views/SectorsTime";
 import Explorer from "./views/Explorer";
 import Upcoming from "./views/Upcoming";
 import { trackEvent, trackUserAction } from "./lib/analytics";
+import { Link, RouteProvider, navigate, useRoute } from "./lib/router";
+import { TAB_ROUTES, headFor, pathForTab, resolveRoute, useHead } from "./lib/seo";
 
 const ipos = iposData as unknown as IPO[];
 const listedCount = ipos.filter((i) => i.listed).length; // header badge was hardcoded 246/237/9; derive from data
 const upcoming = upcomingData as unknown as UpcomingIPO[];
-const TAB_IDS = ["overview", "choppy", "underwriters", "sectors", "explorer", "upcoming"];
 
 // Owner brand mark (Klinik Penyesalan). Lives in public/, BASE_URL keeps it
-// correct under the relative ("./") build base.
+// correct under the build base.
 const logoSrc = `${import.meta.env.BASE_URL}logo.png`;
 const DISCORD_URL = "https://discord.gg/kpkp88";
 
@@ -32,20 +33,29 @@ function DiscordIcon({ className }: { className?: string }) {
   );
 }
 
-function initialTab(): string {
-  const h = typeof window !== "undefined" ? window.location.hash.replace("#", "") : "";
-  return TAB_IDS.includes(h) ? h : "overview";
+/** `initialPath` seeds the router on the server; the browser reads window.location itself. */
+export default function App({ initialPath }: { initialPath?: string }) {
+  return (
+    <RouteProvider initialPath={initialPath}>
+      <Shell />
+    </RouteProvider>
+  );
 }
 
-export default function App() {
+function Shell() {
   const appOpenedTracked = useRef(false);
-  const [tab, setTab] = useState<string>(initialTab);
+  const path = useRoute();
+  const route = resolveRoute(path, upcoming);
+  const tab = route.tab;
+  useHead(headFor(path, upcoming));
+
+  // Radix fires this for keyboard tab activation too, so navigation lives here as well as on
+  // the anchors. `navigate` no-ops when the click already moved us, so the stack stays clean.
   const onTab = (v: string) => {
     if (v !== tab) {
       trackUserAction("Tab Selected", { tab: v, previousTab: tab });
     }
-    setTab(v);
-    if (typeof window !== "undefined") window.history.replaceState(null, "", `#${v}`);
+    navigate(pathForTab(v));
   };
 
   // Theme: default light (:root); .dark class on <html> toggles the concrete-dark variant.
@@ -121,12 +131,13 @@ export default function App() {
 
       <Tabs value={tab} onValueChange={onTab} className="mt-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="choppy">Choppy Market</TabsTrigger>
-          <TabsTrigger value="underwriters">Underwriters</TabsTrigger>
-          <TabsTrigger value="sectors">Sectors &amp; Time</TabsTrigger>
-          <TabsTrigger value="explorer">Explorer</TabsTrigger>
-          <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
+          {TAB_ROUTES.map((t) => (
+            // Real anchors: crawlers see six linked pages, users keep middle-click / open-in-new-tab.
+            <TabsTrigger key={t.id} value={t.id} asChild>
+              {/* type={undefined} drops the button primitive's type="button", meaningless on an <a>. */}
+              <Link href={t.path} type={undefined}>{t.label}</Link>
+            </TabsTrigger>
+          ))}
         </TabsList>
         <TabsContent value="overview"><Overview ipos={ipos} /></TabsContent>
         <TabsContent value="choppy"><ChoppyMarket ipos={ipos} /></TabsContent>

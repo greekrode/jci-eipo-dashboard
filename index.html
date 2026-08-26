@@ -3,18 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="IDX e-IPO analytics — 2021–2026 IPO performance, underwriter track records, and upcoming-deal AI scoring. By Klinik Penyesalan." />
-    <link rel="canonical" href="https://ipo.klinikpenyesalan.com/" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
-    <title>IDX e-IPO Analytics | Klinik Penyesalan</title>
+    <meta property="og:site_name" content="IDX e-IPO Analytics" />
+    <meta property="og:image" content="https://ipo.klinikpenyesalan.com/logo.png" />
+    <!-- Per-route title / description / canonical / OG, injected by scripts/prerender.ts.
+         In dev the placeholder stays a comment and src/lib/seo.ts sets the head on mount. -->
+    <!--app-head-->
     <script>
       // Apply saved theme before paint (default light → no class). Avoids a flash for dark users.
       try { if (localStorage.theme === "dark") document.documentElement.classList.add("dark"); } catch (e) {}
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

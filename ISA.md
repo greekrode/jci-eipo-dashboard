@@ -4,12 +4,12 @@ slug: 20260826-201500_ipo-dashboard-swap-and-listed-migration
 project: ipo-dashboard
 effort: advanced
 effort_source: classifier
-phase: complete
-progress: 55/56
+phase: execute
+progress: 63/65
 mode: interactive
-iteration: 5
+iteration: 7
 started: 2026-08-26T13:15:00Z
-updated: 2026-08-26T17:10:00Z
+updated: 2026-08-26T17:50:00Z
 ---
 
 ## Problem
@@ -91,6 +91,15 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - [x] ISC-54: Detail switcher shows SWAP under "UPCOMING" and the six under "LISTED" (muted), all still clickable.
 - [x] ISC-55: Rp amounts, percentages and multiples render bold inside flags/questions (Interceptor tree shows `strong` nodes; grep dist for the Emph helper).
 - [x] ISC-56: Anti: `rg "text-muted-foreground/60" src/views/upcoming/Detail.tsx` matches only decorative (non-text) uses; production shows the new detail after push.
+- [x] ISC-57: Path routes exist for every tab (`/`, `/choppy-market`, `/underwriters`, `/sectors-time`, `/explorer`, `/upcoming`) and for every deal (`/upcoming/:TICKER`); tab triggers and deal tickers are real `<a href>` anchors; `/#upcoming` redirects to `/upcoming`.
+- [x] ISC-58: `bun run build` prerenders one static HTML per route: `dist/upcoming/SWAP/index.html`, `dist/explorer/index.html` … exist and contain real content (e.g. "Questions before you subscribe" in the SWAP file).
+- [x] ISC-59: Each prerendered file carries its own `<title>`, `meta description`, canonical and OG tags; `/`, `/explorer`, `/upcoming/SWAP` titles differ; RANS canonical = https://ipo.klinikpenyesalan.com/upcoming/RANS.
+- [x] ISC-60: `dist/sitemap.xml` is generated with 13 URLs (6 tabs + 7 deals); `public/sitemap.xml` removed; robots.txt still points at /sitemap.xml.
+- [x] ISC-61: Client hydrates (no blank page, no duplicate render): Interceptor on preview shows the SWAP detail at `/upcoming/SWAP` with the tab bar working and browser back returning to `/upcoming`.
+- [x] ISC-62: `document.title` and canonical update on client-side navigation (Interceptor eval after clicking Explorer tab).
+- [x] ISC-63: `vercel.json` fallback rewrite serves the SPA for unknown paths while prerendered files win; `vite base` is `/`.
+- [x] ISC-64: Anti: no new runtime dependency in package.json; analytics events still fire on navigation (grep trackUserAction in router/App).
+- [ ] ISC-65: Production: `curl -s https://ipo.klinikpenyesalan.com/upcoming/SWAP` returns the SWAP title without JS; sitemap served with 13 URLs.
 - [x] ISC-43: `scripts/jci-trend.sql` (run via the MCP) emits the finished `jci-trend.json` text; saving today's MCP output reproduces the committed rows byte-identical (1356 points, asOf 2026-08-26) and `bun run data` regime counts are unchanged (95/148). *(refined 2026-08-26T15:15Z: the converter script and `data:jci` were removed — the SQL builds the JSON itself, so there is nothing to convert)*
 - [x] ISC-40: `bun run data:jci` without the env var exits 1 with an instruction; with an unreachable DSN it fails loudly.
 - [x] ISC-41: `.env`/`.env.*` are gitignored and README documents the refresh path.
@@ -144,6 +153,8 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - 2026-08-26T15:00Z — Iteration 3 (E2): Rod: "why do you need the arthara database url? you can use the mcp… I'm not opening my db connection anymore." Dropped ISC-39 and deleted `pull-jci.ts`. Refresh path is now MCP-only: `scripts/jci-trend.sql` run via `arthara-db` in-session → `series` string → `bun run data:jci <file>` → committed JSON. Verified the converter round-trips today's pull exactly. Feedback saved to memory.
 - 2026-08-26T15:30Z — Iteration 4 (E3): Rod: "why BACH,jecx,jeli,emmi,prdl,rans are still on the upcoming part? you don't update the data?" My Out-of-Scope call (keep listed deals in Upcoming) was wrong for him — Upcoming means upcoming. Fix: the view partitions deals by presence in the census as `listed`; matrix shows only SWAP, and a "Listed · how the calls played out" table shows AI Score vs realized D1 / D7 / since-listing for the six, with detail pages (forensics) still reachable. Delegated to Forge (E3 coding rule); ISC-44..47 added.
 - 2026-08-26T16:20Z — Iteration 5 (E3), Rod's readability review of the detail page. Decisions: (1) "Context & open questions" stays but changes purpose: it was 34 analyst diligence notes (draft-prospectus typos, reconciliation gaps) that an end user cannot act on; it becomes "Questions before you subscribe" with 9 investor-facing questions for SWAP, and the full list lives in the source JSON as `open_questions_full`. Other deals' lists (6–9 items, analyst-written) are left as-is. (2) Type scale ×1.2 by class rewrite rather than CSS `zoom`, so layout math stays real px. (3) Verdict stays a string field but may carry Markdown; `ReactMarkdown` renders both styles so the six older verdicts need no rewrite. (4) Emphasis is a deterministic tokenizer (Rp amounts, %, multiples, colon lead-ins) rather than hand-bolding every string. (5) ~~Forge implements the component work (E3 coding rule)~~ — Rod: "why is forge working on them? i want you to use opus"; Forge stopped before it edited anything, an Opus agent (general-purpose, model opus) runs the same spec. Saved as feedback memory: Opus, not Forge, for ipo-dashboard UI. I did the type scale, colors and content.
+- 2026-08-26T17:10Z — Iteration 6 (E2): Rod: "Sukadana is actually AD (previously OSO). We need to combine them." Fixed at ingestion: `CODE_RENAMES` in build-data.ts maps AD → "SUKADANA PRIMA SEKURITAS (EX-OSO)", so brokers.json, every row leadName (OBAT 2025) and all views agree; research firm entry tagged brokerCode AD + formerly OSO. Chosen over a compute.ts NAME_OVERRIDES entry because that would have left ipos.json leadName saying OSO in the Explorer lead column.
+- 2026-08-26T17:20Z — Iteration 7 (E3): Rod: "make the page more SEO and navigation friendly … detail should be a new page with its own title and meta, same when switching tabs." Design: hand-rolled path router (no react-router — flat route table, ~60 lines), tabs/tickers as anchors, `headFor(path)` shared by client and prerender, Vite SSR build + `scripts/prerender.ts` writing one HTML per route + generated sitemap, `vercel.json` fallback rewrite, `base` "/" (relative base breaks nested routes). Opus implements (Rod: Opus, not Forge).
 
 ## Changelog
 
@@ -175,4 +186,6 @@ SWAP is a fully-analysed seventh deal in Upcoming (JSON + MD + supplement + fore
 - ISC-47: Bash — `git diff --stat` before commit: README.md, src/App.tsx, src/views/Upcoming.tsx only; `bun run build` ✓ built; matrix columns = SWAP only.
 - ISC-50..55: Interceptor (localhost:4173, SWAP detail) — switcher shows "UPCOMING" then "LISTED" groups; verdict renders "Rich." lead, bullet lines, and a "Bottom line:" paragraph; flag groups HIGH / MED-HIGH / MED / LOW-MED and MODERATE / MINOR with item counts; ownership summary + facts grid + collapsed "Under review · 4 items"; "Questions before you subscribe" with "Primary risk." / "Tailwind." lead-ins and a numbered list; `document.querySelectorAll("strong").length` = 91; no line starts with "?".
 - ISC-56: Bash — `rg "text-muted-foreground/60" src/views/upcoming/Detail.tsx` → only borders/bar backgrounds; Opus SSR-rendered all 7 deals without throws; production check after push.
-- 2026-08-26T17:10Z — Iteration 6 (E2): Rod: "Sukadana is actually AD (previously OSO). We need to combine them." Fixed at ingestion: `CODE_RENAMES` in build-data.ts maps AD → "SUKADANA PRIMA SEKURITAS (EX-OSO)", so brokers.json, every row leadName (OBAT 2025) and all views agree; research firm entry tagged brokerCode AD + formerly OSO. Chosen over a compute.ts NAME_OVERRIDES entry because that would have left ipos.json leadName saying OSO in the Explorer lead column.
+- ISC-57..60: Bash — `bun run build` → "prerendered 13 routes → dist/ · sitemap.xml (13 urls)"; dist/index.html, dist/explorer/index.html, dist/upcoming/SWAP/index.html carry three different <title>s; RANS canonical = https://ipo.klinikpenyesalan.com/upcoming/RANS; og:title present; "Questions before you subscribe" prerendered in the SWAP file; public/sitemap.xml removed; tabs render as `<Link href=…>` anchors (App.tsx:138).
+- ISC-61/62: Interceptor on `vite preview :4181` — /upcoming/SWAP/ loads prerendered content and hydrates (#root has 1 child, verdict text present), `document.title` = "SWAP IPO — PT Swayasa Prakarsa Tbk · AI Score 53/D | …"; clicking the Explorer tab → title "Explorer — every IDX IPO 2021–2026 | …", pathname /explorer, canonical …/explorer, no reload. Opus additionally verified zero console errors on hydration and back/forward history.
+- ISC-63/64: Bash — vite base "/" (vite.config.ts:8); vercel.json has cleanUrls + fallback rewrite + buildCommand "bun run build" (Vercel’s Vite preset would otherwise skip the prerender); package.json diff shows no dependency changes; trackUserAction still referenced in App.tsx (7×).
