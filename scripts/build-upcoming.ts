@@ -16,7 +16,7 @@ const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
 const RESEARCH = resolve(ROOT, "scripts", "shareholder-research.json"); // shareholder background research (committed)
 const UWR = resolve(ROOT, "scripts", "underwriter-research.json"); // underwriter IPO track-record research (committed)
-const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS", "SWAP"];
+const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS", "SWAP", "ANDA"];
 
 // Tags we surface in the public UI: verifiable ownership-structure facts only.
 const STRUCTURAL_TAGS = new Set(["conglomerate", "pep", "pep-family", "affiliated-listed", "foreign-strategic"]);
@@ -90,6 +90,7 @@ function sectorGroup(s: string): string {
   const t = s.toLowerCase();
   if (/health|hospital|medical|diagnostic|pharma|clinic|ivd|eye-care|eye care/.test(t)) return "Healthcare";
   if (/food|consumer|beverage|f&b|dessert|nata/.test(t)) return "Consumer Non-Cyclicals";
+  if (/coal|nickel|mining|overburden/.test(t)) return "Energy"; // IDX-IC: coal mining contractors sit under Energy
   return "Industrials"; // genset / telecom-infra / construction
 }
 
@@ -388,7 +389,7 @@ writeFileSync(resolve(OUT, "upcoming-ipos.json"), JSON.stringify(out, null, 0));
 const check = (cond: boolean, msg: string) => { if (!cond) throw new Error("ASSERT FAILED: " + msg); };
 const T = Object.fromEntries(out.map((o) => [o.ticker, o]));
 check(out.length === TICKERS.length, `all ${TICKERS.length} IPOs built`);
-check(out.every((o) => /^2026-(07|09)/.test(String(o.listingISO))), "all list in Jul or Sep 2026");
+check(out.every((o) => /^2026-\d{2}-\d{2}$/.test(String(o.listingISO))), "all have a 2026 listing date");
 check(out.every((o) => isNum(o.financials.revenue[2]) && o.financials.revenue[2]! > 0), "all have 2025 revenue > 0");
 check(out.every((o) => o.metrics.der[2] != null && o.metrics.der[2]! > 0 && o.metrics.der[2]! < 10), "all DER in (0,10)");
 // known-value cross-checks vs source (catch unit scaling errors)
@@ -436,10 +437,16 @@ check(out.every((o: any) => o.score.axes.find((a: any) => a.key === "fundamental
 // EMMI's profit carries an analyst-flagged one-off — earnings quality should sit below a clean baseline
 check(T.EMMI.score.axes.find((a: any) => a.key === "fundamentals").inputs.find((i: any) => /earnings quality/i.test(i.label)).score <= 70, "EMMI earnings quality discounted for one-off/non-op profit");
 for (const o of out as any[]) {
-  const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === 2025 && typeof r.pct === "number");
+  const yr = o.businessModel.revenueBreakdown[0]?.year; // one clean cut per deal (FY2025, or ANDA's 6M2026 customer mix)
+  const seg = o.businessModel.revenueBreakdown.filter((r: any) => r.year === yr && typeof r.pct === "number");
   const sum = seg.reduce((s: number, r: any) => s + r.pct, 0);
-  check(Math.abs(sum - 100) < 1.5, `${o.ticker} FY25 revenue mix sums ~100% (got ${sum.toFixed(1)})`);
+  check(Math.abs(sum - 100) < 1.5, `${o.ticker} ${yr} revenue mix sums ~100% (got ${sum.toFixed(1)})`);
 }
+// ANDA (in-house from the Prospektus Awal): units, lock-up, sector, warrants-era underwriter wiring
+check(Math.abs(T.ANDA.financials.revenue[2]! - 368.82) < 0.1 && Math.abs(T.ANDA.financials.netProfitParent[2]! - 5.142) < 0.01, `ANDA FY25 revenue ~368.82bn / net ~5.14bn (got ${T.ANDA.financials.revenue[2]} / ${T.ANDA.financials.netProfitParent[2]})`);
+check(T.ANDA.lockup.hard === false && T.ANDA.lockup.strength === "Control only", `ANDA has no statutory lock-up, control pledge only (got ${T.ANDA.lockup.strength})`);
+check(T.ANDA.sectorGroup === "Energy" && T.ANDA.offering.postShares === 6676000000 && T.ANDA.freeFloat === 25.1, "ANDA Energy, 6.676bn post-IPO shares, 25.1% float");
+check(T.ANDA.score.underwriter.leadGrade === "D" && T.ANDA.ownership.level === "family-controlled", "ANDA underwriter Henan (D) and family-controlled ownership wired");
 
 console.log(`Wrote ${out.length} upcoming IPOs -> src/data/upcoming-ipos.json`);
 for (const o of out) {

@@ -710,5 +710,148 @@
         "severity": "Low-Med"
       }
     ]
+  },
+  "ANDA": {
+    "controllerLines": [
+      "Ny. Billy Theristine Lim (Komisaris Utama) is the designated sole controller and beneficial owner: 22.47% direct post-IPO, ~33.1% effective with her 49% of PT Bumi Artha Caraka and 40% of PT Tambang Lancar Indonesia",
+      "Ivan Victor, not designated a controller, owns 51% of PT Bumi Artha Caraka and 99% of PT Arkara Danatama Nusantara (18.72% each post-IPO, ~28.1% look-through); the two partners keep ~61% together",
+      "PT Bhumi Caraka Persada 7.49% (70% commissioner Freddy Hartono, also CEO of customer PT Bukit Bara Alam) · Arief Ramon 3.75% (also a lender) · Public 25.10% (24.24% after Series I warrants) · CEO Gahari Christine is the controller's younger sibling"
+    ],
+    "lockupShort": "No POJK 25/2017 lock-up on any holder (74.90% of post-IPO shares free from day one) · controller's 12-month no-change-of-control pledge only",
+    "businessModel": {
+      "summary": "Coal mining contractor (overburden removal, coal getting, hauling) with a fleet of 33 excavators, 112 trucks and 41 support units, plus heavy-equipment rental; nickel ore-getting began in 2026 at PT Position (Halmahera Timur). For six years almost all revenue came from one mine owner, PT Budi Gema Gempita in Lahat; 2026 added Petrosea, Satria Bahana Sarana and five more sites. FY2025 revenue Rp368.8bn, down from Rp517.0bn in FY2023.",
+      "revenueBreakdown": [
+        {
+          "label": "PT Budi Gema Gempita (Lahat coal)",
+          "pct": 52.25,
+          "year": 2026,
+          "rpBn": 104.545
+        },
+        {
+          "label": "PT Petrosea Tbk (Murung Raya subcontract)",
+          "pct": 15.27,
+          "year": 2026,
+          "rpBn": 30.565
+        },
+        {
+          "label": "PT Satria Bahana Sarana (Tanjung Enim)",
+          "pct": 13.0,
+          "year": 2026,
+          "rpBn": 26.012
+        },
+        {
+          "label": "Other sites & rental (Position, IBP, BSB, affiliates)",
+          "pct": 19.48,
+          "year": 2026,
+          "rpBn": 38.994
+        }
+      ],
+      "breakdownBasis": "by customer (6M2026; BGG was 100% of revenue in FY2023-24 and 94% in FY2025)",
+      "model": "Fleet-based contract mining: the mine owner fixes scope, production targets and tariffs (per BCM of overburden, per tonne of coal or ore, per tonne-km of hauling, per hour for rentals) for multi-year terms; the contractor supplies equipment, operators and maintenance, and in the 2026 contracts the principal (Petrosea, SBS) supplies fuel. Margins depend on volume and fleet utilisation against a largely fixed cost base of depreciation and lease interest.",
+      "keyCustomersOrChannel": "PT Budi Gema Gempita 52% of 6M2026 revenue (100% in FY2023-24, 94% in FY2025); PT Petrosea Tbk 15%; PT Satria Bahana Sarana 13%; affiliates PT Arkara Prathama Energi and PT Bukit Bara Alam contracted from 2026",
+      "moatOrEdge": "Eight-year operating record at one site with a claimed zero-fatality record; IUJP licence to Dec 2027; contracts signed in 2026 run to 2029-2031, with IBP exclusive",
+      "sourcePages": "Prospectus PAGE 164-175 (business), 84-85 (segments), 108-109 & 126-127 (contracts), 129 (fleet), FS note 19 PAGE 312 (customers >10%)"
+    },
+    "redFlags": [
+      {
+        "text": "Single-customer history: PT Budi Gema Gempita (BGG) was 100% of revenue in FY2023 (Rp517.0bn) and FY2024 (Rp415.4bn) and 94% in FY2025 (Rp348.0bn); BGG revenue roughly halved y/y in 6M2026 (Rp212.6bn -> Rp104.5bn) and total revenue fell 29% from FY2023 to FY2025. The prospectus names dependence on its main customer as the primary risk (PAGE 1, 84, 92, 174, 312)",
+        "severity": "High"
+      },
+      {
+        "text": "BGG contract expiry is unclear: the agreement 'berlaku untuk jangka waktu 7 (tujuh) tahun terhitung sejak tanggal ditandatanganinya', which ends in Aug 2025 if counted from the 8 Aug 2018 signing or around Jan 2029 if counted from the 2022 addendum. No expiry date, renewal, termination right, rate basis or order book is given, and the stated value (Rp87.7bn) is a quarter of one year's BGG revenue (PAGE 64, 126)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Covenants breached at all four banks on 30 Jun 2026: Mandiri DSCR 0.86x vs 1.25x, Debt/EBITDA 2.69x vs 2.0x, DER 2.04x vs 2.0x; BCA DSC and current ratio 0.70x vs 1.0x; BRI DSCR vs 1.1x; BNI current ratio and DSC with no waiver, tested on 31 Dec 2026. Waivers are tied to the IPO and one (Mandiri, 7 Oct 2026) post-dates the balance sheet, which is what lets Rp212.7bn of debt sit as non-current (PAGE 25, 26, 57, 73, 74, 337)",
+        "severity": "High"
+      },
+      {
+        "text": "Thin liquidity: current ratio 0.70x, negative working capital of Rp100.2bn and Rp12.5bn of cash against Rp209.3bn of debt and lease payments due within 12 months; 45% of trade payables (Rp33.7bn) are more than 90 days overdue; DSCR was 0.54x in FY2025 (PAGE 24, 25, 45, 50, 70, 91)",
+        "severity": "High"
+      },
+      {
+        "text": "No lock-up on any pre-IPO holder: the prospectus states no shareholder is barred under POJK 25/2017, so all 5.0bn pre-IPO shares (74.90% post-IPO) can be sold from listing day. The Rp39.5bn injection at Rp10 a share was paid on 29-30 Jan 2026, about four weeks before the six-month look-back from the 26 Aug 2026 filing begins; the only undertaking is Billy Theristine Lim's 12-month no-change-of-control pledge (PAGE 38, 105-107, 209)",
+        "severity": "High"
+      },
+      {
+        "text": "Insiders entered at Rp10 a share, 15.8-18.9x below the IPO range: 90% of the Rp50bn paid-up capital arrived in the last two years at par (Sep 2024 Rp5.5bn; Jan 2026 Rp39.5bn, no share premium). PT Bumi Artha Caraka (incorporated Mar 2025) and PT Arkara Danatama Nusantara (Dec 2024) each paid Rp12.5bn with Rp2.5bn of their own capital; the source of the funds is not disclosed (PAGE 105, 106, 140-145, 238, 309)",
+        "severity": "High"
+      },
+      {
+        "text": "Earnings are thin and padded by one-offs: TTM net profit Rp13.65bn on Rp349.8bn revenue (3.9% margin). FY2025 net profit Rp5.14bn includes a Rp5.26bn insurance claim (pre-tax ex-claim ~Rp1.4bn); 6M2026 profit Rp11.77bn includes Rp5.17bn of compensation from affiliate PT Bukit Bara Alam for cancelling an equipment rental, about a third of pre-tax profit (PAGE 78, 79, 317, 318)",
+        "severity": "High"
+      },
+      {
+        "text": "Related-party web around the controllers: new customers PT Arkara Prathama Energi (ANDA's Komut and CEO hold posts there) and PT Bukit Bara Alam (an ANDA commissioner is its director; five-year contracts signed 9 Jul 2026) and equipment counterparty PT Andalan Bhumi Nusantara (common control). Counsel declines to opine on arm's length, and ESDM Kepmen 365/2026 now requires ministerial approval for new affiliate mining-service contracts (PAGE 108, 109, 139, 149, 214, 215, 316)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Control is understated on paper: Billy Theristine Lim is the designated sole controller with 22.47% direct post-IPO, while Ivan Victor owns 51% of PT Bumi Artha Caraka and 99% of PT Arkara Danatama Nusantara, which together hold 37.44% post-IPO; he is not described as a controller anywhere (PAGE 9, 139-145, 210)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Leverage: total liabilities 2.63x equity at Jun 2026 (2.91x FY2025), interest-bearing debt Rp482.2bn = 2.04x equity and ~3.0x TTM EBITDA; interest cover 1.17x in FY2025. Pro forma ~1.0x only if the full Rp280-306bn of new equity arrives (PAGE 24, 25, 45-63, 70)",
+        "severity": "Med-High"
+      },
+      {
+        "text": "Use-of-proceeds Rupiah amounts only hold at the Rp189 ceiling with every share sold: at Rp158 net proceeds fall to ~Rp253.8bn and the 35% debt tranche to ~Rp88.8bn. The stated working-capital need is Rp607bn against Rp198.7bn raised, with Series I warrant cash (exercise Rp695, 3.7-4.4x the offer price) named as the second funding source (PAGE 39-44)",
+        "severity": "Med"
+      },
+      {
+        "text": "Pre-IPO cash squeeze: equipment the company already owned was sale-and-leased-back to Radana Bhaskara Finance at 14-15% (Rp40.5bn Aug 2025, Rp25.0bn Mar 2026), plus a Rp15bn loan from PT Batu Energi Perdana (Jun 2026), a Rp13bn interest-free loan from an undescribed individual and Rp16bn from shareholder Arief Ramon; the IPO repays Radana but none of these (PAGE 39, 40, 51, 62, 63, 316)",
+        "severity": "Med"
+      },
+      {
+        "text": "Governance is eight months old: audit committee, internal audit and corporate secretary all formed 3 Mar 2026; no independent director; 2 of 5 commissioners independent; the CEO is the controller's younger sibling; the head of internal audit is concurrently GM Finance of the 'Arkara Group' around the controllers (PAGE 145-155; family-relationship table PAGE 150)",
+        "severity": "Med"
+      },
+      {
+        "text": "Auditor change and an unexplained emphasis of matter: FY2023-24 were audited by KAP Griselda, Wisnu dan Arum with an emphasis-of-matter paragraph whose text the prospectus never reproduces; BDO's firm was appointed on 2 Jul 2026 for FY2025 and 6M2026 (PAGE 23, 45, 183, 341, 343)",
+        "severity": "Med"
+      },
+      {
+        "text": "Licensing gaps at the new sites: PKKPR (spatial-use approval) still pending at three customer sites (IBP, DBK, APE) as of 19 Oct 2026 though work has started; the IUJP mining-services licence expires 8 Dec 2027 (PAGE 107, 211, 212)",
+        "severity": "Low-Med"
+      },
+      {
+        "text": "Heavy-equipment insurance cover fell from Rp521.6bn (Dec 2025) to Rp294.0bn (Jun 2026) while the fleet is fully pledged to banks and lessors (PAGE 60, 130)",
+        "severity": "Low-Med"
+      },
+      {
+        "text": "Unfinished, internally inconsistent draft: issuance costs, fee split, syndicate and pro-forma equity are blank; the warrant count appears as 239.4m, 485.7m and 558.7m; bookbuilding is described in the past tense in a prospectus dated the day it starts; founders' 2014 capital was never paid in and was ratified only in Mar 2026 (PAGE 1, 44, 98, 99, 176, 181, 310)",
+        "severity": "Low"
+      }
+    ],
+    "counterweights": [
+      {
+        "text": "Customer base is diversifying fast: BGG fell from 94% of revenue (FY2025) to 52% (6M2026) with PT Petrosea Tbk 15% and PT Satria Bahana Sarana (a PTBA subsidiary) 13%, both established counterparties, plus ~20% from new sites; mining-segment operating margin rose from 8.9% to 16.0% and group gross margin to 25.9% (PAGE 78-85, 312)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Multi-year contracts signed in 2026: Petrosea subcontract Rp991.7bn to Dec 2029, SBS Rp208.9bn to Dec 2029, exclusive IBP to 2030, PT Position nickel ore-getting (4 years), BBA to 2031 - visibility if they are executed (PAGE 64-68, 108, 109, 126, 127)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Operating cash flow positive every period presented: Rp151.9bn (FY2023), Rp60.9bn (FY2024), Rp116.1bn (FY2025), Rp26.4bn (6M2026); trade receivables Rp73.4bn with nothing over 90 days at Jun 2026 (PAGE 239, 273, 317)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "100% primary, and 35% of net proceeds retires 9.5-15% debt (Radana in full Rp65.0bn, Mandiri Rp42.0bn), cutting roughly Rp12-13bn of annual interest and taking total liabilities/equity from 2.63x to ~1.0x pro forma (PAGE 21, 39-41)",
+        "strength": "Strong"
+      },
+      {
+        "text": "Controller has cash in and is tied to the lenders: the Rp64bn interest-free shareholder loan was repaid in 6M2026, Rp39.5bn of new equity went in, Billy Theristine Lim personally guarantees the Mandiri loan and banks require her effective stake to stay above ~20.7% (PAGE 47, 66, 238, 316, 337)",
+        "strength": "Moderate"
+      },
+      {
+        "text": "Real asset base: 33 excavators, 112 trucks and 41 support units; PPE net Rp436.4bn plus right-of-use Rp165.8bn; BDO's key audit matter found no impairment indicator after physical inspection (PAGE 129, 278, 342)",
+        "strength": "Minor"
+      },
+      {
+        "text": "Clean legal opinion on litigation, tax and labour for the company and its board; 762 permanent employees; eight years without a fatality claimed (PAGE 161-166, 211)",
+        "strength": "Minor"
+      }
+    ],
+    "controllerPost": "Billy Theristine Lim — 22.47% direct, ~33.1% effective post-IPO (designated sole controller); partner Ivan Victor ~28.1% look-through via two holding companies"
   }
 }

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "asOf": "2026-08-26",
+    "asOf": "2026-11-05",
     "purpose": "Per-deal shareholder background research for the Upcoming-IPO section: flags conglomerate ties, PEP (Politically Exposed Person) status, listed-company affiliations and foreign-strategic holders.",
     "method": "Web research per named shareholder (Indonesian financial press, IDX/e-IPO disclosures, company sites, prospectus). Namesake-cautious: shared surnames (e.g. Widjaja, Hartono, Supra) are NOT treated as links without direct evidence. BACH is derived from its prospectus forensic; the other five from dated web sources cited inline.",
     "disclaimer": "Not financial advice. Research compiled from public sources and may contain namesake or attribution errors. The 'caveats' on some deals are UNVERIFIED or unproven items (dated allegations, possible namesakes, media-reported noise) surfaced for transparency; they are explicitly not findings of wrongdoing and should be confirmed against the final prospectus before relying on them.",
@@ -658,6 +658,161 @@
           "UGM's business-development directorate (Direktorat Pengembangan Usaha dan Inkubasi), which the prospectus names as supervisor of SWAP's UGM licences, had its former director Hargo Utomo and a subdirectorate head convicted in March 2026 over a fictitious Rp6.7bn cocoa procurement at PT Pagilaran, a separate UGM plantation company; SWAP Komut Didi Achjari was an independent commissioner of PT Pagilaran 2018-2023. Neither SWAP nor GMUM is implicated; noted as controller-ecosystem governance context, not a finding against the issuer.",
           "GeNose C19 accuracy was publicly disputed by epidemiologists in mid-2021 (calls to suspend its use for travel screening); the product retained its distribution licence, but the episode explains the unsellable inventory and is a reputational overhang rather than a regulatory sanction.",
           "The 'pep' tag on the UGM/Rector entry reflects senior-public-official status of a state-institution head (LHKPN filer, ministerially influenced appointment), not any party-political or ministerial office; users applying a narrower political-office definition may treat it as PEP-adjacent."
+        ]
+      }
+    },
+    {
+      "ticker": "ANDA",
+      "company": "PT Andalan Artha Primanusa Tbk",
+      "shareholders": [
+        {
+          "name": "Ny. Billy Theristine Lim",
+          "stakePost": 22.47,
+          "tags": [
+            "individual",
+            "founder",
+            "family"
+          ],
+          "finding": "Designated sole controller (pengendali). The prospectus (PAGE 139) says she is controller 'berdasarkan Akta No. 21/2026 yang kemudian ditegaskan melalui Akta No.308/2026 dilakukan dalam rangka pemenuhan ketentuan kepatuhan', with 'kepemilikan efektif sebesar 44,25% (secara langsung sebesar 30% dan secara tidak langsung melalui (i) PT Bumi Artha Caraka sebesar 12,25% dan (ii) PT Tambang Lancar Indonesia sebesar 2%)' before the IPO. DERIVED post-IPO look-through: 22.47% direct + 49% x 18.72% (BAC) + 40% x 3.75% (TLI) = ~33.1%. Age 46, B.Com UNSW 2002; Direktur Utama/President Director 31 Jul 2018-16 Dec 2024, since then Komisaris Utama (PAGE 139, 147). Investor Daily (18 May 2026) profile: she began helping her parents' land-logistics-turned-coal-contractor business in 2006; it was closed in 2015 after the 2013 coal downturn; in 2017 she and her younger sibling restarted via PT Tambang Lancar Indonesia and in 2018 brought in an 'investor partner' for funding (consistent with Arief Ramon, PAGE 104) and later (2022) founded the IUP holder PT Arkara Prathama Energi, where she is Komisaris. The prospectus family table (PAGE 150) confirms Direktur Utama Gahari Christine is her younger sibling ('Adik'). She also lent the company interest-free funds (Rp63.99bn outstanding at 31 Dec 2025, repaid by 30 Jun 2026, PAGE 66, 316), gives personal guarantees on the Mandiri facilities (PAGE 41, 53) and bought TLI's 150m shares on 3 Mar 2026 for Rp1.5bn (Rp10/share vs IPO Rp158-189; PAGE 107). No political office, listed-company seat or conglomerate parent found; no adverse media found under her full name.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 22 post-IPO table; PAGE 41, 53 guarantees; PAGE 66, 316 shareholder loan; PAGE 104-107 history incl. TLI sale; PAGE 139 controller designation; PAGE 147 CV; PAGE 150 family table)",
+            "https://investor.id/investory/439508/miliki-kesalahan-anda-dan-terus-belajar (Investor Daily, 2026-05-18)",
+            "https://investor.id/market/460828/ipo-andalan-artha-primanusa-dikawal-henan-ini-sosok-pengendalinya (Investor Daily, 2026-11-05)",
+            "https://arkara-energi.com/en/company/pt-arkara-prathama-energi (company site, accessed 2026-11-05)"
+          ]
+        },
+        {
+          "name": "PT Bumi Artha Caraka (BAC)",
+          "stakePost": 18.72,
+          "tags": [
+            "holding-co"
+          ],
+          "finding": "Newly formed holding vehicle: incorporated 24 Mar 2025 (Akta 9, Notaris Garut), KBLI coal/iron/tin/nickel/gold/quartz mining plus holding activities, registered at Jl. Ciranjang No. 03, Kebayoran Baru. Owned 51% by Ivan Victor and 49% by Billy Theristine Lim (Akta 172, 16 Mar 2026); Billy is sole Director, Ivan sole Commissioner (PAGE 140-141). It paid Rp12.5bn for 1.25bn shares on 29 Jan 2026 via Bank Mandiri (Rp10/share, i.e. par; IPO range is 15.8-18.9x that, PAGE 106). The same Jl. Ciranjang address is used by PT Arkara Danatama Nusantara (PAGE 143) and by PT Satrio Energy Persada (company registry), the entity whose shares are pledged to Bank Mandiri by Billy, Ivan and Freddy Hartono (PAGE 41). So BAC is the joint Billy-Ivan vehicle: ~12.25% of the 25% pre-IPO stake is Billy's and ~12.75% Ivan's. No third-party or listed-company holder behind it.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 106 Jan-2026 capital increase; PAGE 140-141 BAC profile; PAGE 41 Satrio share pledges)",
+            "https://companieshouse.id/satrio-energy-persada (registry listing, Jl Ciranjang No 03; accessed 2026-11-05)"
+          ]
+        },
+        {
+          "name": "PT Arkara Danatama Nusantara (ADN)",
+          "stakePost": 18.72,
+          "tags": [
+            "holding-co"
+          ],
+          "finding": "Holding/management-consulting vehicle incorporated 10 Dec 2024 (Akta 4, Notaris Cirebon; Jl. Ciranjang No. 3), owned 99% by Ivan Victor and 1% by Anita Rizky HP (Director), with Ivan as Commissioner (PAGE 143-144). It subscribed Rp12.5bn for 1.25bn ANDA shares on 30 Jan 2026 via BCA (Rp10/share). The name ties it to the 'Arkara' group (PT Arkara Prathama Energi, Arkara Wira Sanjaya, Arkara Daya/Bentala/Bhumi Biru, all in Ivan Victor's CV, PAGE 148). DERIVED: Ivan's look-through is 0.99 x 18.72% = ~18.5% post-IPO plus 9.5% via BAC = ~28.1% (pre-IPO 37.5%), i.e. ADN makes him the economically second-largest owner, but the prospectus does NOT designate him a controller. The 1% co-owner 'Anita Rizky HP' is otherwise unidentified; no web footprint found.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 106 capital increase; PAGE 143-144 ADN profile; PAGE 148 Ivan Victor CV)",
+            "https://arkara-energi.com/en/company/pt-arkara-prathama-energi (company site, accessed 2026-11-05)"
+          ]
+        },
+        {
+          "name": "PT Bhumi Caraka Persada (BCP)",
+          "stakePost": 7.49,
+          "tags": [
+            "holding-co",
+            "customer-linked"
+          ],
+          "finding": "Mining-sector holding company (coal, gold, iron sand, iron ore, tin, bauxite, copper, nickel, sand, quartz) incorporated 7 Dec 2023 (Akta 3, Notaris Sukabumi), at Infiniti Office MTH Square, Jakarta Timur. Owned 70% Freddy Hartono, 15% Jocelyn Melissa Koesoema (Director), 15% David Jonathan Satrio; Freddy is Commissioner (Akta 5, 11 Feb 2026; PAGE 144-145). Paid Rp5.0bn for 500m shares on 30 Jan 2026 via Mandiri (Rp10/share). The economic holder behind it, Freddy Hartono (64), is a Komisaris of ANDA since 2026 and, per the prospectus, Direktur Utama of customer PT Bukit Bara Alam (PAGE 109, FS note 24 PAGE 316) and Director of PT Mustika Indah Permai ('Adaro Group'), PT Bara Alam Utama, PT Mustika Energi Lestari, PT Tri Usaha Baru (PAGE 149). See Freddy Hartono row.",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 106 capital increase; PAGE 144-145 BCP profile; PAGE 149 Freddy Hartono CV)"
+          ]
+        },
+        {
+          "name": "PT Tambang Lancar Indonesia (TLI)",
+          "stakePost": 3.75,
+          "tags": [
+            "holding-co",
+            "family"
+          ],
+          "finding": "Billy's original contractor vehicle: incorporated 14 Jul 2011 as PT Tower Light Indonesia (Akta 34), now an equipment-rental/mining-support/dredging/construction company in Cengkareng, owned 60% Willy Christine and 40% Billy Theristine Lim (Akta 7, 8 Apr 2026); Billy is sole Director, Willy Christine Commissioner (PAGE 141-143). It was a 50% founding holder of ANDA from 2018 (via the 2018 Akta 58 with Arief Ramon), then took Series B shares in Oct 2024 (38.1% with Billy) and on 3 Mar 2026 sold 150m shares (3%) to Billy for Rp1.5bn (Rp10/share) leaving 5% (PAGE 104-107). DERIVED: Billy's look-through is 40% x 3.75% = ~1.5% post-IPO. Gahari Christine, Billy's sibling and ANDA's Direktur Utama, was a TLI Director 2017-2019 (PAGE 149). Willy Christine was an ANDA Commissioner 2024-2025 (PAGE 242) and a personal guarantor on the Mandiri facility (PAGE 41, 53), but the prospectus family table (PAGE 150) does not list her as a relative, so we treat her as an unverified associate, not family. Investor Daily says TLI was founded in 2017; the registered entity dates from 2011 (renamed, presumably repurposed).",
+          "confidence": "medium",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 104-107 shareholding history; PAGE 141-143 TLI profile; PAGE 149 Gahari Christine CV; PAGE 150 family table; PAGE 242 board history)",
+            "https://investor.id/investory/439508/miliki-kesalahan-anda-dan-terus-belajar (Investor Daily, 2026-05-18)"
+          ]
+        },
+        {
+          "name": "Tn. Arief Ramon",
+          "stakePost": 3.75,
+          "tags": [
+            "individual",
+            "unverified"
+          ],
+          "finding": "Original 2018 co-investor: took over Heru Sumbogo's 1,000 shares for Rp1bn on 30 Jul 2018 and co-subscribed the 2018 capital increase, leaving a 50/50 TLI/Arief Ramon register until Oct 2024 (PAGE 104). Billy's own account (Investor Daily) is that an 'investor partner' funded the 2018 expansion while she and her sibling ran operations. He was an ANDA Commissioner in 2023 (PAGE 242). He lends to the company: interest-free shareholder loan, limit Rp10bn (3 Jun 2024), raised to Rp30bn on 10 Feb 2026 and extended to 3 Jun 2027, Rp16.04bn outstanding at 30 Jun 2026 and repayable on demand (PAGE 67, 316-317). He backs the debt stack: personal and cash-deficit guarantee (with Billy) on the 2022 Mandiri Rp49bn investment loan, repaid 23 Jan 2026 (PAGE 52-53), a Rp6bn BCA time deposit in his name and Kembangan Selatan/Pegadungan property pledged to BCA (PAGE 46, 294). Beyond the prospectus we found no reliable public profile; a LinkedIn listing 'Arief Ramon, Director, PT Sinar Putra Metalindo' exists but is not linked to ANDA anywhere and could be a namesake, so no background is asserted.",
+          "confidence": "low",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 46 BCA collateral; PAGE 52-53 guarantee; PAGE 67 shareholder loan; PAGE 104 2018 entry; PAGE 242 board history; PAGE 294 property collateral; PAGE 316-317 related-party note)"
+          ]
+        },
+        {
+          "name": "Ivan Victor (CEO of PT Arkara Prathama Energi; UBO of BAC 51% and ADN 99%)",
+          "stakePost": null,
+          "tags": [
+            "individual",
+            "customer-linked"
+          ],
+          "finding": "Look-through owner of 37.5% of ANDA pre-IPO (12.75% via BAC + 24.75% via ADN) and ~28.1% post-IPO; with Billy (44.25% pre / ~33.1% post) the two hold ~81.75% pre-IPO and ~61.2% post-IPO. Age 47, B.F.A. Academy of Art University San Francisco 2003; ANDA Komisaris since 2026. CV (PAGE 148): Presiden Direktur PT Arkara Prathama Energi (APE) 2021-2026, Presiden Direktur PT Satrio Energy Persada 2020-present, Komisaris of PT Arkara Danatama Nusantara, Arkara Daya Nusantara, Arkara Bhumi Biru, Arkara Bentala Nusantara, XAX Lintas Nusantara, Chairman PT Rukun Kreasi Indonesia, Komisaris YF.Inc. Press (detikNews, 17 Jul 2024) quotes him as CEO of APE, the East Kutai (Kutim) coal-IUP holder (IUP 1,757 ha to 2031; ~1.2Mtpa) that is now an ANDA customer under a mining-services contract to 2030 signed 12 Mar 2026 (PAGE 108) and guarantor of ANDA's Mandiri loan (corporate guarantee plus cash-deficit guarantee, with Ivan pledging his APE and Satrio shares, PAGE 41). So he sits on both sides of the largest related-party counterparty. No political office or listed-company seat found; namesake note: his reported surname 'Salim' is NOT linked to the Salim Group (no evidence).",
+          "confidence": "high",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 41 pledges; PAGE 108 APE contract; PAGE 141-144 BAC/ADN; PAGE 148 CV)",
+            "https://news.detik.com/berita/d-7443452/hadapi-krisis-iklim-arkara-prathama-energi-investasi-ke-proyek-energi-hijau (detikNews, 2024-07-17)",
+            "https://arkara-energi.com/en/company/pt-arkara-prathama-energi (company site, accessed 2026-11-05)",
+            "https://www.tambang.id/perusahaan/arkara-prathama-energi/iup/batubara (IUP register mirror, accessed 2026-11-05)",
+            "https://kabaretam.com/2023/05/29/dlh-kutim-berikan-2-sanksi-sekaligus-bagi-pt-ape (APE DLH sanction, 2023-05-29)"
+          ]
+        },
+        {
+          "name": "Freddy Hartono (70% owner of PT Bhumi Caraka Persada)",
+          "stakePost": null,
+          "tags": [
+            "individual",
+            "customer-linked"
+          ],
+          "finding": "Look-through ~7.0% pre-IPO / ~5.2% post-IPO via BCP; Komisaris of ANDA since 2026. Age 64, Pontianak high-school graduate (PAGE 149). His prospectus CV lists Direktur PT Tri Usaha Baru (2024-), PT Mustika Energi Lestari (2020-), PT Mustika Indah Permai 'Adaro Group' (2011-), PT Bukit Bara Alam (2011-), PT Bara Alam Utama (2008-). The prospectus also states he is Direktur Utama of PT Bukit Bara Alam (BBA), which signed two five-year contracts with ANDA on 9 Jul 2026 (overburden rate ~US$0.70 per unit and coal getting US$0.7/MT, to 31 Aug 2031; PAGE 109) and is an affiliate per FS note 24: BBA paid Rp5.17bn termination compensation for a cancelled equipment rental (other income, 2.58% of H1-2026 revenue, PAGE 316-317). ANDA plans 420 staff at BBA's Lahat site from IPO funds (PAGE 42). Omitted from the CV: APE's own website lists 'Freddy Hartono' as President Commissioner of PT Arkara Prathama Energi (with Billy as Commissioner), i.e. the chair of the related-party customer is an ANDA Komisaris and 7% owner. He also pledged his Satrio Energy Persada shares to Mandiri (PAGE 41). Public records: PT Mustika Indah Permai is described as an Adaro subsidiary with a Lahat, South Sumatra coal site; BBA holds a 2,009ha Lahat coal IUP (2012-2032). No political office found.",
+          "confidence": "medium",
+          "sources": [
+            "_sources/upcoming/ANDA/ANDA.txt (PAGE 41 Satrio pledge; PAGE 42 BBA headcount; PAGE 109 BBA contracts; PAGE 144-145 BCP; PAGE 149 CV; PAGE 316-317 FS note 24)",
+            "https://arkara-energi.com/en/company/pt-arkara-prathama-energi (board listing, accessed 2026-11-05)",
+            "https://www.tambang.id/perusahaan/bukit-bara-alam/iup/batubara (IUP register mirror, accessed 2026-11-05)",
+            "https://arest.web.id/content/pt-mustika-indah-permai (company directory, accessed 2026-11-05)",
+            "https://www.disnakerja.com/pt-mustika-indah-permai-adaro-group (2026-09-10)",
+            "https://petrosea.com/id/tentang-kami/struktur-kepemilikan (Petrosea controller chain, as of 2026-02-09)",
+            "https://www.petromindo.com/news/article/budi-gema-plans-major-coal-output-expansion-in-south-sumatra (BGG commissioner Oey Albert, 2026-03-18)",
+            "https://cemplung.com/oey-albert (2026-04-12)",
+            "https://lingkaranistana.id/2024/10/12/pt-bgg-bungkam-terkait-ganti-rugi-lahan-pemilik-lahan-tempuh-jalur-hukum/ (2024-10-12)",
+            "https://www.tambang.id/en/perusahaan/budi-gema-gempita/iup/batubara (accessed 2026-11-05)",
+            "https://www.kadera.id/2025/08/11/penambang-datang-petaka-menerjang-siapakah-pemilik-pt-position (2025-08-11)",
+            "https://www.rmolsumsel.id/esdm-perketat-aturan-afiliasi-jasa-tambang-ptba-sebut-masih-akan-pertahankan-satria-bahana-sarana (SBS is PTBA subsidiary)",
+            "https://katadata.co.id/finansial/bursa/6ae7cde1a0034/ipo-emiten-bren-cuan-bermasalah-ojk-denda-henan-sekuritas-hingga-investor-asing (2026-11-02)"
+          ]
+        }
+      ],
+      "dealExposure": {
+        "level": "family-controlled",
+        "summary": "ANDA is controlled by a private coal-mining owner group, not by a conglomerate, a listed parent or a politician. Billy Theristine Lim (22.47% direct post-IPO; 44.25% effective pre-IPO) is the designated controller, but her partner Ivan Victor holds about 37.5% pre-IPO (~28.1% post) through two holding companies, and the two together keep ~61% after the IPO; Freddy Hartono (~7% pre-IPO) is the third pillar. The same people sit across the table from the contractor: PT Arkara Prathama Energi (Ivan Victor CEO; Billy and Freddy commissioners) is a related-party customer and loan guarantor, and Freddy Hartono is the chief executive of new customer PT Bukit Bara Alam. About 60% of the pre-IPO shares sit in three holding vehicles formed 2023-25 that subscribed at Rp10 per share nine months before an IPO range of Rp158-189. Outside the group, the dominant customer BGG (94% of FY2025 revenue) is unrelated on paper, while the growth customer Petrosea belongs to the CUAN/Prajogo group whose IPO the sole underwriter led. We rate it family-controlled: no PEP, no IDX-listed shareholder and no foreign strategic holder found.",
+        "flags": [
+          "Control is split between two partners: Billy Lim is designated sole controller by shareholder resolution (Akta 21/2026, confirmed by Akta 308/2026) 'dalam rangka pemenuhan ketentuan kepatuhan', with 44.25% effective pre-IPO (~33.1% post-IPO); Ivan Victor holds ~37.5% effective pre-IPO (12.75% via PT Bumi Artha Caraka, 24.75% via PT Arkara Danatama Nusantara; ~28.1% post-IPO) and is not designated. DERIVED combined ~81.75% pre / ~61.2% post-IPO (PAGE 22, 139-144)",
+          "Three holding vehicles (BAC inc. 24 Mar 2025, ADN inc. 10 Dec 2024, BCP inc. 7 Dec 2023) own 60% of pre-IPO ANDA, all acquired in the 5 Feb 2026 capital increase at Rp10 per share (Rp12.5bn, Rp12.5bn, Rp5.0bn), 15.8-18.9x below the Rp158-189 IPO range; BAC and ADN share the Jl. Ciranjang No. 3 address with PT Satrio Energy Persada, whose shares are pledged to Bank Mandiri (PAGE 41, 106, 140-145)",
+          "Related-party customer: PT Arkara Prathama Energi (APE) signed a 2026-2030 mining-services contract with ANDA on 12 Mar 2026 and is flagged as sharing board members (Billy Lim and Freddy Hartono commissioners per APE's site; Ivan Victor its Presiden Direktur 2021-2026 per his prospectus CV); APE also gives a corporate guarantee plus cash-deficit guarantee for ANDA's Rp203bn Mandiri facility and Ivan pledges his APE and Satrio shares (PAGE 41, 108)",
+          "Related-party customer: PT Bukit Bara Alam (BBA), whose Direktur Utama is ANDA Komisaris and 70% BCP owner Freddy Hartono, signed overburden-removal and coal-getting contracts with ANDA on 9 Jul 2026 running to 31 Aug 2031; BBA paid Rp5.17bn compensation for a cancelled equipment rental (2.58% of H1-2026 revenue) and ANDA plans 420 staff at its Lahat site from IPO funds (PAGE 42, 109, 316-317)",
+          "Shareholder financing and guarantees: Billy Lim lent Rp63.99bn interest-free (31 Dec 2025; repaid by 30 Jun 2026); Arief Ramon's interest-free loan limit was raised to Rp30bn on 10 Feb 2026, extended to 3 Jun 2027, Rp16.04bn outstanding at 30 Jun 2026 and repayable on demand; affiliate PT Andalan Bhumi Nusantara (controlled by 'pihak yang sama') is both lessor/lessee, with Rp9.05bn trade and Rp9.29bn other payables at 30 Jun 2026; Mandiri facility guaranteed personally by Billy Lim, Tony Law and Willy Christine (PAGE 41, 66-67, 108, 316-317)",
+          "Customer concentration and sponsor overlap: BGG was 100% of revenue in 2023 and 2024, 94.03% in 2025 and 52.25% in H1 2026; Petrosea Tbk (15% of H1 2026 revenue; subcontract at PT Daya Bumindo Karunia's Murung Raya site) is controlled by PT Kreasi Jasa Persada, wholly owned by PT Petrindo Jaya Kreasi (CUAN, Prajogo Pangestu), whose 2023 IPO Henan Putihrai co-led and was later fined over (PAGE 84, 92, 126-127, 174; petrosea.com/id/tentang-kami/struktur-kepemilikan, shareholders as of 9 Feb 2026; pluang.com/akademi/berita-analisis/saham-ptro-profil-pemilik, 2026-09-23; katadata.co.id 2026-11-02)",
+          "Disclosure gap: Freddy Hartono's prospectus CV (PAGE 149) omits his reported post as President Commissioner of related-party customer APE, shown on APE's own website (arkara-energi.com/en/company/pt-arkara-prathama-energi, accessed 2026-11-05); SBS, a 13% H1-2026 customer, is a subsidiary of state-owned PTBA (rmolsumsel.id, accessed 2026-11-05), and POS (nickel) is held via Harum Energy's Tanito Harum Nickel (kadera.id, 2025-08-11)",
+          "No PEP, IDX-listed shareholder or foreign strategic holder was identified among the six registered holders or the individuals behind the three holding vehicles"
+        ],
+        "caveats": [
+          "UNPROVEN IDENTITY: BGG's commissioner Oey Albert (petromindo.com, 2026-03-18; also Direktur of listed PT Budi Starch & Sweetener and Komisaris of listed PT Tunas Baru Lampung, i.e. Sungai Budi Group, per cemplung.com/oey-albert, 2026-04-12) has the same full name as the 'Tn. Oey Albert' who lent ANDA Rp18.975bn and Rp12.65bn interest-free for 36 months in Aug/Oct 2024 (Rp13.0bn outstanding at 30 Jun 2026; PAGE 288). Same name and same counterparty circle, but no document proves they are one person; if confirmed, ANDA's 94% customer's commissioner would be one of its lenders, and BGG would sit inside a listed Lampung agri group.",
+          "A local outlet (lingkaranistana.id, 2024-10-12) calls BGG 'milik konglomerat asal Lampung' and reports unresolved land-compensation disputes at its Muara Lawai (Lahat) site; no BGG ownership register was found, so the Sungai Budi attribution is inferred, not shown.",
+          "The IUP register mirror tambang.id/en/perusahaan/budi-gema-gempita/iup/batubara (accessed 2026-11-05) shows BGG's coal production IUP valid '2010-04-29 to 2026-04-29'. We could not find a renewal or the prospectus's treatment of it; the registry copy may lag, so this is a question to ask, not a finding.",
+          "The prospectus labels PT Mustika Indah Permai '(Adaro Group)' (PAGE 149), and directories (arest.web.id/content/pt-mustika-indah-permai; disnakerja.com, 2026-09-10) describe it as an Adaro-group coal miner in Lahat. Whether Freddy Hartono is an operating director or an owner there is not established; 'Hartono' is a common surname and he is not linked to any other Hartono family.",
+          "'Salim' in Ivan Victor Salim (detikNews 2024) is not linked to the Salim Group. 'Willy Christine' (60% of TLI) shares a given name with CEO Gahari Christine but is absent from the prospectus family table, so she is not treated as family. 'Tony Law' (Mandiri personal guarantor), 'Anita Rizky HP' (1% of ADN), 'Sukamdani Kencana Y' (owner of a time deposit pledged to BCA, PAGE 294) and 'Arief Ramon' could not be identified publicly.",
+          "Lender PT Batu Energi Perdana (Rp15bn, 5%, due 31 Dec 2026; PAGE 288) is named 'Batu Energi Persada' on PAGE 110; its owners are not disclosed and no link to the Batu Group mining holding was established. The controller of affiliate PT Andalan Bhumi Nusantara is not named in the prospectus.",
+          "APE received a Kutai Timur DLH environmental sanction in May 2023 (temporary halt to land clearing outside its concession plus an administrative coercive order; kabaretam.com, 2023-05-29); PT Position (nickel customer, held via Harum Energy's subsidiary) faces press allegations over Maba Sangaji indigenous-forest mining (kadera.id, 2025-08-11). Both are reputational context on counterparties, not findings against ANDA or its shareholders.",
+          "Sponsor cross-reference: OJK fined Henan Putihrai Sekuritas Rp1.7bn (S-48/PM.2/2026, 16 Oct 2026) over anti-money-laundering controls in the 2023 CUAN IPO and froze its director Jurgantara Usman's underwriter-representative licence for three months (katadata.co.id, 2026-11-02; insight.kontan.co.id, 2026-11-01); see the underwriter file. It is a sanction on the firm, not on ANDA."
         ]
       }
     }

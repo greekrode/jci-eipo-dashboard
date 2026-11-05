@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "asOf": "2026-08-26",
+    "asOf": "2026-11-05",
     "purpose": "Underwriter (penjamin emisi efek) IDX IPO track-record research, feeding the 'sponsor' component of the AI Score. The key signal is post-listing performance: do this house's recent lead IPOs hold up, or pop-and-fade.",
     "disclaimer": "Track records are research-grade summaries compiled from public sources as of the asOf date and conservatively graded. Past underwriter performance does not predict any individual IPO's outcome. Not investment advice — DYOR.",
     "gradeScale": "A = large reputable house, listings generally hold up; B = established mid-tier, mixed but credible book; C = small house or thin/weak post-listing record; D = poor record or regulatory flags.",
@@ -33,6 +33,9 @@
     },
     "SWAP": {
       "lead": "sukadana-prima"
+    },
+    "ANDA": {
+      "lead": "henan-putihrai"
     }
   },
   "firms": {
@@ -318,6 +321,73 @@
       ],
       "brokerCode": "AD",
       "formerly": "PT OSO Sekuritas Indonesia (renamed Feb 2026; same entity, same IDX code AD — census deals led as OSO, e.g. OBAT 2025, belong to this house)"
+    },
+    "henan-putihrai": {
+      "key": "henan-putihrai",
+      "legalName": "PT Henan Putihrai Sekuritas",
+      "group": "No bank or conglomerate parent identified; founder/management-owned (IDX member since 1990, broker code HP; management buy-out 2000). Affiliate PT Henan Putihrai Asset Management holds ~11% of listed SSIA; ex-CEO Ferry Sudjono holds 6% of FORE, an HP-led issuer. Current shareholder register not found.",
+      "tier": "established-mid",
+      "ipoLeadCount_2022_2025": 5,
+      "notableDeals": [
+        {
+          "ticker": "CUAN",
+          "year": 2023,
+          "note": "Joint lead with BRI Danareksa for Prajogo Pangestu's Petrindo Jaya Kreasi; Rp371.8bn. D1 +22.7%, D7 +250%; peak ~13,000% above offer, Rp360 now (-87.5% from peak). OJK fined HP Rp1.7bn over this IPO (16 Oct 2026)."
+        },
+        {
+          "ticker": "DAAZ",
+          "year": 2024,
+          "note": "Joint lead with CGS International; Rp264bn at Rp880. Seven straight ARA sessions, D7 +372%; peak Rp7,450, now Rp1,435 (+63% vs offer, -81% from peak)."
+        },
+        {
+          "ticker": "RATU",
+          "year": 2025,
+          "note": "Joint lead with Sucor for Happy Hapsoro's Raharja Energi Cepu; Rp624bn at Rp1,150, ~313x oversubscribed. Seven ARA sessions, D7 +370%; peak Rp12,900, now Rp2,120 (+84% vs offer, -84% from peak)."
+        },
+        {
+          "ticker": "FORE",
+          "year": 2025,
+          "note": "Joint lead with Mandiri Sekuritas; Rp353bn at Rp188. D1 +34%, D7 +96%; peak Rp1,135 (May 2026), now Rp580 (+208% vs offer, -49% from peak). HP's ex-CEO holds 6%."
+        },
+        {
+          "ticker": "CDIA",
+          "year": 2025,
+          "note": "One of six co-leads (with DBS Vickers, Trimegah, BNI, BCA, OCBC) for Prajogo's Chandra Daya Investasi; Rp2.37T at Rp190. Seven ARA sessions, D7 +413%; peak Rp2,450, now Rp334 (+76% vs offer, -86% from peak)."
+        },
+        {
+          "ticker": "ANDA",
+          "year": 2026,
+          "note": "Upcoming: sole underwriter (full commitment) for coal/nickel contractor Andalan Artha Primanusa; Rp158-189, up to Rp316.8bn; bookbuilding 5-17 Nov 2026, listing 1 Dec 2026. First HP deal in the census without a co-lead."
+        }
+      ],
+      "performanceSummary": "Five joint-lead IPOs in 2023-25 (about Rp3.99T raised), each with a different co-lead; none in 2022. All five remain above offer on 5 Nov 2026 (+63% to +1,536%), but four are 81-87% below their peaks and three sit 61-66% below their D7 closes. Average D1 +28.2%, average D7 +300%. Issuers cluster in tycoon-controlled names: two Prajogo units (CUAN, CDIA), Happy Hapsoro's RATU, DAAZ and FORE.",
+      "firstDayPattern": "5 of 5 debuts rose +22.7% to +34.7% on day one; CDIA, RATU and DAAZ hit the cap for all seven sessions, CUAN six of seven, FORE three. Small free floats (10-21%) produce an auto-reject-up streak, then a long drawdown; none broke below offer in week one.",
+      "underwaterNote": "0 of 5 below offer on 5 Nov 2026, but from the D7 close 3 of 5 are underwater (CDIA -66%, DAAZ -65%, RATU -61%) and 4 of 5 are 81-87% off their peaks. Five deals, all from a 2023-25 bull phase.",
+      "flags": [
+        "OJK sanction (current): Rp1.7bn fine (S-48/PM.2/2026, 16 Oct 2026) for anti-money-laundering control failures in the 2023 CUAN IPO, where OJK found controller-linked parties obtained large allocations by obscuring identities; director Jurgantara Usman (corporate finance) had his underwriter-representative licence frozen for 3 months. HP calls it administrative and is reviewing CDD/EDD procedures.",
+        "Sponsor cluster: three of five prior deals are Prajogo Pangestu or Happy Hapsoro companies, and ANDA's new customer Petrosea (15% of H1-2026 revenue) is a CUAN sub-group company.",
+        "Principal conflicts: ex-CEO Ferry Sudjono holds 6% of FORE and HP Asset Management ~11% of SSIA; ANDA's independent commissioner also sits on the board of HP-led DAAZ.",
+        "Pump-and-fade: 4 of 5 deals fell 81-87% from peak; first-week allotment, not the aftermarket, was the gain window.",
+        "ANDA is the first HP lead with no co-lead, a full-commitment backstop on up to Rp316.8bn in a weak tape (IDX Composite 5,030). Ownership unverified."
+      ],
+      "grade": "D",
+      "gradeRationale": "D under the scale's 'regulatory flags' clause and the sukadana-prima precedent (any OJK misconduct finding moves it to D). The flag is current, IPO-specific (AML/due-diligence failure in allocating the CUAN offering) and touches the director who runs the IPO desk. It is an administrative Rp1.7bn fine, not manipulation, and the book is not poor (0 of 5 below offer, D7 +300%), so confidence is medium. Pump-and-fade drawdowns (4 of 5 down 81-87%) and a repeat-sponsor cluster weigh against. Would move to C after remediation and a clean post-sanction deal.",
+      "confidence": "medium",
+      "sources": [
+        "https://katadata.co.id/finansial/bursa/6ae7cde1a0034/ipo-emiten-bren-cuan-bermasalah-ojk-denda-henan-sekuritas-hingga-investor-asing (2026-11-02)",
+        "https://katadata.co.id/finansial/bursa/6ae927361da07/daftar-nama-11-sekuritas-terseret-kasus-dssa-dan-cuan-didenda-ojk-rp15-3-miliar (2026-11-03)",
+        "https://insight.kontan.co.id/news/henan-putihrai-sekuritas-buka-suara-terkait-pemberian-sanksi-ojk (2026-11-01)",
+        "https://www.suara.com/bisnis/2026/11/05/151528/ipo-anda-dikawal-henan-putihrai-sekuritas-yang-didenda-ojk-dalam-kasus-saham-cuan (2026-11-05)",
+        "https://henanputihrai.com/tentang (accessed 2026-11-05)",
+        "https://www.idnfinancials.com/id/news/69180/eks-ceo-henan-putihrai-borong-saham-fore-kini-kuasai-6 (2026-09-21)",
+        "https://investor.id/market/379717/ipo-daaz-bara-lestari-daaz-diserbu-masuk-papan-utama/all (2024-11-11)",
+        "https://investor.id/market/383605/perusahaan-happy-hapsoro-ratu-ipo-valuasidi-atas-medc-enrg-tapi-dikawal-uw-cuan (2024-12-16)",
+        "https://pintarsaham.id/ipo-fore-good-or-bad (2025-03-20)",
+        "https://investor.id/market/460828/ipo-andalan-artha-primanusa-dikawal-henan-ini-sosok-pengendalinya (2026-11-05)",
+        "https://www.google.com/finance/quote/CDIA:IDX and query1.finance.yahoo.com chart API (prices and peaks, 2026-11-05)",
+        "src/data/ipos.json (project census: leadCode HP, members, cum D1..D7)"
+      ],
+      "brokerCode": "HP"
     }
   }
 }
