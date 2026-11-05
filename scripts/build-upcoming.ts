@@ -16,7 +16,9 @@ const OUT = resolve(ROOT, "src", "data");
 const SUPP = resolve(ROOT, "scripts", "upcoming-supplement.json"); // prospectus-PDF-derived overrides (committed)
 const RESEARCH = resolve(ROOT, "scripts", "shareholder-research.json"); // shareholder background research (committed)
 const UWR = resolve(ROOT, "scripts", "underwriter-research.json"); // underwriter IPO track-record research (committed)
-const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS", "SWAP", "ANDA"];
+// SWAP (Sep 2026) is excluded: it never listed (no prices or company profile in the alpha-flow DB as of
+// 2026-11-05); its supplement/forensic/research entries stay committed so it can be re-added by ticker.
+const TICKERS = ["BACH", "EMMI", "JECX", "JELI", "PRDL", "RANS", "ANDA"];
 
 // Tags we surface in the public UI: verifiable ownership-structure facts only.
 const STRUCTURAL_TAGS = new Set(["conglomerate", "pep", "pep-family", "affiliated-listed", "foreign-strategic"]);
